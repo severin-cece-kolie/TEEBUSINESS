@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Contact Form Submission</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f8f8;
+        }
+        .email-container {
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 40px 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #000;
+            text-decoration: none;
+        }
+        h1 {
+            font-size: 28px;
+            margin: 20px 0 10px;
+            color: #000;
+        }
+        .subtitle {
+            color: #666;
+            font-size: 16px;
+            margin: 10px 0 30px;
+        }
+        .content {
+            margin: 30px 0;
+            font-size: 15px;
+            line-height: 1.7;
+            color: #333;
+        }
+        .message-box {
+            background-color: #f8f8f8;
+            padding: 20px;
+            border-left: 4px solid #000;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+        .message-box h3 {
+            margin-top: 0;
+            font-size: 14px;
+            text-transform: uppercase;
+            color: #666;
+        }
+        .message-text {
+            font-size: 14px;
+            line-height: 1.8;
+            margin: 0;
+            word-wrap: break-word;
+        }
+        .info-section {
+            background-color: #f0f0f0;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .info-row:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        .info-label {
+            font-weight: bold;
+            font-size: 13px;
+            color: #666;
+            min-width: 100px;
+        }
+        .info-value {
+            font-size: 13px;
+            color: #333;
+            text-align: right;
+        }
+        .cta-button {
+            display: inline-block;
+            background-color: #000;
+            color: #ffffff;
+            padding: 12px 30px;
+            border-radius: 4px;
+            text-decoration: none;
+            margin: 15px 0;
+            font-weight: 600;
+        }
+        .cta-button:hover {
+            background-color: #333;
+        }
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #f0f0f0;
+            text-align: center;
+            font-size: 13px;
+            color: #666;
+        }
+        .footer-note {
+            font-size: 12px;
+            color: #999;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            <div class="logo">TEEBUSINESS</div>
+        </div>
+
+        <h1>New Contact Form Submission</h1>
+        <p class="subtitle">Admin Notification</p>
+
+        <div class="content">
+            <p>A new contact form submission has been received on the TEEBUSINESS website.</p>
+
+            <div class="info-section">
+                <div class="info-row">
+                    <span class="info-label">Name:</span>
+                    <span class="info-value">{{ full_name }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Email:</span>
+                    <span class="info-value">{{ email }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Phone:</span>
+                    <span class="info-value">{{ phone|default:"Not provided" }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Subject:</span>
+                    <span class="info-value">{{ subject }}</span>
+                </div>
+            </div>
+
+            <div class="message-box">
+                <h3>Message</h3>
+                <p class="message-text">{{ message }}</p>
+            </div>
+
+            <p style="text-align: center;">
+                <a href="mailto:{{ email }}" class="cta-button">Reply to Sender</a>
+            </p>
+
+            <p style="font-size: 13px; color: #666; margin-top: 20px;">
+                <strong>Action Required:</strong> Please review this message and respond to the customer within 24 hours to maintain excellent customer service standards.
+            </p>
+        </div>
+
+        <div class="footer">
+            <p>TEEBUSINESS Contact Form System</p>
+            <p class="footer-note">This is an automated email. Do not reply to this address. Use the "Reply to Sender" button above to contact the customer.</p>
+        </div>
+    </div>
+</body>
+</html>

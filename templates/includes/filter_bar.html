@@ -1,0 +1,32 @@
+<nav class="filter-bar -mx-4 px-4 sm:mx-0 sm:px-0" aria-label="Product filters">
+    <form method="get" action="{% url 'catalog' %}" class="filter-bar__inner" x-data @change="$event.target.closest('form').submit()">
+        {% if search_q %}<input type="hidden" name="q" value="{{ search_q }}">{% endif %}
+        {% if selected_category %}<input type="hidden" name="category" value="{{ selected_category }}">{% endif %}
+
+        <a href="{% url 'catalog' %}{% if search_q %}?q={{ search_q|urlencode }}{% endif %}"
+           class="filter-pill {% if not selected_category and not selected_brand %}is-active{% endif %}">
+            All
+        </a>
+
+        {% for cat in categories %}
+        <a href="{% url 'catalog' %}?category={{ cat.slug }}{% if search_q %}&q={{ search_q|urlencode }}{% endif %}{% if selected_brand %}&brand={{ selected_brand }}{% endif %}"
+           class="filter-pill {% if selected_category == cat.slug %}is-active{% endif %}">
+            {{ cat.name }}
+        </a>
+        {% endfor %}
+
+        <span class="mx-1 hidden h-5 w-px shrink-0 bg-luxury-line sm:inline" aria-hidden="true"></span>
+
+        <label class="sr-only" for="filter-brand">Brand</label>
+        <select id="filter-brand" name="brand" class="filter-bar__select">
+            <option value="">Brand</option>
+            {% for brand in brands %}
+            <option value="{{ brand.id }}" {% if selected_brand == brand.id|stringformat:"s" %}selected{% endif %}>{{ brand.name }}</option>
+            {% endfor %}
+        </select>
+
+        {% if selected_category or selected_brand or search_q %}
+        <a href="{% url 'catalog' %}" class="filter-bar__action">Clear</a>
+        {% endif %}
+    </form>
+</nav>

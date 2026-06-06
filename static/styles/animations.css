@@ -1,0 +1,24 @@
+/* ===== ANIMATIONS ===== */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.fade-in { animation: fadeInUp 0.5s ease forwards; }
+.fade-in.delay-100 { animation-delay: 0.1s; }
+.fade-in.delay-200 { animation-delay: 0.2s; }
+.fade-in.delay-300 { animation-delay: 0.3s; }
+
+.shine-effect {
+  background: linear-gradient(90deg, transparent 45%, rgba(255,255,255,.25) 50%, transparent 55%);
+  background-size: 200% auto;
+  animation: shimmer 3s linear infinite;
+}

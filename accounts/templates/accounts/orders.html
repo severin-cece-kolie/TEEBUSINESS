@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}Orders — TEEBUSINESS{% endblock %}
+
+{% block content %}
+{% include 'includes/hero_banner.html' with title="Orders" hide_subtitle=True variant="compact" %}
+<section class="premium-content">
+<div class="mx-auto max-w-4xl px-4 py-10">
+    <div class="premium-panel py-16 text-center">
+        <h1 class="mb-2 font-barlow text-2xl font-black uppercase">No orders yet</h1>
+        <a href="{% url 'catalog' %}" class="btn-luxury mt-6 inline-flex">Start Shopping</a>
+    </div>
+</div>
+</section>
+{% endblock %}

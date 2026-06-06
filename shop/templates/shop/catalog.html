@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load currency_tags %}
+
+{% block title %}Shop — TEEBUSINESS{% endblock %}
+
+{% block content %}
+{% include 'includes/hero_banner.html' with title="Shop" hide_subtitle=True variant="compact" %}
+
+<section class="premium-content">
+    <div class="mx-auto max-w-7xl px-3 py-4 md:px-4 md:py-10">
+        <div class="mb-3 flex flex-col gap-3 md:mb-6 md:flex-row md:items-center md:justify-end md:gap-4">
+            <form action="{% url 'catalog' %}" method="get" class="flex w-full gap-2 md:w-auto md:gap-3">
+                <input name="q" value="{{ search_q }}" placeholder="Search" class="min-w-0 flex-1 rounded-full border border-luxury-line bg-white/90 px-4 py-2.5 text-sm outline-none focus:border-luxury-black md:w-72 md:px-5 md:py-3">
+                {% if selected_category %}<input type="hidden" name="category" value="{{ selected_category }}">{% endif %}
+                {% if selected_brand %}<input type="hidden" name="brand" value="{{ selected_brand }}">{% endif %}
+                <button type="submit" class="btn-luxury shrink-0 px-4 text-[10px] md:px-6 md:text-sm">Search</button>
+            </form>
+        </div>
+
+        {% if products %}
+        <div class="product-grid mt-3 md:mt-6">
+            {% for product in products %}
+            {% include 'includes/product_card.html' %}
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="premium-panel mt-6 py-20 text-center">
+            <h2 class="mb-2 font-barlow text-2xl font-black uppercase">No products found</h2>
+            <p class="mb-6 text-sm text-luxury-mid">Try a different search or reset the filters.</p>
+            <a href="{% url 'catalog' %}" class="btn-luxury inline-flex">Reset Shop</a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

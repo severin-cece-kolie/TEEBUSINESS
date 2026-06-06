@@ -1,0 +1,70 @@
+{% extends 'base_auth.html' %}
+{% load static %}
+
+{% block title %}Register — TEEBUSINESS{% endblock %}
+
+{% block auth_content %}
+<div class="auth-page">
+    <aside class="auth-brand">
+        <div class="auth-brand__orb auth-brand__orb--1"></div>
+        <div class="auth-brand__orb auth-brand__orb--2"></div>
+        <div class="auth-brand__orb auth-brand__orb--3"></div>
+        <div class="auth-brand__grid"></div>
+        <div class="auth-brand__inner">
+            <a href="{% url 'home' %}">
+                <img src="{% static 'assets/images/logo.png' %}" alt="TEEBUSINESS" class="auth-brand__logo">
+            </a>
+            <h1 class="auth-brand__title">Join TEEBUSINESS</h1>
+            <p class="auth-brand__text">Create your account for faster checkout, order tracking, and exclusive access to new drops.</p>
+            <div class="auth-brand__stats">
+                <div class="auth-brand__stat">
+                    <strong>Fast</strong>
+                    <span>Checkout</span>
+                </div>
+                <div class="auth-brand__stat">
+                    <strong>Secure</strong>
+                    <span>Account</span>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <div class="auth-form-side">
+        <div class="auth-card">
+            <h2 class="auth-card__title">Register</h2>
+            <p class="auth-card__subtitle">Set up your account in seconds.</p>
+
+            <form method="post" novalidate>
+                {% csrf_token %}
+                {% if form.non_field_errors %}
+                <div class="auth-error-box" role="alert">{{ form.non_field_errors }}</div>
+                {% endif %}
+
+                {% for field in form %}
+                <div class="mb-4">
+                    <label class="auth-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.help_text %}
+                    <span class="mt-1 block text-xs text-luxury-mid">{{ field.help_text }}</span>
+                    {% endif %}
+                    {% for error in field.errors %}
+                    <span class="mt-1 block text-xs text-red-700" role="alert">{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+
+                <button type="submit" class="auth-btn">Create Account</button>
+
+                <p class="mt-6 text-center text-sm text-luxury-mid">
+                    Already registered?
+                    <a href="{% url 'login' %}" class="font-semibold text-luxury-black underline underline-offset-4 transition-opacity hover:opacity-70">Sign in</a>
+                </p>
+            </form>
+
+            <p class="mt-8 text-center text-xs text-luxury-mid">
+                <a href="{% url 'home' %}" class="font-bold uppercase tracking-widest transition-colors hover:text-luxury-black">&larr; Back to store</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

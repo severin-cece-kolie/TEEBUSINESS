@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}Profile — TEEBUSINESS{% endblock %}
+
+{% block content %}
+{% include 'includes/hero_banner.html' with title="Profile" hide_subtitle=True variant="compact" %}
+<section class="premium-content">
+<div class="mx-auto max-w-xl px-4 py-10">
+    <form method="post" class="premium-panel p-6">
+        {% csrf_token %}
+        {% for field in form %}
+        <label class="mb-4 block">
+            <span class="mb-2 block text-[10px] font-bold uppercase tracking-widest text-luxury-mid">{{ field.label }}</span>
+            {{ field }}
+            {% for error in field.errors %}<span class="mt-1 block text-xs text-red-700">{{ error }}</span>{% endfor %}
+        </label>
+        {% endfor %}
+        <button class="btn-luxury">Save Changes</button>
+    </form>
+</div>
+</section>
+{% endblock %}

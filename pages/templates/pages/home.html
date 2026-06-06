@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load static currency_tags %}
+
+{% block title %}TEEBUSINESS — Premium Streetwear Boutique{% endblock %}
+
+{% block extra_head %}
+<link rel="preload" as="image" href="{% static 'assets/images/background1.jpg' %}">
+{% endblock %}
+
+{% block content %}
+{% url 'catalog' as shop_url %}
+{% include 'includes/hero_banner.html' with title="TEEBUSINESS" subtitle="Premium footwear & streetwear essentials." variant="home" eager_image=True hero_cta_url=shop_url hero_cta_label="Shop Now" %}
+
+{% if featured_products %}
+<section class="premium-content">
+    <div class="mx-auto max-w-7xl px-3 py-5 md:px-4 md:py-10">
+        <h2 class="mb-4 font-barlow text-sm font-black uppercase tracking-widest text-luxury-mid md:mb-6 md:text-base">Popular Products</h2>
+        <div class="product-grid">
+            {% for product in featured_products %}
+            {% include 'includes/product_card.html' %}
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{% if new_products %}
+<section class="premium-content">
+    <div class="mx-auto max-w-7xl px-3 py-4 md:px-4 md:pb-12">
+        <h2 class="mb-4 font-barlow text-sm font-black uppercase tracking-widest text-luxury-mid md:mb-6 md:text-base">New Arrivals</h2>
+        <div class="product-grid">
+            {% for product in new_products %}
+            {% include 'includes/product_card.html' %}
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard — TEEBUSINESS{% endblock %}
+
+{% block content %}
+{% include 'includes/hero_banner.html' with title="Account" hide_subtitle=True variant="compact" %}
+<section class="premium-content">
+<div class="mx-auto max-w-7xl px-4 py-10">
+    <div class="grid gap-5 md:grid-cols-3">
+        <a href="{% url 'profile' %}" class="premium-panel block p-6 transition-shadow hover:shadow-lg">
+            <h2 class="mb-2 font-barlow text-xl font-black uppercase">Profile</h2>
+            <p class="text-sm text-luxury-mid">Update contact details.</p>
+        </a>
+        <a href="{% url 'orders' %}" class="premium-panel block p-6 transition-shadow hover:shadow-lg">
+            <h2 class="mb-2 font-barlow text-xl font-black uppercase">Orders</h2>
+            <p class="text-sm text-luxury-mid">Review order activity.</p>
+        </a>
+        <a href="{% url 'wishlist' %}" class="premium-panel block p-6 transition-shadow hover:shadow-lg">
+            <h2 class="mb-2 font-barlow text-xl font-black uppercase">Wishlist</h2>
+            <p class="text-sm text-luxury-mid">Saved products appear here.</p>
+        </a>
+    </div>
+</div>
+</section>
+{% endblock %}

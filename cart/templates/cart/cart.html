@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load currency_tags %}
+
+{% block title %}Cart — TEEBUSINESS{% endblock %}
+
+{% block content %}
+{% include 'includes/hero_banner.html' with title="Cart" hide_subtitle=True variant="compact" %}
+
+<section class="premium-content">
+<div class="mx-auto max-w-7xl px-3 py-5 md:px-4 md:py-10">
+    {% if items %}
+    <div class="grid gap-6 lg:grid-cols-[1fr_360px] lg:gap-10">
+        <div class="space-y-3 md:space-y-4">
+            {% for item in items %}
+            <article class="premium-panel flex gap-3 p-3 md:gap-4 md:p-4">
+                <a href="{% url 'product_detail' item.product.id %}" class="h-20 w-16 shrink-0 overflow-hidden rounded-lg bg-luxury-grey sm:h-24 sm:w-20">
+                    {% if item.product.images.all %}<img src="{{ item.product.images.first.image.url }}" alt="{{ item.product.name }}" class="h-full w-full object-cover">{% endif %}
+                </a>
+                <div class="flex min-w-0 flex-1 flex-col justify-between gap-2">
+                    <div>
+                        <h2 class="truncate text-sm font-semibold md:text-base">{{ item.product.name }}</h2>
+                        <p class="text-xs text-luxury-mid md:text-sm">{{ item.product.category.name }}</p>
+                    </div>
+                    <div class="flex flex-wrap items-center justify-between gap-2 md:gap-4">
+                        <form method="post" action="{% url 'update_cart' item.product.id %}" class="flex items-center gap-2">
+                            {% csrf_token %}
+                            <input name="qty" type="number" min="0" value="{{ item.qty }}" class="w-20 rounded-full border border-luxury-line px-3 py-2 text-center text-sm">
+                            <button class="text-[10px] font-bold uppercase tracking-widest underline underline-offset-4">Update</button>
+                        </form>
+                        <div class="flex items-center gap-5">
+                            <p class="font-barlow font-bold">{{ item.subtotal|convert_price:request }}</p>
+                            <a href="{% url 'remove_from_cart' item.product.id %}" class="text-[10px] font-bold uppercase tracking-widest text-luxury-mid hover:text-luxury-black">Remove</a>
+                        </div>
+                    </div>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+        <aside class="premium-panel h-fit p-6">
+            <h2 class="mb-6 font-barlow text-xl font-black uppercase">Order Summary</h2>
+            <div class="mb-6 flex justify-between border-b border-luxury-line pb-5">
+                <span class="text-sm text-luxury-mid">Subtotal</span>
+                <span class="font-barlow font-bold">{{ total_gnf|convert_price:request }}</span>
+            </div>
+            <a href="{% url 'checkout' %}" class="btn-luxury flex w-full justify-center">Checkout</a>
+        </aside>
+    </div>
+    {% else %}
+    <div class="premium-panel py-20 text-center">
+        <h1 class="mb-3 font-barlow text-3xl font-black uppercase">Your cart is empty</h1>
+        <p class="mb-7 text-sm text-luxury-mid">Start with the latest edit and return here when ready.</p>
+        <a href="{% url 'catalog' %}" class="btn-luxury inline-flex">Shop Products</a>
+    </div>
+    {% endif %}
+</div>
+</section>
+{% endblock %}

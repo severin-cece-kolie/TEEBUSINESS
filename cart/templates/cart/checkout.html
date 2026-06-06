@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load currency_tags %}
+
+{% block title %}Checkout — TEEBUSINESS{% endblock %}
+
+{% block content %}
+{% include 'includes/hero_banner.html' with title="Checkout" hide_subtitle=True variant="compact" %}
+
+<section class="premium-content">
+<div class="mx-auto max-w-7xl px-3 py-5 md:px-4 md:py-10">
+    <div class="grid gap-10 lg:grid-cols-[1fr_360px]">
+        <form class="premium-panel p-6">
+            <h2 class="mb-6 font-barlow text-xl font-black uppercase">Customer Details</h2>
+            <div class="grid gap-4 md:grid-cols-2">
+                <input class="rounded-lg border border-luxury-line px-4 py-3 text-sm" placeholder="First name" required>
+                <input class="rounded-lg border border-luxury-line px-4 py-3 text-sm" placeholder="Last name" required>
+                <input class="rounded-lg border border-luxury-line px-4 py-3 text-sm md:col-span-2" type="email" placeholder="Email" required>
+                <input class="rounded-lg border border-luxury-line px-4 py-3 text-sm md:col-span-2" placeholder="Phone" required>
+                <textarea class="rounded-lg border border-luxury-line px-4 py-3 text-sm md:col-span-2" rows="4" placeholder="Delivery address" required></textarea>
+            </div>
+            <button type="button" class="btn-luxury mt-6">Confirm Order</button>
+        </form>
+        <aside class="premium-panel h-fit p-6">
+            <h2 class="mb-6 font-barlow text-xl font-black uppercase">Summary</h2>
+            <div class="space-y-4">
+                {% for item in items %}
+                <div class="flex justify-between gap-4 text-sm">
+                    <span>{{ item.product.name }} x {{ item.qty }}</span>
+                    <span class="font-semibold">{{ item.subtotal|convert_price:request }}</span>
+                </div>
+                {% empty %}
+                <p class="text-sm text-luxury-mid">No items in cart.</p>
+                {% endfor %}
+            </div>
+            <div class="mt-6 flex justify-between border-t border-luxury-line pt-5 font-barlow font-bold">
+                <span>Total</span>
+                <span>{{ total_gnf|convert_price:request }}</span>
+            </div>
+        </aside>
+    </div>
+</div>
+</section>
+{% endblock %}

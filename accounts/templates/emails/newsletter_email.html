@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TEEBUSINESS Newsletter</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f8f8;
+        }
+        .email-container {
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 40px 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #000;
+            text-decoration: none;
+        }
+        h1 {
+            font-size: 28px;
+            margin: 20px 0 10px;
+            color: #000;
+        }
+        .subtitle {
+            color: #666;
+            font-size: 16px;
+            margin: 10px 0 30px;
+        }
+        .content {
+            margin: 30px 0;
+            font-size: 15px;
+            line-height: 1.7;
+            color: #333;
+        }
+        .featured-section {
+            margin: 30px 0;
+        }
+        .featured-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        .featured-item {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 12px;
+        }
+        .featured-item h3 {
+            margin: 0 0 8px;
+            font-size: 15px;
+            font-weight: bold;
+        }
+        .featured-item p {
+            margin: 0;
+            font-size: 13px;
+            color: #666;
+        }
+        .cta-link {
+            display: inline-block;
+            color: #000;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+        .cta-link:hover {
+            text-decoration: underline;
+        }
+        .headline-section {
+            background-color: #f0f0f0;
+            padding: 20px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+        .headline-section h3 {
+            margin-top: 0;
+            font-size: 16px;
+        }
+        .newsletter-content {
+            line-height: 1.8;
+            font-size: 14px;
+        }
+        .highlight-box {
+            background-color: #000;
+            color: #ffffff;
+            padding: 15px;
+            border-radius: 4px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .highlight-box h3 {
+            margin: 0 0 10px;
+            font-size: 16px;
+        }
+        .highlight-box p {
+            margin: 0;
+            font-size: 14px;
+        }
+        .cta-button {
+            display: inline-block;
+            background-color: #000;
+            color: #ffffff;
+            padding: 12px 30px;
+            border-radius: 4px;
+            text-decoration: none;
+            margin: 15px 0;
+            font-weight: 600;
+        }
+        .cta-button:hover {
+            background-color: #333;
+        }
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #f0f0f0;
+            text-align: center;
+            font-size: 13px;
+            color: #666;
+        }
+        .contact-info {
+            margin: 15px 0;
+            font-size: 13px;
+        }
+        .contact-info a {
+            color: #000;
+            text-decoration: none;
+        }
+        .contact-info a:hover {
+            text-decoration: underline;
+        }
+        .unsubscribe {
+            margin-top: 20px;
+            font-size: 11px;
+            color: #999;
+        }
+        .unsubscribe a {
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            <div class="logo">TEEBUSINESS</div>
+        </div>
+
+        <h1>Newsletter</h1>
+        <p class="subtitle">Your curated selection of premium footwear and streetwear</p>
+
+        <div class="content">
+            <p>Hello {{ user.first_name|default:user.username }},</p>
+            
+            <p>Check out what's new this week at TEEBUSINESS. We've curated the finest selection of premium products just for you.</p>
+
+            <div class="featured-section">
+                <div class="featured-title">✨ Featured This Week</div>
+                
+                <div class="featured-item">
+                    <h3>New Arrivals</h3>
+                    <p>Discover our latest collection of premium footwear straight from the best brands worldwide.</p>
+                    <a href="{{ site_url }}/shop/?sort=newest" class="cta-link">Browse New Arrivals →</a>
+                </div>
+
+                <div class="featured-item">
+                    <h3>Exclusive Deals</h3>
+                    <p>Members enjoy exclusive access to limited-time offers on selected premium items.</p>
+                    <a href="{{ site_url }}/shop/?filter=sale" class="cta-link">View Deals →</a>
+                </div>
+
+                <div class="featured-item">
+                    <h3>Trending Now</h3>
+                    <p>See what other TEEBUSINESS customers are loving this season.</p>
+                    <a href="{{ site_url }}/shop/?sort=trending" class="cta-link">See Trending →</a>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>Summer Collection Alert ☀️</h3>
+                <p>Our latest summer collection is now available. Enjoy premium comfort with our new seasonal styles.</p>
+            </div>
+
+            <div class="newsletter-content">
+                <h3 style="margin-top: 20px;">Why Shop with TEEBUSINESS?</h3>
+                <ul>
+                    <li>Curated selection of premium brands</li>
+                    <li>Fast and secure checkout</li>
+                    <li>Dedicated customer support</li>
+                    <li>Regular exclusive offers for members</li>
+                    <li>Easy returns and exchanges</li>
+                </ul>
+            </div>
+
+            <p style="text-align: center;">
+                <a href="{{ site_url }}/shop/" class="cta-button">Shop Now</a>
+            </p>
+        </div>
+
+        <div class="footer">
+            <p>Thank you for being part of the TEEBUSINESS community!</p>
+            
+            <div class="contact-info">
+                <p>
+                    <strong>TEEBUSINESS Customer Support</strong><br>
+                    <a href="mailto:kseverin189@gmail.com">kseverin189@gmail.com</a><br>
+                    <a href="tel:+224623707833">+224 623 70 78 33</a>
+                </p>
+            </div>
+
+            <p>&copy; 2026 TEEBUSINESS. All rights reserved.</p>
+
+            <div class="unsubscribe">
+                <p>You received this email because you're subscribed to the TEEBUSINESS newsletter.</p>
+                <p><a href="{{ site_url }}/accounts/profile/">Update your preferences</a></p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

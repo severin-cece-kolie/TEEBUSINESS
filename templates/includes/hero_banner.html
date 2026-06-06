@@ -1,0 +1,22 @@
+{% load static %}
+<section class="premium-hero premium-hero--{% if variant %}{{ variant }}{% else %}default{% endif %}" aria-label="{{ title }}">
+    <div class="premium-hero__media" aria-hidden="true">
+        {% if banner_image %}
+        <img src="{{ banner_image }}" alt="" loading="{% if eager_image %}eager{% else %}lazy{% endif %}" fetchpriority="{% if eager_image %}high{% else %}low{% endif %}" decoding="async">
+        {% else %}
+        <img src="{% static site_banner_image %}" alt="" loading="{% if eager_image %}eager{% else %}lazy{% endif %}" fetchpriority="{% if eager_image %}high{% else %}low{% endif %}" decoding="async">
+        {% endif %}
+    </div>
+    <div class="premium-hero__overlay" aria-hidden="true"></div>
+    <div class="premium-hero__content">
+        {% if title %}
+        <h1 class="font-barlow text-3xl font-black uppercase leading-none tracking-tight text-white md:text-5xl">{{ title }}</h1>
+        {% endif %}
+        {% if subtitle and not hide_subtitle %}
+        <p class="mx-auto mt-4 max-w-xl text-sm leading-6 text-white/70">{{ subtitle }}</p>
+        {% endif %}
+        {% if hero_cta_url %}
+        <a href="{{ hero_cta_url }}" class="btn-luxury mt-6 inline-flex items-center justify-center bg-white text-luxury-black hover:bg-luxury-grey">{{ hero_cta_label|default:"Shop Now" }}</a>
+        {% endif %}
+    </div>
+</section>

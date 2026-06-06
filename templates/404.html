@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container" style="padding: 120px 24px; text-align: center;">
+    <h1 style="font-size: 6rem; color: var(--accent-primary); margin-bottom: 16px;">404</h1>
+    <h2 style="margin-bottom: 24px;">Page introuvable</h2>
+    <p style="color: var(--text-secondary); margin-bottom: 40px;">La page que vous recherchez n'existe pas.</p>
+    <a href="{% url 'home' %}" class="btn btn-black" style="padding: 12px 32px; display: inline-block;">Retour à l'accueil</a>
+</div>
+{% endblock %}

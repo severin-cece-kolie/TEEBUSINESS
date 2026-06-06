@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to TEEBUSINESS</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f8f8;
+        }
+        .email-container {
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 40px 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #000;
+            text-decoration: none;
+        }
+        h1 {
+            font-size: 28px;
+            margin: 20px 0 10px;
+            color: #000;
+        }
+        .subtitle {
+            color: #666;
+            font-size: 16px;
+            margin: 10px 0 30px;
+        }
+        .content {
+            margin: 30px 0;
+            font-size: 15px;
+            line-height: 1.7;
+            color: #333;
+        }
+        .cta-button {
+            display: inline-block;
+            background-color: #000;
+            color: #ffffff;
+            padding: 12px 30px;
+            border-radius: 4px;
+            text-decoration: none;
+            margin: 20px 0;
+            font-weight: 600;
+        }
+        .cta-button:hover {
+            background-color: #333;
+        }
+        .features {
+            margin: 30px 0;
+            padding: 20px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .feature-item {
+            margin: 15px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+        .feature-item::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #000;
+            font-weight: bold;
+        }
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #f0f0f0;
+            text-align: center;
+            font-size: 13px;
+            color: #666;
+        }
+        .contact-info {
+            margin: 15px 0;
+            font-size: 13px;
+        }
+        .contact-info a {
+            color: #000;
+            text-decoration: none;
+        }
+        .contact-info a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            <div class="logo">TEEBUSINESS</div>
+        </div>
+
+        <h1>Welcome to TEEBUSINESS!</h1>
+        <p class="subtitle">Thank you for joining our premium footwear and streetwear community.</p>
+
+        <div class="content">
+            <p>Hi {{ user.first_name|default:user.username }},</p>
+            
+            <p>Your account has been successfully created. Welcome to TEEBUSINESS, where we curate the finest selection of premium footwear and streetwear essentials.</p>
+
+            <p>Here's what you can do with your account:</p>
+
+            <div class="features">
+                <div class="feature-item">Browse our exclusive collection of curated products</div>
+                <div class="feature-item">Save your favorite items to your wishlist</div>
+                <div class="feature-item">Track your orders in real-time</div>
+                <div class="feature-item">Manage your account and payment methods</div>
+                <div class="feature-item">Receive updates on new arrivals and special offers</div>
+            </div>
+
+            <p>
+                <a href="{{ site_url }}/accounts/dashboard/" class="cta-button">Go to Your Dashboard</a>
+            </p>
+
+            <p>If you have any questions or need assistance, our support team is here to help. Don't hesitate to reach out to us.</p>
+        </div>
+
+        <div class="footer">
+            <p>Thank you for choosing TEEBUSINESS. Happy shopping!</p>
+            
+            <div class="contact-info">
+                <p>
+                    <strong>TEEBUSINESS Customer Support</strong><br>
+                    <a href="mailto:kseverin189@gmail.com">kseverin189@gmail.com</a><br>
+                    <a href="tel:+224623707833">+224 623 70 78 33</a>
+                </p>
+            </div>
+
+            <p>&copy; 2026 TEEBUSINESS. All rights reserved.</p>
+            <p style="font-size: 12px; margin-top: 20px; color: #999;">
+                You received this email because you created an account with TEEBUSINESS.
+            </p>
+        </div>
+    </div>
+</body>
+</html>
