@@ -1,5 +1,5 @@
 # Django Core
-Django>=6.0.5,<7.0.0
+Django>=5.2.0,<6.0.0
 
 # Environment Variables
 python-dotenv>=1.0.0
@@ -29,5 +29,5 @@ python-dotenv>=1.0.0
 # Security
 # django-ratelimit>=4.1.0
 
-# Development Tools
-django-debug-toolbar>=4.2.0
+# Development Tools (comment out in production)
+# django-debug-toolbar>=4.2.0

@@ -28,14 +28,22 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-mg)^gdj^%gmiyos$3$l@9!1px2l%k2q-n)qf=m2k-svq0=gt)1')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG', 'True') == 'True'
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+
+# Raise error if DEBUG is True in production-like environment
+if not DEBUG and not os.environ.get('SECRET_KEY'):
+    raise ValueError("SECRET_KEY must be set in production when DEBUG=False")
 
 ALLOWED_HOSTS = os.environ.get(
     'DJANGO_ALLOWED_HOSTS',
     'localhost,127.0.0.1,testserver'
 ).split(',')
 
-ALLOWED_HOSTS.append('.ngrok-free.dev')
+# CSRF Trusted Origins for cross-origin requests
+CSRF_TRUSTED_ORIGINS = os.environ.get(
+    'CSRF_TRUSTED_ORIGINS',
+    'http://localhost,http://127.0.0.1'
+).split(',')
 
 # Application definition
 
@@ -259,15 +267,16 @@ CACHES = {
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
-    'handlers': {
-        'file': {
-            'level': 'INFO',
-            'class': 'logging.FileHandler',
-            'filename': BASE_DIR / 'logs' / 'django.log',
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {message}',
+            'style': '{',
         },
+    },
+    'handlers': {
         'console': {
-            'level': 'INFO',
             'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
         },
     },
     'root': {
@@ -281,12 +290,25 @@ LOGGING = {
             'propagate': False,
         },
         'accounts': {
-            'handlers': ['file', 'console'],
+            'handlers': ['console'],
             'level': 'INFO',
             'propagate': False,
         },
     },
 }
 
-# Create logs directory if it doesn't exist
-os.makedirs(BASE_DIR / 'logs', exist_ok=True)
+# File logging only in development (not on PythonAnywhere)
+if DEBUG:
+    try:
+        logs_dir = BASE_DIR / 'logs'
+        logs_dir.mkdir(exist_ok=True)
+        LOGGING['handlers']['file'] = {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'formatter': 'verbose',
+            'filename': logs_dir / 'django.log',
+        }
+        LOGGING['loggers']['accounts']['handlers'] = ['file', 'console']
+    except Exception:
+        # Silently fail if we can't create logs directory
+        pass

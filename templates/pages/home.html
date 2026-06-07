@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+
+{% block title %}TEEBUSINESS - Home{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="relative bg-luxury-black text-white py-20 md:py-32">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center">
+            <h1 class="text-4xl md:text-6xl font-bold mb-6">Welcome to TEEBUSINESS</h1>
+            <p class="text-xl md:text-2xl mb-8 text-gray-300">Discover Premium Fashion & Accessories</p>
+            <a href="{% url 'shop:catalog' %}" class="inline-block bg-white text-black px-8 py-4 rounded-full font-bold hover:bg-gray-200 transition">
+                Shop Now
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Products -->
+{% if featured_products %}
+<section class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-3xl font-bold text-center mb-12">Featured Products</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {% for product in featured_products %}
+            <div class="product-card">
+                <a href="{% url 'shop:product_detail' product.id %}">
+                    {% if product.images.first %}
+                    <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}" class="w-full h-64 object-cover rounded-lg">
+                    {% else %}
+                    <div class="w-full h-64 bg-gray-200 rounded-lg flex items-center justify-center">
+                        <span class="text-gray-400">No Image</span>
+                    </div>
+                    {% endif %}
+                    <h3 class="mt-4 text-lg font-semibold">{{ product.name }}</h3>
+                    <p class="text-gray-600">${{ product.price }}</p>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- New Arrivals -->
+{% if new_products %}
+<section class="py-16 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-3xl font-bold text-center mb-12">New Arrivals</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {% for product in new_products %}
+            <div class="product-card">
+                <a href="{% url 'shop:product_detail' product.id %}">
+                    {% if product.images.first %}
+                    <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}" class="w-full h-64 object-cover rounded-lg">
+                    {% else %}
+                    <div class="w-full h-64 bg-gray-200 rounded-lg flex items-center justify-center">
+                        <span class="text-gray-400">No Image</span>
+                    </div>
+                    {% endif %}
+                    <h3 class="mt-4 text-lg font-semibold">{{ product.name }}</h3>
+                    <p class="text-gray-600">${{ product.price }}</p>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Best Sellers -->
+{% if best_sellers %}
+<section class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-3xl font-bold text-center mb-12">Best Sellers</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {% for product in best_sellers %}
+            <div class="product-card">
+                <a href="{% url 'shop:product_detail' product.id %}">
+                    {% if product.images.first %}
+                    <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}" class="w-full h-64 object-cover rounded-lg">
+                    {% else %}
+                    <div class="w-full h-64 bg-gray-200 rounded-lg flex items-center justify-center">
+                        <span class="text-gray-400">No Image</span>
+                    </div>
+                    {% endif %}
+                    <h3 class="mt-4 text-lg font-semibold">{{ product.name }}</h3>
+                    <p class="text-gray-600">${{ product.price }}</p>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Brands -->
+{% if brands %}
+<section class="py-16 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-3xl font-bold text-center mb-12">Our Brands</h2>
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-8">
+            {% for brand in brands %}
+            <div class="text-center">
+                <h3 class="font-semibold">{{ brand.name }}</h3>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Newsletter -->
+{% include 'includes/newsletter_section.html' %}
+{% endblock %}

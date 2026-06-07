@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - TEEBUSINESS{% endblock %}
+
+{% block content %}
+<section class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h1 class="text-4xl font-bold text-center mb-8">Welcome, {{ user.username }}!</h1>
+        
+        <div class="max-w-3xl mx-auto">
+            <div class="bg-gray-50 p-8 rounded-lg">
+                <h2 class="text-2xl font-semibold mb-4">Account Dashboard</h2>
+                <p class="text-gray-600 mb-6">Manage your account settings, view your orders, and more.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <a href="{% url 'profile' %}" class="block p-6 bg-white rounded-lg shadow hover:shadow-md transition">
+                        <h3 class="font-semibold mb-2">Profile Settings</h3>
+                        <p class="text-gray-600 text-sm">Update your personal information</p>
+                    </a>
+                    <a href="{% url 'orders' %}" class="block p-6 bg-white rounded-lg shadow hover:shadow-md transition">
+                        <h3 class="font-semibold mb-2">My Orders</h3>
+                        <p class="text-gray-600 text-sm">View your order history</p>
+                    </a>
+                    <a href="{% url 'wishlist' %}" class="block p-6 bg-white rounded-lg shadow hover:shadow-md transition">
+                        <h3 class="font-semibold mb-2">Wishlist</h3>
+                        <p class="text-gray-600 text-sm">View your saved items</p>
+                    </a>
+                    <a href="{% url 'shop:catalog' %}" class="block p-6 bg-white rounded-lg shadow hover:shadow-md transition">
+                        <h3 class="font-semibold mb-2">Shop</h3>
+                        <p class="text-gray-600 text-sm">Browse our products</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}My Orders - TEEBUSINESS{% endblock %}
+
+{% block content %}
+<section class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h1 class="text-4xl font-bold text-center mb-8">My Orders</h1>
+        
+        <div class="max-w-3xl mx-auto">
+            <div class="bg-gray-50 p-8 rounded-lg">
+                <p class="text-gray-600">You have no orders yet.</p>
+                <a href="{% url 'shop:catalog' %}" class="inline-block mt-4 bg-black text-white px-6 py-3 rounded-full font-bold hover:bg-gray-800 transition">
+                    Start Shopping
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
