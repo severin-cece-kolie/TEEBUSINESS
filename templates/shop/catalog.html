@@ -36,7 +36,7 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {% for product in products %}
             <div class="product-card">
-                <a href="{% url 'shop:product_detail' product.id %}">
+                <a href="{% url 'product_detail' product.id %}">
                     {% if product.images.first %}
                     <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}" class="w-full h-64 object-cover rounded-lg">
                     {% else %}

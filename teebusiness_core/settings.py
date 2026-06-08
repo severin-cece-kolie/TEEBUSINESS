@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-mg)^gdj^%gmiyos$3$l@9!1px2l%k2q-n)qf=m2k-svq0=gt)1')
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-change-this-in-production-use-get-random-secret-key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
@@ -39,11 +39,10 @@ ALLOWED_HOSTS = os.environ.get(
     'localhost,127.0.0.1,testserver'
 ).split(',')
 
-# CSRF Trusted Origins for cross-origin requests
-CSRF_TRUSTED_ORIGINS = os.environ.get(
-    'CSRF_TRUSTED_ORIGINS',
-    'http://localhost,http://127.0.0.1'
-).split(',')
+ALLOWED_HOSTS.extend([
+    'teebusiness.pythonanywhere.com',
+    '.ngrok-free.dev',
+])
 
 # Application definition
 
@@ -161,57 +160,40 @@ LOGOUT_REDIRECT_URL = 'home'
 
 # ===== EMAIL CONFIGURATION =====
 # Email Backend Selection
-EMAIL_BACKEND_CHOICE = os.environ.get('EMAIL_BACKEND', 'console')
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
-if EMAIL_BACKEND_CHOICE == 'console':
-    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-elif EMAIL_BACKEND_CHOICE == 'smtp':
-    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-elif EMAIL_BACKEND_CHOICE == 'sendgrid':
-    EMAIL_BACKEND = 'django_sendgrid.backends.SendgridBackend'
-elif EMAIL_BACKEND_CHOICE == 'mailgun':
-    EMAIL_BACKEND = 'anymail.backends.mailgun.EmailBackend'
-elif EMAIL_BACKEND_CHOICE == 'ses':
-    EMAIL_BACKEND = 'django_ses.SESBackend'
-elif EMAIL_BACKEND_CHOICE == 'brevo':
-    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-else:
-    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 # SMTP Configuration (Gmail, Brevo, etc.)
 EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.gmail.com')
 EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 587))
 EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'True') == 'True'
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', 'kseverin189@gmail.com')
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', 'supportteebusiness@gmail.com')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
-DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'kseverin189@gmail.com')
-SERVER_EMAIL = os.environ.get('SERVER_EMAIL', 'kseverin189@gmail.com')
+DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'supportteebusiness@gmail.com')
+SERVER_EMAIL = os.environ.get('SERVER_EMAIL', 'supportteebusiness@gmail.com')
 
-# SendGrid Configuration
-SENDGRID_API_KEY = os.environ.get('SENDGRID_API_KEY', '')
+# SMTP Configuration (Gmail, Brevo, etc.)
+EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.gmail.com')
+EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 587))
+EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'True') == 'True'
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
+DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'supportteebusiness@gmail.com')
+SERVER_EMAIL = os.environ.get('SERVER_EMAIL', 'supportteebusiness@gmail.com')
 
-# Mailgun Configuration
-MAILGUN_API_KEY = os.environ.get('MAILGUN_API_KEY', '')
-MAILGUN_DOMAIN = os.environ.get('MAILGUN_DOMAIN', '')
-
-# Amazon SES Configuration
-AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID', '')
-AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY', '')
-AWS_SES_REGION = os.environ.get('AWS_SES_REGION', 'us-east-1')
-
-# Brevo Configuration
-BREVO_API_KEY = os.environ.get('BREVO_API_KEY', '')
 
 # Contact Information Constants
 BUSINESS_PHONE = os.environ.get('BUSINESS_PHONE', '+224 623 70 78 33')
-BUSINESS_EMAIL = os.environ.get('BUSINESS_EMAIL', 'kseverin189@gmail.com')
+BUSINESS_EMAIL = os.environ.get('BUSINESS_EMAIL', 'supportteebusiness@gmail.com')
 BUSINESS_NAME = os.environ.get('BUSINESS_NAME', 'TEEBUSINESS')
-
-# ===== SMS CONFIGURATION =====
-SMS_ENABLED = os.environ.get('SMS_ENABLED', 'False') == 'True'
-TWILIO_ACCOUNT_SID = os.environ.get('TWILIO_ACCOUNT_SID', '')
-TWILIO_AUTH_TOKEN = os.environ.get('TWILIO_AUTH_TOKEN', '')
-TWILIO_PHONE_NUMBER = os.environ.get('TWILIO_PHONE_NUMBER', '+224 623 70 78 33')
 
 # ===== SECURITY SETTINGS =====
 CSRF_COOKIE_SECURE = not DEBUG

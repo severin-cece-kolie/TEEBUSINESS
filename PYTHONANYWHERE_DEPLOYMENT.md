@@ -17,25 +17,28 @@ Dans le tableau de bord PythonAnywhere, allez dans:
 
 ```bash
 DEBUG=False
-SECRET_KEY=p023!0$)+=$8ktw6%54zj&hhsfx!y@&2rvy59#a17*!_rq!#+%
-DJANGO_ALLOWED_HOSTS=teebusiness.pythonanywhere.com
-EMAIL_BACKEND=smtp
+# Generate a new secret key:
+# python manage.py shell -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
+SECRET_KEY=<YOUR_NEW_SECRET_KEY_HERE>
+DJANGO_ALLOWED_HOSTS=yourusername.pythonanywhere.com,www.yourusername.pythonanywhere.com
+EMAIL_BACKEND=console
 EMAIL_HOST=smtp.gmail.com
 EMAIL_PORT=587
 EMAIL_USE_TLS=True
-EMAIL_HOST_USER=supportteebusiness@gmail.com
-EMAIL_HOST_PASSWORD=xjpc oslx kbki okzu
-DEFAULT_FROM_EMAIL=supportteebusiness@gmail.com
-SERVER_EMAIL=supportteebusiness@gmail.com
+EMAIL_HOST_USER=your-email@gmail.com
+EMAIL_HOST_PASSWORD=your-app-password
+DEFAULT_FROM_EMAIL=your-email@gmail.com
+SERVER_EMAIL=your-email@gmail.com
 BUSINESS_NAME=TEEBUSINESS
-BUSINESS_PHONE=+224 623 70 78 33
-BUSINESS_EMAIL=supportteebusiness@gmail.com
-SECURE_SSL_REDIRECT=True
-SECURE_HSTS_SECONDS=31536000
-SECURE_HSTS_INCLUDE_SUBDOMAINS=True
-SECURE_HSTS_PRELOAD=True
-SESSION_COOKIE_SECURE=True
-CSRF_COOKIE_SECURE=True
+BUSINESS_PHONE=+1 (555) 000-0000
+BUSINESS_EMAIL=contact@teebusiness.com
+# For PythonAnywhere FREE tier (no native SSL support):
+SECURE_SSL_REDIRECT=False
+SECURE_HSTS_SECONDS=0
+SECURE_HSTS_INCLUDE_SUBDOMAINS=False
+SECURE_HSTS_PRELOAD=False
+SESSION_COOKIE_SECURE=False
+CSRF_COOKIE_SECURE=False
 RATELIMIT_ENABLE=True
 MAX_LOGIN_ATTEMPTS=5
 LOCKOUT_DURATION=900

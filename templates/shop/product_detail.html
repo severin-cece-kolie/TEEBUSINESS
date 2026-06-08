@@ -44,7 +44,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                 {% for similar in similar_products %}
                 <div class="product-card">
-                    <a href="{% url 'shop:product_detail' similar.id %}">
+                    <a href="{% url 'product_detail' similar.id %}">
                         {% if similar.images.first %}
                         <img src="{{ similar.images.first.image.url }}" alt="{{ similar.name }}" class="w-full h-64 object-cover rounded-lg">
                         {% else %}
