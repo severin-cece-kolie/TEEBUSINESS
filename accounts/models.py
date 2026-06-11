@@ -164,6 +164,7 @@ class LoginSecurityLog(models.Model):
     EVENT_TYPE_CHOICES = [
         ('login_success', 'Login Success'),
         ('login_failed', 'Login Failed'),
+        ('logout', 'Logout'),
         ('account_locked', 'Account Locked'),
         ('account_unlocked', 'Account Unlocked'),
         ('password_changed', 'Password Changed'),

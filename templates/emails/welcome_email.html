@@ -1,0 +1,56 @@
+{% load static %}<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Welcome to TEEBUSINESS</title>
+<style>
+  body{font-family:Arial,sans-serif;line-height:1.6;color:#333;margin:0;padding:0;background:#f4f4f4}
+  .wrapper{max-width:600px;margin:30px auto;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.08)}
+  .header{background:#0a0a0a;padding:30px 40px;text-align:center}
+  .header h1{color:#fff;margin:0;font-size:28px;letter-spacing:2px}
+  .header p{color:#aaa;margin:4px 0 0;font-size:13px}
+  .body{padding:40px}
+  .body h2{color:#0a0a0a;margin-top:0}
+  .highlight{background:#f6f5f2;border-left:4px solid #0a0a0a;padding:16px 20px;border-radius:4px;margin:24px 0}
+  .btn{display:inline-block;background:#0a0a0a;color:#fff;padding:14px 32px;text-decoration:none;border-radius:6px;font-weight:bold;margin-top:16px}
+  .feature-row{display:flex;gap:12px;margin:24px 0;flex-wrap:wrap}
+  .feature{flex:1;min-width:140px;background:#f6f5f2;border-radius:8px;padding:16px;text-align:center}
+  .feature span{font-size:24px}
+  .feature p{margin:8px 0 0;font-size:13px;color:#555}
+  .footer{background:#f6f5f2;padding:24px 40px;text-align:center;font-size:12px;color:#888}
+  .footer a{color:#555;text-decoration:none}
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <div class="header">
+    <h1>TEEBUSINESS</h1>
+    <p>Premium Fashion & Style</p>
+  </div>
+  <div class="body">
+    <h2>Welcome, {{ user.first_name|default:user.username }}!</h2>
+    <p>Your account has been verified and is now active. We're thrilled to have you as part of the TEEBUSINESS community.</p>
+
+    <div class="highlight">
+      <strong>Your account details</strong><br>
+      Username: <strong>{{ user.username }}</strong><br>
+      Email: <strong>{{ user.email }}</strong>
+    </div>
+
+    <p>Here's what you can do now:</p>
+    <div class="feature-row">
+      <div class="feature"><span>👕</span><p>Browse our latest collections</p></div>
+      <div class="feature"><span>❤️</span><p>Save items to your wishlist</p></div>
+      <div class="feature"><span>📦</span><p>Track your orders in real time</p></div>
+    </div>
+
+    <a href="{{ site_url }}{% url 'catalog' %}" class="btn">Start Shopping</a>
+  </div>
+  <div class="footer">
+    <p>Need help? <a href="mailto:supportteebusiness@gmail.com">supportteebusiness@gmail.com</a> &nbsp;|&nbsp; +224 623 70 78 33</p>
+    <p>&copy; {% now "Y" %} TEEBUSINESS. All rights reserved.</p>
+  </div>
+</div>
+</body>
+</html>

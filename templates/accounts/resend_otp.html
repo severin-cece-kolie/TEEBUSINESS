@@ -1,52 +1,39 @@
 {% extends 'base_auth.html' %}
 
-{% block title %}Resend OTP - TEEBUSINESS{% endblock %}
+{% block title %}Resend Code — TEEBUSINESS{% endblock %}
 
-{% block content %}
-<div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-md w-full space-y-8">
-        <div>
-            <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
-                Resend Verification Code
-            </h2>
-            <p class="mt-2 text-center text-sm text-gray-600">
-                Enter your email address to receive a new verification code
-            </p>
-        </div>
-        
-        {% if messages %}
-            {% for message in messages %}
-                <div class="rounded-md p-4 {% if message.tags == 'error' %}bg-red-50{% elif message.tags == 'success' %}bg-green-50{% else %}bg-blue-50{% endif %}">
-                    <p class="text-sm font-medium {% if message.tags == 'error' %}text-red-800{% elif message.tags == 'success' %}text-green-800{% else %}text-blue-800{% endif %}">
-                        {{ message }}
-                    </p>
-                </div>
-            {% endfor %}
-        {% endif %}
-        
-        <form class="mt-8 space-y-6" method="post">
-            {% csrf_token %}
-            
-            <div>
-                <label for="email" class="sr-only">Email Address</label>
-                {{ form.email }}
-                {% if form.email.errors %}
-                    <p class="mt-2 text-sm text-red-600">{{ form.email.errors.0 }}</p>
-                {% endif %}
-            </div>
-            
-            <div>
-                <button type="submit" class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-black hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black">
-                    Send New Code
-                </button>
-            </div>
-        </form>
-        
-        <div class="text-center">
-            <a href="{% url 'login' %}" class="font-medium text-black hover:text-gray-800">
-                Back to Login
-            </a>
-        </div>
-    </div>
+{% block brand_eyebrow %}No code?{% endblock %}
+{% block brand_headline %}Send a<br>fresh code.{% endblock %}
+{% block brand_sub %}Enter your email and we’ll send you a new 6-digit verification code right away.{% endblock %}
+
+{% block form_panel %}
+<div class="mb-8">
+  <h2 class="font-barlow text-3xl font-black uppercase tracking-tight">Resend code</h2>
+  <p class="mt-2 text-sm text-luxury-mid">Enter your email to receive a new verification code.</p>
+</div>
+
+{% if messages %}
+  {% for message in messages %}
+  <div class="mb-4 rounded-xl border px-4 py-3 text-sm {% if message.tags == 'success' %}border-green-200 bg-green-50 text-green-800{% elif message.tags == 'error' %}border-red-200 bg-red-50 text-red-700{% else %}border-luxury-line bg-luxury-grey text-luxury-black{% endif %}">
+    {{ message }}
+  </div>
+  {% endfor %}
+{% endif %}
+
+<form method="post" class="space-y-5" novalidate>
+  {% csrf_token %}
+  <div>
+    <label for="{{ form.email.id_for_label }}" class="mb-1.5 block text-xs font-semibold uppercase tracking-[0.12em] text-luxury-mid">Email</label>
+    {{ form.email }}
+    {% if form.email.errors %}<p class="mt-1.5 text-xs text-red-600">{{ form.email.errors.0 }}</p>{% endif %}
+  </div>
+
+  <button type="submit" class="w-full rounded-xl bg-luxury-black py-3.5 text-sm font-semibold uppercase tracking-[0.15em] text-white transition hover:bg-luxury-black/90 focus:outline-none focus:ring-2 focus:ring-luxury-black/20 active:scale-[0.99]">
+    Send new code
+  </button>
+</form>
+
+<div class="mt-6 text-center text-sm text-luxury-mid">
+  <a href="{% url 'login' %}" class="font-semibold text-luxury-black underline-offset-4 hover:underline">Back to sign in</a>
 </div>
 {% endblock %}

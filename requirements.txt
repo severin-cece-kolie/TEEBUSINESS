@@ -28,6 +28,12 @@ python-dotenv>=1.0.0
 
 # Security
 # django-ratelimit>=4.1.0
+# Brute-force protection (optional upgrade — the project ships with an
+# equivalent built-in: account lockout + IP tracking + LoginSecurityLog).
+# To use django-axes instead, install it and add 'axes' to INSTALLED_APPS,
+# 'axes.middleware.AxesMiddleware' to MIDDLEWARE, and the AxesBackend to
+# AUTHENTICATION_BACKENDS, then run migrations.
+# django-axes>=6.4.0
 
 # Development Tools (comment out in production)
 # django-debug-toolbar>=4.2.0

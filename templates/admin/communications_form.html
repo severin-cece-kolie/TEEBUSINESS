@@ -1,0 +1,195 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block title %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block extrahead %}
+{{ block.super }}
+<style>
+  #comm-form{max-width:860px}
+  .back-link{display:inline-block;margin-bottom:20px;color:#447e9b;font-size:13px;text-decoration:none}
+  .back-link:hover{text-decoration:underline}
+  .form-section{background:#fff;border:1px solid #e8e8e8;border-radius:8px;padding:28px;margin-bottom:20px}
+  .form-section h3{margin:0 0 18px;font-size:15px;color:#333;border-bottom:1px solid #f0f0f0;padding-bottom:10px}
+  .field-row{margin-bottom:16px}
+  .field-row label{display:block;font-size:13px;font-weight:600;color:#555;margin-bottom:6px}
+  .field-row input[type=text],
+  .field-row textarea{width:100%;box-sizing:border-box;border:1px solid #ccc;border-radius:6px;padding:10px 12px;font-size:14px;font-family:inherit;resize:vertical}
+  .field-row input:focus,.field-row textarea:focus{outline:none;border-color:#447e9b;box-shadow:0 0 0 2px rgba(68,126,155,.15)}
+  .char-counter{font-size:11px;color:#999;text-align:right;margin-top:3px}
+  .char-counter.warn{color:#e53e3e}
+  .user-table-wrap{max-height:320px;overflow-y:auto;border:1px solid #e8e8e8;border-radius:6px}
+  table.user-table{width:100%;border-collapse:collapse;font-size:13px}
+  table.user-table thead th{background:#f8f9fa;padding:10px 12px;text-align:left;position:sticky;top:0;z-index:1;border-bottom:1px solid #e8e8e8}
+  table.user-table tbody tr:hover{background:#f8f9fa}
+  table.user-table tbody td{padding:9px 12px;border-bottom:1px solid #f0f0f0}
+  .select-all-row{padding:10px 12px;background:#f0f7ff;border-bottom:1px solid #e8e8e8;font-size:13px}
+  .btn-send{background:#447e9b;color:#fff;border:none;padding:12px 32px;border-radius:6px;font-size:14px;font-weight:600;cursor:pointer}
+  .btn-send:hover{background:#376687}
+  .btn-cancel{background:#f8f9fa;color:#555;border:1px solid #ccc;padding:12px 24px;border-radius:6px;font-size:14px;cursor:pointer;text-decoration:none;display:inline-block;margin-left:10px}
+  .recipient-count{font-size:12px;color:#777;margin-left:8px}
+  .hint{font-size:12px;color:#999;margin-top:4px}
+  .preview-area{border:1px solid #e8e8e8;border-radius:6px;padding:16px;min-height:80px;background:#fafafa;font-size:13px;color:#555}
+</style>
+{% endblock %}
+
+{% block content %}
+<div id="content-main">
+  <div id="comm-form">
+
+    <a href="{% url 'admin:communications_index' %}" class="back-link">&larr; Back to Communications Center</a>
+
+    <h1>{{ title }}</h1>
+
+    {% if messages %}
+      {% for msg in messages %}
+      <ul class="messagelist"><li class="{{ msg.tags }}">{{ msg }}</li></ul>
+      {% endfor %}
+    {% endif %}
+
+    <form method="post" id="main-form">
+      {% csrf_token %}
+
+      {# ── Email subject + body (for 'email' action) ─────────────────── #}
+      {% if action == 'email' %}
+      <div class="form-section">
+        <h3>Email Content</h3>
+        <div class="field-row">
+          <label for="id_subject">Subject *</label>
+          <input type="text" name="subject" id="id_subject" required maxlength="255"
+                 placeholder="e.g. Exclusive Summer Sale — Up to 40% Off">
+        </div>
+        <div class="field-row">
+          <label for="id_message">HTML Message *</label>
+          <textarea name="message" id="id_message" rows="10" required
+                    placeholder="Paste your HTML email content here, or write plain text…"></textarea>
+          <p class="hint">Supports HTML. Use &lt;p&gt;, &lt;a&gt;, &lt;strong&gt;, etc.</p>
+        </div>
+      </div>
+      {% endif %}
+
+      {# ── SMS message (for 'sms' action) ──────────────────────────────── #}
+      {% if action == 'sms' %}
+      <div class="form-section">
+        <h3>SMS Message</h3>
+        <div class="field-row">
+          <label for="id_message">Message * <span class="recipient-count">(max {{ char_limit }} characters)</span></label>
+          <textarea name="message" id="id_message" rows="4" required
+                    maxlength="{{ char_limit }}"
+                    placeholder="e.g. TEEBUSINESS: 20% off this weekend. Shop now: teebusiness.com"></textarea>
+          <div class="char-counter" id="char-counter">0 / {{ char_limit }}</div>
+        </div>
+      </div>
+      {% endif %}
+
+      {# ── Newsletter info (for 'newsletter' action) ────────────────────── #}
+      {% if action == 'newsletter' %}
+      <div class="form-section">
+        <h3>Newsletter</h3>
+        <p style="color:#555;font-size:13px">
+          This will send the standard newsletter template to the selected users.
+          The email includes any featured products from your catalogue.
+        </p>
+      </div>
+      {% endif %}
+
+      {# ── Recipient selector ───────────────────────────────────────────── #}
+      <div class="form-section">
+        <h3>
+          Recipients
+          <span class="recipient-count" id="selected-count">(0 selected)</span>
+        </h3>
+
+        <div class="select-all-row">
+          <label>
+            <input type="checkbox" id="select-all-checkbox">
+            <strong>Select all {{ users|length }} recipient(s)</strong>
+          </label>
+          <input type="hidden" name="select_all" id="select_all_hidden" value="0">
+        </div>
+
+        <div class="user-table-wrap">
+          <table class="user-table">
+            <thead>
+              <tr>
+                <th style="width:36px"></th>
+                <th>Username</th>
+                <th>Email</th>
+                {% if action == 'sms' %}<th>Phone</th>{% endif %}
+              </tr>
+            </thead>
+            <tbody>
+              {% for user in users %}
+              <tr>
+                <td><input type="checkbox" name="users" value="{{ user.id }}" class="user-cb"></td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.email }}</td>
+                {% if action == 'sms' %}<td>{{ user.phone_number|default:"—" }}</td>{% endif %}
+              </tr>
+              {% empty %}
+              <tr><td colspan="4" style="text-align:center;color:#999;padding:20px">No eligible recipients found.</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {# ── Actions ──────────────────────────────────────────────────────── #}
+      <div style="display:flex;align-items:center;gap:12px;margin-top:8px">
+        <button type="submit" class="btn-send">
+          {% if action == 'sms' %}Send SMS{% elif action == 'newsletter' %}Send Newsletter{% else %}Send Email{% endif %}
+        </button>
+        <a href="{% url 'admin:communications_index' %}" class="btn-cancel">Cancel</a>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+<script>
+(function(){
+  var allCb    = document.getElementById('select-all-checkbox');
+  var hiddenAl = document.getElementById('select_all_hidden');
+  var userCbs  = document.querySelectorAll('.user-cb');
+  var countEl  = document.getElementById('selected-count');
+  {% if action == 'sms' %}
+  var msgArea  = document.getElementById('id_message');
+  var charCtr  = document.getElementById('char-counter');
+  var limit    = {{ char_limit }};
+  if (msgArea && charCtr) {
+    msgArea.addEventListener('input', function(){
+      var len = msgArea.value.length;
+      charCtr.textContent = len + ' / ' + limit;
+      charCtr.classList.toggle('warn', len > limit * 0.9);
+    });
+  }
+  {% endif %}
+
+  function updateCount(){
+    var n = document.querySelectorAll('.user-cb:checked').length;
+    if (hiddenAl.value === '1') {
+      countEl.textContent = '(all {{ users|length }} selected)';
+    } else {
+      countEl.textContent = '(' + n + ' selected)';
+    }
+  }
+
+  if (allCb) {
+    allCb.addEventListener('change', function(){
+      var checked = allCb.checked;
+      hiddenAl.value = checked ? '1' : '0';
+      userCbs.forEach(function(cb){ cb.checked = checked; cb.disabled = checked; });
+      updateCount();
+    });
+  }
+
+  userCbs.forEach(function(cb){
+    cb.addEventListener('change', function(){
+      hiddenAl.value = '0';
+      if (allCb) allCb.checked = false;
+      updateCount();
+    });
+  });
+})();
+</script>
+{% endblock %}

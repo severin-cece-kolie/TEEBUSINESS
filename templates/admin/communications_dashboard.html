@@ -1,0 +1,51 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block title %}Communications Center | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block extrahead %}
+{{ block.super }}
+<style>
+  .comm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:20px;margin-top:24px}
+  .comm-card{background:#fff;border:1px solid #e8e8e8;border-radius:10px;padding:28px 24px;text-decoration:none;color:#333;transition:box-shadow .2s,transform .2s;display:block}
+  .comm-card:hover{box-shadow:0 4px 20px rgba(0,0,0,.12);transform:translateY(-2px);text-decoration:none}
+  .comm-card-icon{width:48px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:14px}
+  .comm-card h3{margin:0 0 6px;font-size:16px;color:#1a1a1a}
+  .comm-card p{margin:0;font-size:13px;color:#777;line-height:1.4}
+  .comm-stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:16px;margin-bottom:28px}
+  .stat-box{background:#f8f9fa;border-radius:8px;padding:18px 20px}
+  .stat-box .val{font-size:28px;font-weight:bold;color:#1a1a1a}
+  .stat-box .lbl{font-size:12px;color:#777;text-transform:uppercase;letter-spacing:.5px;margin-top:4px}
+  #content-main h1{margin-bottom:8px}
+  .breadcrumbs a,.breadcrumbs{font-size:13px}
+</style>
+{% endblock %}
+
+{% block content %}
+<div id="content-main">
+  <h1>{% trans "Communications Center" %}</h1>
+  <p style="color:#777;margin-bottom:28px">Send newsletters, promotional emails &amp; SMS directly from the admin panel.</p>
+
+  {% if messages %}
+    {% for msg in messages %}
+    <div class="messagelist"><p class="{{ msg.tags }}">{{ msg }}</p></div>
+    {% endfor %}
+  {% endif %}
+
+  {# Quick stats #}
+  {% block comm_stats %}{% endblock %}
+
+  {# Action cards #}
+  <div class="comm-grid">
+    {% for action in actions %}
+    <a href="{{ action.url }}" class="comm-card">
+      <div class="comm-card-icon" style="background:{{ action.color }}20">
+        <span style="color:{{ action.color }}">&#9993;</span>
+      </div>
+      <h3>{{ action.name }}</h3>
+      <p>{{ action.description }}</p>
+    </a>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

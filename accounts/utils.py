@@ -154,20 +154,22 @@ def send_otp_email(user, otp, request=None):
 
 def get_client_ip(request):
     """
-    Get client IP address from request.
-    
-    Args:
-        request: HttpRequest object
-    
-    Returns:
-        str: Client IP address
+    Get the real client IP, honouring Cloudflare and reverse proxies.
+
+    Order of precedence:
+      1. CF-Connecting-IP  (set by Cloudflare — the true visitor IP)
+      2. X-Forwarded-For   (first hop in the chain)
+      3. REMOTE_ADDR       (direct connection)
     """
+    cf_ip = request.META.get('HTTP_CF_CONNECTING_IP')
+    if cf_ip:
+        return cf_ip.strip()
+
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
     if x_forwarded_for:
-        ip = x_forwarded_for.split(',')[0]
-    else:
-        ip = request.META.get('REMOTE_ADDR')
-    return ip
+        return x_forwarded_for.split(',')[0].strip()
+
+    return request.META.get('REMOTE_ADDR')
 
 
 def log_security_event(user, event_type, request=None, details=None):

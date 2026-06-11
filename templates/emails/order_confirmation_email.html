@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Order Confirmation - TEEBUSINESS</title>
+<style>
+  body{font-family:Arial,sans-serif;line-height:1.6;color:#333;margin:0;padding:0;background:#f4f4f4}
+  .wrapper{max-width:600px;margin:30px auto;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.08)}
+  .header{background:#0a0a0a;padding:30px 40px;text-align:center}
+  .header h1{color:#fff;margin:0;font-size:28px;letter-spacing:2px}
+  .header p{color:#aaa;margin:4px 0 0;font-size:13px}
+  .body{padding:40px}
+  .body h2{color:#0a0a0a;margin-top:0}
+  .order-badge{background:#f6f5f2;border:2px solid #0a0a0a;border-radius:8px;padding:16px 24px;text-align:center;margin:24px 0}
+  .order-badge span{display:block;font-size:12px;color:#777;text-transform:uppercase;letter-spacing:1px}
+  .order-badge strong{font-size:22px;color:#0a0a0a}
+  table{width:100%;border-collapse:collapse;margin:20px 0}
+  thead th{background:#0a0a0a;color:#fff;padding:10px 14px;text-align:left;font-size:13px}
+  tbody td{padding:12px 14px;border-bottom:1px solid #e8e4dc;font-size:14px}
+  .total-row td{font-weight:bold;font-size:15px;background:#f6f5f2}
+  .btn{display:inline-block;background:#0a0a0a;color:#fff;padding:14px 32px;text-decoration:none;border-radius:6px;font-weight:bold;margin-top:8px}
+  .info{background:#e8f4fd;border-left:4px solid #3b82f6;padding:14px 18px;border-radius:4px;margin:20px 0;font-size:13px}
+  .footer{background:#f6f5f2;padding:24px 40px;text-align:center;font-size:12px;color:#888}
+  .footer a{color:#555;text-decoration:none}
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <div class="header">
+    <h1>TEEBUSINESS</h1>
+    <p>Order Confirmation</p>
+  </div>
+  <div class="body">
+    <h2>Thank you for your order, {{ order.user.first_name|default:order.user.username }}!</h2>
+    <p>Your order has been received and is being processed. You will receive another email when it ships.</p>
+
+    <div class="order-badge">
+      <span>Order Number</span>
+      <strong>#{{ order.order_number }}</strong>
+    </div>
+
+    {% if order.items.all %}
+    <table>
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th style="text-align:center">Qty</th>
+          <th style="text-align:right">Price</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in order.items.all %}
+        <tr>
+          <td>{{ item.product.name }}{% if item.size %} &mdash; Size {{ item.size }}{% endif %}</td>
+          <td style="text-align:center">{{ item.quantity }}</td>
+          <td style="text-align:right">{{ item.total_price }} GNF</td>
+        </tr>
+        {% endfor %}
+        <tr class="total-row">
+          <td colspan="2">Total</td>
+          <td style="text-align:right">{{ order.total_amount }} GNF</td>
+        </tr>
+      </tbody>
+    </table>
+    {% endif %}
+
+    <div class="info">
+      We will notify you when your order ships. You can also track it in your account.
+    </div>
+
+    <a href="{{ site_url }}{% url 'orders' %}" class="btn">View My Orders</a>
+  </div>
+  <div class="footer">
+    <p>Questions? <a href="mailto:supportteebusiness@gmail.com">supportteebusiness@gmail.com</a> &nbsp;|&nbsp; +224 623 70 78 33</p>
+    <p>&copy; {% now "Y" %} TEEBUSINESS. All rights reserved.</p>
+  </div>
+</div>
+</body>
+</html>

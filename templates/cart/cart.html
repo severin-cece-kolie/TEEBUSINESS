@@ -1,20 +1,102 @@
 {% extends 'base.html' %}
+{% load currency_tags %}
 
-{% block title %}Shopping Cart - TEEBUSINESS{% endblock %}
+{% block title %}Your Cart — TEEBUSINESS{% endblock %}
 
 {% block content %}
-<section class="py-16 bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 class="text-4xl font-bold text-center mb-8">Shopping Cart</h1>
-        
-        <div class="max-w-3xl mx-auto">
-            <div class="bg-gray-50 p-8 rounded-lg">
-                <p class="text-gray-600">Your cart is currently empty.</p>
-                <a href="{% url 'catalog' %}" class="inline-block mt-4 bg-black text-white px-6 py-3 rounded-full font-bold hover:bg-gray-800 transition">
-                    Continue Shopping
-                </a>
+<section class="bg-white py-10 md:py-16">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <h1 class="mb-8 font-barlow text-3xl font-black uppercase tracking-tight md:text-4xl">Your cart</h1>
+
+    {% if messages %}
+      {% for message in messages %}
+      <div class="mb-4 rounded-xl border px-4 py-3 text-sm {% if message.tags == 'success' %}border-green-200 bg-green-50 text-green-800{% else %}border-red-200 bg-red-50 text-red-700{% endif %}">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+
+    {% if groups %}
+    <div class="grid gap-10 lg:grid-cols-3">
+      <!-- Lines -->
+      <div class="lg:col-span-2">
+        <div class="divide-y divide-luxury-line border-y border-luxury-line">
+          {% for group in groups %}
+          <div class="py-6">
+            <div class="flex gap-4">
+              <a href="{% url 'product_detail' group.product.id %}" class="h-24 w-24 flex-shrink-0 overflow-hidden rounded-xl border border-luxury-line bg-luxury-grey/40">
+                {% if group.product.images.first %}
+                <img src="{{ group.product.images.first.image.url }}" alt="{{ group.product.name }}" class="h-full w-full object-cover">
+                {% endif %}
+              </a>
+              <div class="min-w-0 flex-1">
+                <a href="{% url 'product_detail' group.product.id %}" class="font-barlow text-lg font-bold uppercase tracking-tight hover:text-luxury-mid">{{ group.product.name }}</a>
+                <p class="text-xs uppercase tracking-widest text-luxury-mid">{{ group.product.discounted_price|convert_price:request }} / pair</p>
+
+                <!-- Per-size rows (never merged) -->
+                <div class="mt-3 space-y-2.5">
+                  {% for line in group.lines %}
+                  <div class="flex flex-wrap items-center gap-3 rounded-xl bg-luxury-grey/40 px-3 py-2.5">
+                    <span class="inline-flex h-7 min-w-[3.5rem] items-center justify-center rounded-md bg-white px-2 text-xs font-bold uppercase tracking-wide">Size {{ line.size }}</span>
+
+                    <form method="post" action="{% url 'update_cart' %}" class="flex items-center rounded-lg border border-luxury-line bg-white">
+                      {% csrf_token %}
+                      <input type="hidden" name="key" value="{{ line.key }}">
+                      <input type="number" name="qty" value="{{ line.qty }}" min="1" max="{{ line.available }}"
+                             onchange="this.form.submit()"
+                             class="h-8 w-14 bg-transparent text-center text-sm outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
+                      <button type="submit" class="border-l border-luxury-line px-2 text-[11px] font-bold uppercase tracking-wide text-luxury-mid hover:text-luxury-black">Update</button>
+                    </form>
+
+                    <span class="text-sm font-semibold">{{ line.subtotal|convert_price:request }}</span>
+
+                    {% if line.over_stock %}
+                    <span class="text-[11px] font-semibold text-red-500">Only {{ line.available }} left</span>
+                    {% endif %}
+
+                    <form method="post" action="{% url 'remove_from_cart' %}" class="ml-auto">
+                      {% csrf_token %}
+                      <input type="hidden" name="key" value="{{ line.key }}">
+                      <button type="submit" class="text-luxury-mid transition hover:text-red-500" aria-label="Remove">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M6 18L18 6M6 6l12 12"/></svg>
+                      </button>
+                    </form>
+                  </div>
+                  {% endfor %}
+                </div>
+              </div>
             </div>
+          </div>
+          {% endfor %}
         </div>
+        <a href="{% url 'catalog' %}" class="mt-6 inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-widest text-luxury-mid hover:text-luxury-black">
+          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+          Continue shopping
+        </a>
+      </div>
+
+      <!-- Summary -->
+      <aside class="lg:col-span-1">
+        <div class="rounded-2xl border border-luxury-line bg-luxury-grey/40 p-6">
+          <h2 class="font-barlow text-lg font-black uppercase tracking-tight">Order summary</h2>
+          <div class="mt-4 space-y-2 text-sm">
+            <div class="flex justify-between text-luxury-mid"><span>Items</span><span>{{ total_qty }}</span></div>
+            <div class="flex justify-between text-luxury-mid"><span>Subtotal</span><span>{{ total_gnf|convert_price:request }}</span></div>
+          </div>
+          <div class="mt-4 flex justify-between border-t border-luxury-line pt-4 text-base font-bold">
+            <span>Total</span><span>{{ total_gnf|convert_price:request }}</span>
+          </div>
+          <a href="{% url 'checkout' %}" class="mt-6 block rounded-xl bg-luxury-black py-3.5 text-center text-sm font-semibold uppercase tracking-[0.15em] text-white transition hover:bg-luxury-black/90">
+            Proceed to checkout
+          </a>
+        </div>
+      </aside>
     </div>
+
+    {% else %}
+    <div class="rounded-2xl border border-luxury-line bg-luxury-grey/40 p-12 text-center">
+      <p class="text-luxury-mid">Your cart is currently empty.</p>
+      <a href="{% url 'catalog' %}" class="mt-5 inline-block rounded-full bg-luxury-black px-7 py-3.5 text-xs font-bold uppercase tracking-widest text-white transition hover:bg-black/90">Continue shopping</a>
+    </div>
+    {% endif %}
+  </div>
 </section>
 {% endblock %}

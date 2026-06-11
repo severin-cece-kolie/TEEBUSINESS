@@ -6,7 +6,7 @@ from .models import Product, Category, Brand
 
 
 def catalog(request):
-    products = Product.objects.select_related('category', 'brand').prefetch_related('images').all()
+    products = Product.objects.filter(is_active=True).select_related('category', 'brand').prefetch_related('images')
     categories = Category.objects.all()
     brands = Brand.objects.all()
 
@@ -32,9 +32,12 @@ def catalog(request):
 
 
 def product_detail(request, id):
-    product = get_object_or_404(Product.objects.select_related('category', 'brand').prefetch_related('images', 'sizes'), id=id)
+    product = get_object_or_404(
+        Product.objects.select_related('category', 'brand').prefetch_related('images', 'sizes'),
+        id=id, is_active=True,
+    )
     similar = Product.objects.filter(
-        category=product.category
+        category=product.category, is_active=True,
     ).exclude(id=id)[:4]
     return render(request, 'shop/product_detail.html', {
         'product': product,

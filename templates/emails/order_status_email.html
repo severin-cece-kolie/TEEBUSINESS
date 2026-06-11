@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Order Status Update - TEEBUSINESS</title>
+<style>
+  body{font-family:Arial,sans-serif;line-height:1.6;color:#333;margin:0;padding:0;background:#f4f4f4}
+  .wrapper{max-width:600px;margin:30px auto;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.08)}
+  .header{background:#0a0a0a;padding:30px 40px;text-align:center}
+  .header h1{color:#fff;margin:0;font-size:28px;letter-spacing:2px}
+  .header p{color:#aaa;margin:4px 0 0;font-size:13px}
+  .body{padding:40px}
+  .body h2{color:#0a0a0a;margin-top:0}
+  .status-badge{display:inline-block;padding:10px 24px;border-radius:24px;font-weight:bold;font-size:16px;margin:16px 0}
+  .status-processing{background:#fff3cd;color:#856404}
+  .status-shipped{background:#cff4fc;color:#055160}
+  .status-delivered{background:#d1e7dd;color:#0a3622}
+  .status-cancelled{background:#f8d7da;color:#842029}
+  .status-default{background:#f6f5f2;color:#333}
+  .order-info{background:#f6f5f2;border-radius:8px;padding:16px 20px;margin:20px 0}
+  .order-info p{margin:4px 0;font-size:14px}
+  .btn{display:inline-block;background:#0a0a0a;color:#fff;padding:14px 32px;text-decoration:none;border-radius:6px;font-weight:bold;margin-top:8px}
+  .footer{background:#f6f5f2;padding:24px 40px;text-align:center;font-size:12px;color:#888}
+  .footer a{color:#555;text-decoration:none}
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <div class="header">
+    <h1>TEEBUSINESS</h1>
+    <p>Order Status Update</p>
+  </div>
+  <div class="body">
+    <h2>Your order has been updated</h2>
+    <p>Hello {{ order.user.first_name|default:order.user.username }},</p>
+    <p>The status of your order <strong>#{{ order.order_number }}</strong> has changed:</p>
+
+    {% if status == 'processing' %}
+      <span class="status-badge status-processing">Being Processed</span>
+    {% elif status == 'shipped' %}
+      <span class="status-badge status-shipped">Shipped</span>
+    {% elif status == 'delivered' %}
+      <span class="status-badge status-delivered">Delivered</span>
+    {% elif status == 'cancelled' %}
+      <span class="status-badge status-cancelled">Cancelled</span>
+    {% else %}
+      <span class="status-badge status-default">{{ status|capfirst }}</span>
+    {% endif %}
+
+    <div class="order-info">
+      <p><strong>Order:</strong> #{{ order.order_number }}</p>
+      {% if tracking_number %}
+      <p><strong>Tracking Number:</strong> {{ tracking_number }}</p>
+      {% endif %}
+    </div>
+
+    {% if status == 'shipped' %}
+    <p>Your order is on its way! Use the tracking number above to follow its progress.</p>
+    {% elif status == 'delivered' %}
+    <p>Your order has been delivered. We hope you enjoy your purchase!</p>
+    {% elif status == 'cancelled' %}
+    <p>Your order has been cancelled. If you have questions, please contact our support team.</p>
+    {% endif %}
+
+    <a href="{{ site_url }}{% url 'orders' %}" class="btn">View My Orders</a>
+  </div>
+  <div class="footer">
+    <p>Questions? <a href="mailto:supportteebusiness@gmail.com">supportteebusiness@gmail.com</a> &nbsp;|&nbsp; +224 623 70 78 33</p>
+    <p>&copy; {% now "Y" %} TEEBUSINESS. All rights reserved.</p>
+  </div>
+</div>
+</body>
+</html>

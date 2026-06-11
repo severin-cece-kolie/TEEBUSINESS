@@ -28,8 +28,10 @@ class NewsletterSubscriber(models.Model):
     ]
     
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    full_name = models.CharField(max_length=255)
-    email = models.EmailField(unique=True)
+    full_name = models.CharField(max_length=255, blank=True)
+    # Nullable + unique: lets phone-only subscribers exist (SQLite/Postgres treat
+    # multiple NULLs as distinct, so uniqueness still holds for real emails).
+    email = models.EmailField(unique=True, null=True, blank=True)
     phone_number = models.CharField(max_length=20, blank=True, null=True)
     subscription_date = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')

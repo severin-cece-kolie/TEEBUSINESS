@@ -1,23 +1,18 @@
-{{ business_name }} - Email Verification
-========================================
+{{ business_name }} - Email Verification Code
+==============================================
 
 Hello {{ user.username }},
 
-Thank you for registering with {{ business_name }}. To complete your registration and activate your account, please use the following verification code:
+Your verification code is: {{ otp.code }}
 
-{{ otp.code }}
+This code expires in 10 minutes.
 
-This code will expire in 10 minutes for your security.
+DO NOT share this code with anyone.
 
-IMPORTANT:
-- Enter this code on the verification page to activate your account
-- Do not share this code with anyone
-- If you didn't request this code, please ignore this email
+If you did not create an account with {{ business_name }}, please ignore this email.
 
-If you have any questions or need assistance, please contact us at:
-
-Email: {{ business_email }}
-Phone: {{ business_phone }}
+Need help?
+  Email : {{ business_email }}
+  Phone : {{ business_phone }}
 
 © {% now "Y" %} {{ business_name }}. All rights reserved.
-This is an automated email. Please do not reply directly.

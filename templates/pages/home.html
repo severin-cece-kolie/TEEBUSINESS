@@ -1,115 +1,78 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block title %}TEEBUSINESS - Home{% endblock %}
+{% block title %}TEEBUSINESS — Premium Footwear{% endblock %}
 
 {% block content %}
-<!-- Hero Section -->
-<section class="relative bg-luxury-black text-white py-20 md:py-32">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center">
-            <h1 class="text-4xl md:text-6xl font-bold mb-6">Welcome to TEEBUSINESS</h1>
-            <p class="text-xl md:text-2xl mb-8 text-gray-300">Discover Premium Fashion & Accessories</p>
-            <a href="{% url 'catalog' %}" class="inline-block bg-white text-black px-8 py-4 rounded-full font-bold hover:bg-gray-200 transition">
-                Shop Now
-            </a>
-        </div>
+<!-- Hero -->
+<section class="relative overflow-hidden bg-luxury-black text-white">
+  <img src="{% static 'assets/images/background1.jpg' %}" alt="" aria-hidden="true"
+       class="absolute inset-0 h-full w-full object-cover object-center opacity-70">
+  <div class="absolute inset-0 bg-gradient-to-r from-luxury-black via-luxury-black/80 to-luxury-black/30"></div>
+  <div class="relative mx-auto max-w-5xl px-4 py-20 sm:px-6 md:py-28 lg:px-8">
+    <div class="max-w-xl">
+      <p class="mb-4 text-[11px] font-bold uppercase tracking-[0.35em] text-white/60">New Season · 2026</p>
+      <h1 class="font-barlow text-4xl font-black uppercase leading-[1.05] tracking-tight md:text-5xl">
+        Curated footwear,<br>elevated service.
+      </h1>
+      <p class="mt-5 max-w-md text-base leading-7 text-white/70">
+        Discover premium silhouettes and limited releases — handpicked for the TEEBUSINESS community.
+      </p>
+      <a href="{% url 'catalog' %}" class="mt-8 inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-xs font-bold uppercase tracking-widest text-luxury-black transition hover:bg-white/90">
+        Shop the collection
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+      </a>
     </div>
+  </div>
 </section>
-
-<!-- Featured Products -->
-{% if featured_products %}
-<section class="py-16 bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 class="text-3xl font-bold text-center mb-12">Featured Products</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {% for product in featured_products %}
-            <div class="product-card">
-                <a href="{% url 'product_detail' product.id %}">
-                    {% if product.images.first %}
-                    <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}" class="w-full h-64 object-cover rounded-lg">
-                    {% else %}
-                    <div class="w-full h-64 bg-gray-200 rounded-lg flex items-center justify-center">
-                        <span class="text-gray-400">No Image</span>
-                    </div>
-                    {% endif %}
-                    <h3 class="mt-4 text-lg font-semibold">{{ product.name }}</h3>
-                    <p class="text-gray-600">${{ product.price }}</p>
-                </a>
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-</section>
-{% endif %}
 
 <!-- New Arrivals -->
 {% if new_products %}
-<section class="py-16 bg-gray-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 class="text-3xl font-bold text-center mb-12">New Arrivals</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {% for product in new_products %}
-            <div class="product-card">
-                <a href="{% url 'product_detail' product.id %}">
-                    {% if product.images.first %}
-                    <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}" class="w-full h-64 object-cover rounded-lg">
-                    {% else %}
-                    <div class="w-full h-64 bg-gray-200 rounded-lg flex items-center justify-center">
-                        <span class="text-gray-400">No Image</span>
-                    </div>
-                    {% endif %}
-                    <h3 class="mt-4 text-lg font-semibold">{{ product.name }}</h3>
-                    <p class="text-gray-600">${{ product.price }}</p>
-                </a>
-            </div>
-            {% endfor %}
-        </div>
+<section class="bg-white py-14 md:py-20">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="mb-8 flex items-end justify-between md:mb-10">
+      <div>
+        <p class="mb-1 text-[11px] font-bold uppercase tracking-[0.25em] text-luxury-mid">Just in</p>
+        <h2 class="font-barlow text-2xl font-black uppercase tracking-tight md:text-3xl">New Arrivals</h2>
+      </div>
+      <a href="{% url 'catalog' %}" class="hidden text-xs font-bold uppercase tracking-widest text-luxury-mid transition hover:text-luxury-black sm:block">View all</a>
     </div>
+    <div class="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 lg:grid-cols-4 md:gap-x-6 md:gap-y-10">
+      {% for product in new_products %}{% include 'includes/product_card.html' %}{% endfor %}
+    </div>
+  </div>
 </section>
 {% endif %}
 
 <!-- Best Sellers -->
 {% if best_sellers %}
-<section class="py-16 bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 class="text-3xl font-bold text-center mb-12">Best Sellers</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {% for product in best_sellers %}
-            <div class="product-card">
-                <a href="{% url 'product_detail' product.id %}">
-                    {% if product.images.first %}
-                    <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}" class="w-full h-64 object-cover rounded-lg">
-                    {% else %}
-                    <div class="w-full h-64 bg-gray-200 rounded-lg flex items-center justify-center">
-                        <span class="text-gray-400">No Image</span>
-                    </div>
-                    {% endif %}
-                    <h3 class="mt-4 text-lg font-semibold">{{ product.name }}</h3>
-                    <p class="text-gray-600">${{ product.price }}</p>
-                </a>
-            </div>
-            {% endfor %}
-        </div>
+<section class="bg-luxury-grey/40 py-14 md:py-20">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="mb-8 flex items-end justify-between md:mb-10">
+      <div>
+        <p class="mb-1 text-[11px] font-bold uppercase tracking-[0.25em] text-luxury-mid">Most wanted</p>
+        <h2 class="font-barlow text-2xl font-black uppercase tracking-tight md:text-3xl">Best Sellers</h2>
+      </div>
+      <a href="{% url 'catalog' %}" class="hidden text-xs font-bold uppercase tracking-widest text-luxury-mid transition hover:text-luxury-black sm:block">View all</a>
     </div>
+    <div class="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 lg:grid-cols-4 md:gap-x-6 md:gap-y-10">
+      {% for product in best_sellers %}{% include 'includes/product_card.html' %}{% endfor %}
+    </div>
+  </div>
 </section>
 {% endif %}
 
 <!-- Brands -->
 {% if brands %}
-<section class="py-16 bg-gray-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 class="text-3xl font-bold text-center mb-12">Our Brands</h2>
-        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-8">
-            {% for brand in brands %}
-            <div class="text-center">
-                <h3 class="font-semibold">{{ brand.name }}</h3>
-            </div>
-            {% endfor %}
-        </div>
+<section class="border-t border-luxury-line bg-white py-12 md:py-16">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <p class="mb-8 text-center text-[11px] font-bold uppercase tracking-[0.25em] text-luxury-mid">Brands we carry</p>
+    <div class="flex flex-wrap items-center justify-center gap-x-10 gap-y-4 md:gap-x-16">
+      {% for brand in brands %}
+      <span class="font-barlow text-base font-bold uppercase tracking-[0.15em] text-luxury-mid transition hover:text-luxury-black md:text-lg">{{ brand.name }}</span>
+      {% endfor %}
     </div>
+  </div>
 </section>
 {% endif %}
-
-<!-- Newsletter -->
-{% include 'includes/newsletter_section.html' %}
 {% endblock %}

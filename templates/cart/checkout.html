@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load currency_tags %}
+
+{% block title %}Checkout — TEEBUSINESS{% endblock %}
+
+{% block content %}
+<section class="bg-white py-10 md:py-16">
+  <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+    <h1 class="mb-8 font-barlow text-3xl font-black uppercase tracking-tight md:text-4xl">Checkout</h1>
+
+    {% if messages %}
+      {% for message in messages %}
+      <div class="mb-4 rounded-xl border px-4 py-3 text-sm {% if message.tags == 'success' %}border-green-200 bg-green-50 text-green-800{% else %}border-red-200 bg-red-50 text-red-700{% endif %}">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+
+    <div class="overflow-hidden rounded-2xl border border-luxury-line">
+      <div class="bg-luxury-grey/50 px-6 py-4">
+        <h2 class="font-barlow text-lg font-black uppercase tracking-tight">Order summary</h2>
+      </div>
+
+      <div class="divide-y divide-luxury-line">
+        {% for group in groups %}
+        <div class="px-6 py-5">
+          <p class="font-barlow text-base font-bold uppercase tracking-tight">{{ group.product.name }}</p>
+          <p class="text-xs uppercase tracking-widest text-luxury-mid">Unit price: {{ group.product.discounted_price|convert_price:request }}</p>
+
+          <table class="mt-3 w-full text-sm">
+            <thead>
+              <tr class="text-left text-[11px] uppercase tracking-widest text-luxury-mid">
+                <th class="pb-1 font-semibold">Size</th>
+                <th class="pb-1 text-center font-semibold">Qty</th>
+                <th class="pb-1 text-right font-semibold">Price</th>
+                <th class="pb-1 text-right font-semibold">Subtotal</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for line in group.lines %}
+              <tr class="border-t border-luxury-line/60">
+                <td class="py-1.5 font-semibold">Size {{ line.size }}</td>
+                <td class="py-1.5 text-center">× {{ line.qty }}</td>
+                <td class="py-1.5 text-right text-luxury-mid">{{ line.unit_price|convert_price:request }}</td>
+                <td class="py-1.5 text-right font-semibold">{{ line.subtotal|convert_price:request }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% endfor %}
+      </div>
+
+      <div class="flex items-center justify-between bg-luxury-grey/50 px-6 py-5">
+        <div>
+          <p class="text-xs uppercase tracking-widest text-luxury-mid">{{ total_qty }} item{{ total_qty|pluralize }}</p>
+          <p class="font-barlow text-xl font-black uppercase">Total {{ total_gnf|convert_price:request }}</p>
+        </div>
+        <form method="post" action="{% url 'place_order' %}">
+          {% csrf_token %}
+          <button type="submit" class="rounded-xl bg-luxury-black px-8 py-3.5 text-sm font-semibold uppercase tracking-[0.15em] text-white transition hover:bg-luxury-black/90">
+            Place order
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <a href="{% url 'cart' %}" class="mt-6 inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-widest text-luxury-mid hover:text-luxury-black">
+      <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+      Back to cart
+    </a>
+  </div>
+</section>
+{% endblock %}

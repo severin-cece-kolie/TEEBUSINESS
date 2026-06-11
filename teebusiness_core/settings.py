@@ -86,6 +86,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'shop.context_processors.currency_processor',
+                'cart.context_processors.cart_processor',
             ],
         },
     },
@@ -106,6 +107,12 @@ DATABASES = {
 
 # Custom User Model
 AUTH_USER_MODEL = 'accounts.User'
+
+# Authentication backends — email-based login first, username fallback for staff.
+AUTHENTICATION_BACKENDS = [
+    'accounts.backends.EmailBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
 
 # Default Auto Field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
@@ -159,36 +166,37 @@ LOGIN_REDIRECT_URL = 'dashboard'
 LOGOUT_REDIRECT_URL = 'home'
 
 # ===== EMAIL CONFIGURATION =====
-# Email Backend Selection
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+# Shorthand aliases: set EMAIL_BACKEND=console (or smtp, dummy, locmem) in .env
+_EMAIL_BACKEND_ALIASES = {
+    'console':   'django.core.mail.backends.console.EmailBackend',
+    'smtp':      'django.core.mail.backends.smtp.EmailBackend',
+    'dummy':     'django.core.mail.backends.dummy.EmailBackend',
+    'filebased': 'django.core.mail.backends.filebased.EmailBackend',
+    'locmem':    'django.core.mail.backends.locmem.EmailBackend',
+}
+_backend_key = os.environ.get('EMAIL_BACKEND', 'console')
+EMAIL_BACKEND = _EMAIL_BACKEND_ALIASES.get(_backend_key, _backend_key)
 
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-
-EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
-EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
-
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-
-# SMTP Configuration (Gmail, Brevo, etc.)
-EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.gmail.com')
-EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 587))
-EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'True') == 'True'
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', 'supportteebusiness@gmail.com')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
-DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'supportteebusiness@gmail.com')
-SERVER_EMAIL = os.environ.get('SERVER_EMAIL', 'supportteebusiness@gmail.com')
-
-# SMTP Configuration (Gmail, Brevo, etc.)
 EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.gmail.com')
 EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 587))
 EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'True') == 'True'
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
-DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'supportteebusiness@gmail.com')
-SERVER_EMAIL = os.environ.get('SERVER_EMAIL', 'supportteebusiness@gmail.com')
+DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'noreply@teebusiness.com')
+SERVER_EMAIL = os.environ.get('SERVER_EMAIL', DEFAULT_FROM_EMAIL)
 
+# ===== SITE CONFIGURATION =====
+SITE_URL = os.environ.get('SITE_URL', 'http://localhost:8000')
+
+# Master switch for automatic subscriber product alerts (new/restock/discount).
+# Set False (e.g. during data imports/seeding) to avoid emailing on bulk changes.
+PRODUCT_NOTIFICATIONS_ENABLED = os.environ.get('PRODUCT_NOTIFICATIONS_ENABLED', 'True') == 'True'
+
+# ===== SMS CONFIGURATION (Twilio — disabled by default) =====
+SMS_ENABLED = os.environ.get('SMS_ENABLED', 'False') == 'True'
+TWILIO_ACCOUNT_SID = os.environ.get('TWILIO_ACCOUNT_SID', '')
+TWILIO_AUTH_TOKEN = os.environ.get('TWILIO_AUTH_TOKEN', '')
+TWILIO_PHONE_NUMBER = os.environ.get('TWILIO_PHONE_NUMBER', '')
 
 # Contact Information Constants
 BUSINESS_PHONE = os.environ.get('BUSINESS_PHONE', '+224 623 70 78 33')
@@ -208,6 +216,20 @@ X_FRAME_OPTIONS = 'DENY'
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 SECURE_SSL_REDIRECT = os.environ.get('SECURE_SSL_REDIRECT', 'False') == 'True'
+
+# ===== PROXY / CLOUDFLARE COMPATIBILITY =====
+# Cloudflare (and most reverse proxies) terminate TLS and forward the original
+# scheme in X-Forwarded-Proto. This lets request.is_secure() report correctly so
+# secure cookies and HTTPS-only behaviour work behind the proxy.
+# Safe to enable only when the app always sits behind a trusted proxy in prod.
+if os.environ.get('USE_PROXY_SSL_HEADER', 'False') == 'True':
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+# Domains allowed to submit cross-origin POST/CSRF (your production hostnames).
+# e.g. CSRF_TRUSTED_ORIGINS=https://teebusiness.com,https://www.teebusiness.com
+CSRF_TRUSTED_ORIGINS = [
+    o.strip() for o in os.environ.get('CSRF_TRUSTED_ORIGINS', '').split(',') if o.strip()
+]
 
 # HSTS Settings (only in production)
 if not DEBUG:

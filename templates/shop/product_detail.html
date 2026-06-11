@@ -1,65 +1,132 @@
 {% extends 'base.html' %}
+{% load currency_tags %}
 
-{% block title %}{{ product.name }} - TEEBUSINESS{% endblock %}
+{% block title %}{{ product.name }} — TEEBUSINESS{% endblock %}
 
 {% block content %}
-<section class="py-16 bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            <!-- Product Images -->
-            <div>
-                {% if product.images.first %}
-                <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}" class="w-full h-96 object-cover rounded-lg">
-                {% else %}
-                <div class="w-full h-96 bg-gray-200 rounded-lg flex items-center justify-center">
-                    <span class="text-gray-400">No Image</span>
-                </div>
-                {% endif %}
-            </div>
-            
-            <!-- Product Info -->
-            <div>
-                <h1 class="text-3xl font-bold mb-4">{{ product.name }}</h1>
-                <p class="text-2xl text-gray-600 mb-4">{{ current_currency_icon }}{{ product.price }}</p>
-                <p class="text-gray-600 mb-6">{{ product.description|default:"No description available." }}</p>
-                
-                {% if product.category %}
-                <p class="mb-2"><strong>Category:</strong> {{ product.category.name }}</p>
-                {% endif %}
-                
-                {% if product.brand %}
-                <p class="mb-6"><strong>Brand:</strong> {{ product.brand.name }}</p>
-                {% endif %}
-                
-                <a href="{% url 'cart:add_to_cart' product.id %}" class="inline-block bg-black text-white px-8 py-4 rounded-full font-bold hover:bg-gray-800 transition">
-                    Add to Cart
-                </a>
-            </div>
+<section class="bg-white py-10 md:py-16">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <nav class="mb-6 text-xs uppercase tracking-widest text-luxury-mid">
+      <a href="{% url 'catalog' %}" class="hover:text-luxury-black">Shop</a>
+      <span class="mx-2">/</span>
+      <span class="text-luxury-black">{{ product.name }}</span>
+    </nav>
+
+    <div class="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:gap-14">
+      <!-- Gallery -->
+      <div>
+        {% if product.images.first %}
+        <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}"
+             class="aspect-square w-full rounded-2xl border border-luxury-line object-cover">
+        {% else %}
+        <div class="flex aspect-square w-full items-center justify-center rounded-2xl border border-luxury-line bg-luxury-grey/50 text-luxury-mid">
+          <svg class="h-12 w-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.3" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
         </div>
-        
-        <!-- Similar Products -->
-        {% if similar_products %}
-        <section class="mt-16">
-            <h2 class="text-2xl font-bold mb-8">Similar Products</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                {% for similar in similar_products %}
-                <div class="product-card">
-                    <a href="{% url 'product_detail' similar.id %}">
-                        {% if similar.images.first %}
-                        <img src="{{ similar.images.first.image.url }}" alt="{{ similar.name }}" class="w-full h-64 object-cover rounded-lg">
-                        {% else %}
-                        <div class="w-full h-64 bg-gray-200 rounded-lg flex items-center justify-center">
-                            <span class="text-gray-400">No Image</span>
-                        </div>
-                        {% endif %}
-                        <h3 class="mt-4 text-lg font-semibold">{{ similar.name }}</h3>
-                        <p class="text-gray-600">{{ current_currency_icon }}{{ similar.price }}</p>
-                    </a>
-                </div>
-                {% endfor %}
-            </div>
-        </section>
         {% endif %}
+        {% if product.images.all|length > 1 %}
+        <div class="mt-4 grid grid-cols-5 gap-3">
+          {% for img in product.images.all %}
+          <img src="{{ img.image.url }}" alt="{{ img.label|default:product.name }}"
+               class="aspect-square w-full rounded-lg border border-luxury-line object-cover">
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- Info + size picker -->
+      <div>
+        {% if product.brand %}<p class="mb-1 text-[11px] font-bold uppercase tracking-[0.2em] text-luxury-mid">{{ product.brand.name }}</p>{% endif %}
+        <h1 class="font-barlow text-3xl font-black uppercase tracking-tight md:text-4xl">{{ product.name }}</h1>
+
+        <div class="mt-3 flex items-center gap-3">
+          <span class="font-barlow text-2xl font-bold">{{ product.discounted_price|convert_price:request }}</span>
+          {% if product.discount_percent %}
+          <span class="text-sm text-luxury-mid line-through">{{ product.price_gnf|convert_price:request }}</span>
+          <span class="rounded-full bg-luxury-black px-2.5 py-0.5 text-[11px] font-bold text-white">-{{ product.discount_percent }}%</span>
+          {% endif %}
+        </div>
+
+        <p class="mt-5 text-[15px] leading-7 text-luxury-mid">{{ product.description|default:"No description available." }}</p>
+
+        <form method="post" action="{% url 'add_to_cart' product.id %}" class="mt-8"
+              x-data="sizePicker({ {% for s in product.sizes.all %}'{{ s.size }}': 0,{% endfor %} })">
+          {% csrf_token %}
+
+          <div class="mb-3 flex items-center justify-between">
+            <h2 class="text-xs font-bold uppercase tracking-[0.18em] text-luxury-black">Select sizes &amp; quantities</h2>
+            <div class="flex items-center gap-3 text-[11px] uppercase tracking-widest text-luxury-mid">
+              <span class="flex items-center gap-1"><span class="h-2 w-2 rounded-full bg-green-500"></span>In stock</span>
+              <span class="flex items-center gap-1"><span class="h-2 w-2 rounded-full bg-amber-500"></span>Low</span>
+              <span class="flex items-center gap-1"><span class="h-2 w-2 rounded-full bg-red-400"></span>Out</span>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+            {% for s in product.sizes.all %}
+            {% with status=s.stock_status %}
+            <div class="flex items-center justify-between rounded-xl border px-3 py-2.5
+                        {% if status == 'out_of_stock' %}border-luxury-line bg-luxury-grey/40 opacity-60{% else %}border-luxury-line bg-white{% endif %}">
+              <div>
+                <p class="text-sm font-bold">Size {{ s.size }}</p>
+                <p class="text-[11px] font-semibold uppercase tracking-wide
+                          {% if status == 'in_stock' %}text-green-600{% elif status == 'low_stock' %}text-amber-600{% else %}text-red-500{% endif %}">
+                  {% if status == 'in_stock' %}In stock{% elif status == 'low_stock' %}Low stock{% else %}Out of stock{% endif %}
+                </p>
+              </div>
+
+              {% if status == 'out_of_stock' %}
+              <span class="text-xs font-bold uppercase tracking-widest text-luxury-mid">—</span>
+              <input type="hidden" name="qty_{{ s.size }}" value="0">
+              {% else %}
+              <div class="flex items-center rounded-lg border border-luxury-line">
+                <button type="button" @click="dec('{{ s.size }}')" class="flex h-8 w-8 items-center justify-center text-luxury-mid hover:text-luxury-black" aria-label="Decrease">−</button>
+                <input type="number" name="qty_{{ s.size }}" x-model.number="qty['{{ s.size }}']"
+                       min="0" max="{{ s.quantity }}"
+                       class="h-8 w-10 border-x border-luxury-line text-center text-sm outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
+                <button type="button" @click="inc('{{ s.size }}', {{ s.quantity }})" class="flex h-8 w-8 items-center justify-center text-luxury-mid hover:text-luxury-black" aria-label="Increase">+</button>
+              </div>
+              {% endif %}
+            </div>
+            {% endwith %}
+            {% empty %}
+            <p class="text-sm text-luxury-mid">No sizes available yet.</p>
+            {% endfor %}
+          </div>
+
+          <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <button type="submit" :disabled="totalCount() === 0"
+                    class="flex-1 rounded-xl bg-luxury-black py-4 text-sm font-semibold uppercase tracking-[0.15em] text-white transition hover:bg-luxury-black/90 disabled:cursor-not-allowed disabled:opacity-40">
+              Add to cart <span x-show="totalCount() > 0">· <span x-text="totalCount()"></span></span>
+            </button>
+            <a href="{% url 'cart' %}" class="rounded-xl border border-luxury-line py-4 text-center text-sm font-semibold uppercase tracking-[0.15em] transition hover:bg-luxury-grey sm:px-8">View cart</a>
+          </div>
+          <p x-show="totalCount() === 0" class="mt-2 text-xs text-luxury-mid">Choose at least one size to continue.</p>
+        </form>
+      </div>
     </div>
+
+    <!-- Similar -->
+    {% if similar_products %}
+    <section class="mt-16 md:mt-20">
+      <h2 class="mb-8 font-barlow text-2xl font-black uppercase tracking-tight">You may also like</h2>
+      <div class="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 lg:grid-cols-4 md:gap-x-6">
+        {% for product in similar_products %}{% include 'includes/product_card.html' %}{% endfor %}
+      </div>
+    </section>
+    {% endif %}
+  </div>
 </section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  function sizePicker(initial) {
+    return {
+      qty: initial,
+      inc(size, max) { if (this.qty[size] < max) this.qty[size]++; },
+      dec(size) { if (this.qty[size] > 0) this.qty[size]--; },
+      totalCount() { return Object.values(this.qty).reduce((a, b) => a + (parseInt(b) || 0), 0); },
+    };
+  }
+</script>
 {% endblock %}

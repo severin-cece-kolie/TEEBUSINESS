@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load currency_tags %}
+
+{% block title %}Order Confirmed — TEEBUSINESS{% endblock %}
+
+{% block content %}
+<section class="bg-white py-12 md:py-20">
+  <div class="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
+    <div class="text-center">
+      <div class="mx-auto mb-6 inline-flex h-16 w-16 items-center justify-center rounded-full bg-green-50">
+        <svg class="h-8 w-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M5 13l4 4L19 7"/></svg>
+      </div>
+      <h1 class="font-barlow text-3xl font-black uppercase tracking-tight md:text-4xl">Order confirmed</h1>
+      <p class="mx-auto mt-3 max-w-md text-sm leading-6 text-luxury-mid">Thank you! Your order has been received and stock has been updated. Our team will reach out to arrange delivery and payment.</p>
+    </div>
+
+    <div class="mt-10 overflow-hidden rounded-2xl border border-luxury-line">
+      <div class="bg-luxury-grey/50 px-6 py-4">
+        <h2 class="font-barlow text-base font-black uppercase tracking-tight">Order summary</h2>
+      </div>
+      <div class="divide-y divide-luxury-line">
+        {% for group in groups %}
+        <div class="px-6 py-4">
+          <p class="font-barlow text-sm font-bold uppercase tracking-tight">{{ group.name }}</p>
+          <ul class="mt-2 space-y-1 text-sm">
+            {% for line in group.lines %}
+            <li class="flex justify-between">
+              <span class="text-luxury-mid">Size {{ line.size }} × {{ line.qty }}</span>
+              <span class="font-semibold">{{ line.subtotal|convert_price:request }}</span>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+        {% endfor %}
+      </div>
+      <div class="flex items-center justify-between bg-luxury-grey/50 px-6 py-4">
+        <span class="text-xs uppercase tracking-widest text-luxury-mid">{{ total_qty }} item{{ total_qty|pluralize }}</span>
+        <span class="font-barlow text-lg font-black uppercase">Total {{ total_gnf|convert_price:request }}</span>
+      </div>
+    </div>
+
+    <div class="mt-8 text-center">
+      <a href="{% url 'catalog' %}" class="inline-block rounded-full bg-luxury-black px-8 py-3.5 text-xs font-bold uppercase tracking-widest text-white transition hover:bg-black/90">Continue shopping</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

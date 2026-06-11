@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>New Contact Form Submission - TEEBUSINESS</title>
+<style>
+  body{font-family:Arial,sans-serif;line-height:1.6;color:#333;margin:0;padding:0;background:#f4f4f4}
+  .wrapper{max-width:600px;margin:30px auto;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.08)}
+  .header{background:#0a0a0a;padding:28px 40px;text-align:center}
+  .header h1{color:#fff;margin:0;font-size:24px;letter-spacing:2px}
+  .header p{color:#aaa;margin:4px 0 0;font-size:13px}
+  .body{padding:36px 40px}
+  .body h2{color:#0a0a0a;margin-top:0}
+  table{width:100%;border-collapse:collapse;margin:20px 0}
+  th{text-align:left;background:#f6f5f2;padding:10px 14px;font-size:13px;color:#555;width:30%}
+  td{padding:10px 14px;border-bottom:1px solid #e8e4dc;font-size:14px}
+  .message-box{background:#f6f5f2;border-radius:6px;padding:18px 20px;margin-top:16px;white-space:pre-wrap;font-size:14px}
+  .footer{background:#f6f5f2;padding:20px 40px;text-align:center;font-size:12px;color:#888}
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <div class="header">
+    <h1>TEEBUSINESS</h1>
+    <p>New Contact Form Submission</p>
+  </div>
+  <div class="body">
+    <h2>Someone sent you a message</h2>
+    <table>
+      <tr><th>Name</th><td>{{ full_name }}</td></tr>
+      <tr><th>Email</th><td><a href="mailto:{{ email }}">{{ email }}</a></td></tr>
+      <tr><th>Phone</th><td>{{ phone|default:"—" }}</td></tr>
+      <tr><th>Subject</th><td>{{ subject }}</td></tr>
+    </table>
+    <p><strong>Message:</strong></p>
+    <div class="message-box">{{ message }}</div>
+    <p style="margin-top:24px;font-size:13px;color:#777">
+      Reply directly to this email to respond to {{ full_name }}.
+    </p>
+  </div>
+  <div class="footer">
+    <p>&copy; {% now "Y" %} TEEBUSINESS. All rights reserved.</p>
+  </div>
+</div>
+</body>
+</html>

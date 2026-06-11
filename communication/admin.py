@@ -147,19 +147,70 @@ class EmailCampaignAdmin(admin.ModelAdmin):
     get_progress_percentage.short_description = 'Progress'
     
     def send_campaign(self, request, queryset):
-        """Send selected campaigns."""
-        from .tasks import send_email_campaign_task
-        
-        count = 0
+        """Send selected draft campaigns to all active newsletter subscribers."""
+        from django.core.mail import EmailMultiAlternatives
+        from django.utils import timezone as tz
+
+        sent_campaigns = 0
+
         for campaign in queryset.filter(status='draft'):
+            subscribers = NewsletterSubscriber.objects.filter(status='active')
+            total = subscribers.count()
+
+            if total == 0:
+                messages.warning(request,
+                                  f'Campaign "{campaign.name}": no active subscribers found.')
+                continue
+
+            campaign.total_recipients = total
             campaign.status = 'sending'
-            campaign.save()
-            # In production, this would trigger a Celery task
-            # send_email_campaign_task.delay(campaign.id)
-            count += 1
-        
-        messages.success(request, f'{count} campaigns queued for sending.')
-    send_campaign.short_description = 'Send selected campaigns'
+            campaign.save(update_fields=['total_recipients', 'status'])
+
+            sent = failed = 0
+
+            for subscriber in subscribers:
+                recipient, _ = CampaignRecipient.objects.get_or_create(
+                    campaign=campaign,
+                    subscriber=subscriber,
+                )
+                try:
+                    msg = EmailMultiAlternatives(
+                        subject=campaign.subject,
+                        body=(campaign.plain_text_content
+                              or 'Please view this email in an HTML-compatible client.'),
+                        from_email=campaign.from_email,
+                        to=[subscriber.email],
+                        reply_to=[campaign.reply_to] if campaign.reply_to else None,
+                    )
+                    msg.attach_alternative(campaign.html_content, 'text/html')
+                    msg.send()
+
+                    recipient.status = 'sent'
+                    recipient.sent_at = tz.now()
+                    recipient.save(update_fields=['status', 'sent_at'])
+                    sent += 1
+                except Exception as exc:
+                    recipient.status = 'failed'
+                    recipient.error_message = str(exc)
+                    recipient.failed_at = tz.now()
+                    recipient.save(update_fields=['status', 'error_message', 'failed_at'])
+                    failed += 1
+
+            campaign.sent_count = sent
+            campaign.failed_count = failed
+            campaign.status = 'sent'
+            campaign.sent_at = tz.now()
+            campaign.save(update_fields=['sent_count', 'failed_count', 'status', 'sent_at'])
+
+            sent_campaigns += 1
+            messages.success(
+                request,
+                f'Campaign "{campaign.name}" sent: {sent} delivered, {failed} failed.',
+            )
+
+        if sent_campaigns == 0 and not queryset.filter(status='draft').exists():
+            messages.warning(request, 'Only draft campaigns can be sent.')
+    send_campaign.short_description = 'Send selected draft campaigns'
     
     def duplicate_campaign(self, request, queryset):
         """Duplicate selected campaigns."""

@@ -1,13 +1,14 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="fr" class="scroll-smooth">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}TEEBUSINESS{% endblock %}</title>
+    <meta name="robots" content="noindex, nofollow">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Barlow:wght@700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Barlow:wght@600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -23,16 +24,95 @@
               'barlow': ['Barlow', 'sans-serif'],
               'inter': ['Inter', 'sans-serif'],
             },
+            borderRadius: { 'luxury': '8px' }
           }
         }
       }
     </script>
     <link rel="stylesheet" href="{% static 'css/output.css' %}">
     <link rel="stylesheet" href="{% static 'css/premium.css' %}">
+    <style>
+      @keyframes auth-rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+      @keyframes auth-fade { from { opacity: 0; } to { opacity: 1; } }
+      .auth-rise { animation: auth-rise .6s cubic-bezier(.22,.61,.36,1) both; }
+      .auth-fade { animation: auth-fade 1.1s ease both; }
+      .auth-delay-1 { animation-delay: .08s; }
+      .auth-delay-2 { animation-delay: .16s; }
+      .auth-delay-3 { animation-delay: .24s; }
+      .brand-art {
+        background-color: #0a0a0a;
+        background-image:
+          linear-gradient(180deg, rgba(10,10,10,.25) 0%, rgba(10,10,10,.55) 55%, rgba(10,10,10,.92) 100%),
+          url('https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?auto=format&fit=crop&w=1400&q=80');
+        background-size: cover;
+        background-position: center;
+      }
+    </style>
     {% block extra_css %}{% endblock %}
 </head>
 <body class="font-inter text-luxury-black antialiased">
-    {% block auth_content %}{% endblock %}
-    {% block extra_js %}{% endblock %}
+  <div class="grid min-h-screen lg:grid-cols-2">
+
+    <!-- ───── Brand / lifestyle panel ───── -->
+    <aside class="brand-art relative hidden flex-col justify-between p-12 text-white lg:flex">
+      <a href="{% url 'home' %}" class="auth-fade flex items-center gap-3">
+        <span class="font-barlow text-xl font-black uppercase tracking-[0.3em]">TEEBUSINESS</span>
+      </a>
+
+      <div class="auth-fade auth-delay-2 max-w-md">
+        <p class="mb-4 text-[11px] font-bold uppercase tracking-[0.4em] text-white/70">
+          {% block brand_eyebrow %}Premium Footwear{% endblock %}
+        </p>
+        <h1 class="font-barlow text-4xl font-black uppercase leading-[1.05] tracking-tight xl:text-5xl">
+          {% block brand_headline %}Step into<br>the next drop.{% endblock %}
+        </h1>
+        <p class="mt-5 text-sm leading-7 text-white/75">
+          {% block brand_sub %}Curated silhouettes, members-only releases and elevated service — reserved for the TEEBUSINESS community.{% endblock %}
+        </p>
+      </div>
+
+      <div class="auth-fade auth-delay-3 flex items-center gap-6 text-[11px] uppercase tracking-[0.2em] text-white/50">
+        <span>Authentic</span><span class="h-1 w-1 rounded-full bg-white/40"></span>
+        <span>Secured</span><span class="h-1 w-1 rounded-full bg-white/40"></span>
+        <span>Worldwide</span>
+      </div>
+    </aside>
+
+    <!-- ───── Form panel ───── -->
+    <main class="flex min-h-screen flex-col bg-white">
+      <header class="flex items-center justify-between px-6 py-6 sm:px-10">
+        <a href="{% url 'home' %}" class="flex items-center gap-2 lg:hidden">
+          <span class="font-barlow text-base font-black uppercase tracking-[0.25em]">TEEBUSINESS</span>
+        </a>
+        <a href="{% url 'home' %}" class="ml-auto inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.15em] text-luxury-mid transition hover:text-luxury-black">
+          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+          Back to store
+        </a>
+      </header>
+
+      <div class="flex flex-1 items-center justify-center px-6 py-8 sm:px-10">
+        <div class="w-full max-w-md auth-rise">
+          {% block form_panel %}{% endblock %}
+        </div>
+      </div>
+
+      <footer class="px-6 py-6 text-center text-[11px] text-luxury-mid sm:px-10">
+        © {% now "Y" %} TEEBUSINESS · <a href="{% url 'privacy' %}" class="hover:text-luxury-black">Privacy</a> · <a href="{% url 'terms' %}" class="hover:text-luxury-black">Terms</a>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    // Show / hide password toggle (vanilla, no dependencies)
+    function togglePassword(btn) {
+      var input = btn.closest('.pw-wrap').querySelector('input');
+      var showing = input.getAttribute('type') === 'text';
+      input.setAttribute('type', showing ? 'password' : 'text');
+      btn.querySelector('[data-eye]').classList.toggle('hidden', !showing);
+      btn.querySelector('[data-eye-off]').classList.toggle('hidden', showing);
+      btn.setAttribute('aria-label', showing ? 'Show password' : 'Hide password');
+    }
+  </script>
+  {% block extra_js %}{% endblock %}
 </body>
 </html>

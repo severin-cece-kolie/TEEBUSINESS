@@ -88,9 +88,7 @@
 
                 <a href="{% url 'cart' %}" class="relative ml-auto rounded-full p-2 transition-colors hover:bg-luxury-grey md:ml-0" aria-label="Cart">
                     <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 10-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
-                    {% with count=request.session.cart|length %}
-                    {% if count %}<span class="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-luxury-black text-[10px] font-bold text-white">{{ count }}</span>{% endif %}
-                    {% endwith %}
+                    {% if cart_count %}<span class="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-luxury-black text-[10px] font-bold text-white">{{ cart_count }}</span>{% endif %}
                 </a>
 
                 <button @click="mobileMenuOpen = !mobileMenuOpen" class="rounded-full p-2 transition-colors hover:bg-luxury-grey md:hidden" aria-label="Menu">
@@ -124,10 +122,9 @@
         {% block content %}{% endblock %}
     </main>
 
-    {% include 'includes/newsletter_section.html' %}
-
     <footer class="site-footer border-t border-luxury-line bg-luxury-grey/60 py-8 md:py-12">
-        <div class="mx-auto grid max-w-7xl grid-cols-2 gap-8 px-3 sm:px-6 md:grid-cols-5 md:gap-10 lg:px-8">
+        {% include 'includes/newsletter_section.html' %}
+        <div class="mx-auto mt-8 grid max-w-7xl grid-cols-2 gap-8 px-3 sm:px-6 md:mt-10 md:grid-cols-5 md:gap-10 lg:px-8">
             <div class="col-span-2 md:col-span-1">
                 <img src="{% static 'assets/images/logo.png' %}" alt="TEEBUSINESS" class="mb-4 h-8 w-auto opacity-80 grayscale md:mb-5 md:h-9">
                 <p class="max-w-sm text-xs leading-6 text-luxury-mid md:text-sm md:leading-7">A cleaner premium shopping experience for curated footwear and streetwear essentials.</p>

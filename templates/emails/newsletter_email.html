@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TEEBUSINESS Newsletter</title>
+<style>
+  body{font-family:Arial,sans-serif;line-height:1.6;color:#333;margin:0;padding:0;background:#f4f4f4}
+  .wrapper{max-width:600px;margin:30px auto;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.08)}
+  .header{background:#0a0a0a;padding:30px 40px;text-align:center}
+  .header h1{color:#fff;margin:0;font-size:28px;letter-spacing:4px}
+  .header p{color:#aaa;margin:4px 0 0;font-size:13px}
+  .hero{background:linear-gradient(135deg,#1a1a1a,#333);padding:40px;text-align:center;color:#fff}
+  .hero h2{margin:0 0 8px;font-size:26px}
+  .hero p{margin:0;color:#ccc;font-size:14px}
+  .body{padding:40px}
+  .section-title{font-size:18px;font-weight:bold;color:#0a0a0a;border-bottom:2px solid #0a0a0a;padding-bottom:8px;margin:32px 0 20px}
+  .product-grid{display:flex;flex-wrap:wrap;gap:16px;margin-bottom:24px}
+  .product-card{flex:1;min-width:160px;border:1px solid #e8e4dc;border-radius:8px;overflow:hidden;text-decoration:none;color:#333}
+  .product-card img{width:100%;height:140px;object-fit:cover;background:#f6f5f2}
+  .product-card-body{padding:12px}
+  .product-card-body p{margin:0 0 4px;font-size:13px;font-weight:bold}
+  .product-card-body span{font-size:12px;color:#777}
+  .btn{display:inline-block;background:#0a0a0a;color:#fff;padding:14px 32px;text-decoration:none;border-radius:6px;font-weight:bold}
+  .btn-outline{display:inline-block;border:2px solid #0a0a0a;color:#0a0a0a;padding:12px 28px;text-decoration:none;border-radius:6px;font-weight:bold}
+  .cta{text-align:center;padding:20px 0 32px}
+  .divider{border:none;border-top:1px solid #e8e4dc;margin:32px 0}
+  .footer{background:#f6f5f2;padding:24px 40px;text-align:center;font-size:12px;color:#888}
+  .footer a{color:#555;text-decoration:none}
+  .social-links{margin:12px 0}
+  .social-links a{margin:0 8px;color:#555;text-decoration:none;font-size:13px}
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <div class="header">
+    <h1>TEEBUSINESS</h1>
+    <p>Premium Fashion &amp; Style</p>
+  </div>
+
+  <div class="hero">
+    <h2>Exclusive Offers Just for You</h2>
+    <p>Discover this week's highlights and members-only deals</p>
+  </div>
+
+  <div class="body">
+    <p>Hello {{ user.first_name|default:user.username }},</p>
+    <p>Here are this week's hand-picked items and promotions we thought you'd love.</p>
+
+    {% if featured_items %}
+    <p class="section-title">Featured This Week</p>
+    <div class="product-grid">
+      {% for item in featured_items %}
+      <a href="{{ site_url }}/shop/product/{{ item.id }}/" class="product-card">
+        {% if item.images.first %}
+        <img src="{{ site_url }}{{ item.images.first.image.url }}" alt="{{ item.name }}">
+        {% else %}
+        <div style="width:100%;height:140px;background:#f6f5f2;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:12px">No image</div>
+        {% endif %}
+        <div class="product-card-body">
+          <p>{{ item.name }}</p>
+          <span>{{ item.price_gnf|floatformat:0 }} GNF</span>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <hr class="divider">
+
+    <div class="cta">
+      <p style="margin-bottom:16px;font-size:15px">See everything new in the store</p>
+      <a href="{{ site_url }}/shop/" class="btn">Shop Now</a>
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>You received this because you are a registered TEEBUSINESS member.</p>
+    <p>
+      <a href="mailto:supportteebusiness@gmail.com">supportteebusiness@gmail.com</a>
+      &nbsp;|&nbsp; +224 623 70 78 33
+    </p>
+    <p>&copy; {% now "Y" %} TEEBUSINESS. All rights reserved.</p>
+  </div>
+</div>
+</body>
+</html>
