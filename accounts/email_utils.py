@@ -17,7 +17,7 @@ def get_site_url(request=None):
     """Get the base site URL."""
     if request:
         return request.build_absolute_uri('/').rstrip('/')
-    return settings.SITE_URL if hasattr(settings, 'SITE_URL') else 'https://teebusiness.com'
+    return settings.SITE_URL if hasattr(settings, 'SITE_URL') else 'https://teebusiness.pythonanywhere.com'
 
 
 def send_welcome_email(user, request=None):
