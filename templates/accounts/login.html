@@ -1,78 +1,40 @@
 {% extends 'base_auth.html' %}
 
-{% block title %}Sign In — TEEBUSINESS{% endblock %}
-
-{% block brand_eyebrow %}Welcome back{% endblock %}
-{% block brand_headline %}Your collection<br>awaits.{% endblock %}
-{% block brand_sub %}Sign in to track orders, save your favourites and unlock members-only drops.{% endblock %}
+{% block title %}Connexion — TEEBUSINESS{% endblock %}
 
 {% block form_panel %}
-<div class="mb-8">
-  <h2 class="font-barlow text-3xl font-black uppercase tracking-tight">Sign in</h2>
-  <p class="mt-2 text-sm text-luxury-mid">
-    New here?
-    <a href="{% url 'register' %}" class="font-semibold text-luxury-black underline-offset-4 hover:underline">Create an account</a>
-  </p>
-</div>
+<h1 class="mb-7 text-center font-poppins text-3xl font-bold text-auth-red">Sign In</h1>
 
 {% if messages %}
   {% for message in messages %}
-  <div class="mb-4 rounded-xl border px-4 py-3 text-sm {% if message.tags == 'success' %}border-green-200 bg-green-50 text-green-800{% elif message.tags == 'error' %}border-red-200 bg-red-50 text-red-700{% else %}border-luxury-line bg-luxury-grey text-luxury-black{% endif %}">
-    {{ message }}
-  </div>
+  <div class="mb-4 rounded-xl px-4 py-2.5 text-center text-sm {% if message.tags == 'success' %}bg-green-50 text-green-700{% elif message.tags == 'error' %}bg-red-50 text-red-600{% else %}bg-white/60 text-[#3a2f2a]{% endif %}">{{ message }}</div>
   {% endfor %}
 {% endif %}
 
 {% if form.non_field_errors %}
-  <div class="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+  <div class="mb-4 rounded-xl bg-red-50/90 px-4 py-2.5 text-center text-sm text-red-600">
     {% for error in form.non_field_errors %}{{ error }}{% endfor %}
   </div>
 {% endif %}
 
-<form method="post" class="space-y-5" novalidate>
+<form method="post" class="space-y-4" novalidate>
   {% csrf_token %}
 
   <div>
-    <label for="{{ form.username.id_for_label }}" class="mb-1.5 block text-xs font-semibold uppercase tracking-[0.12em] text-luxury-mid">Email</label>
     {{ form.username }}
-    {% if form.username.errors %}<p class="mt-1.5 text-xs text-red-600">{{ form.username.errors.0 }}</p>{% endif %}
+    {% if form.username.errors %}<p class="mt-1 px-1 text-xs text-red-700 font-medium">{{ form.username.errors.0 }}</p>{% endif %}
   </div>
 
   <div>
-    <div class="mb-1.5 flex items-center justify-between">
-      <label for="{{ form.password.id_for_label }}" class="block text-xs font-semibold uppercase tracking-[0.12em] text-luxury-mid">Password</label>
-      <a href="{% url 'password_reset' %}" class="text-xs font-medium text-luxury-mid underline-offset-4 hover:text-luxury-black hover:underline">Forgot password?</a>
-    </div>
-    <div class="pw-wrap relative">
-      {{ form.password }}
-      <button type="button" onclick="togglePassword(this)" tabindex="-1" aria-label="Show password" class="absolute inset-y-0 right-0 flex items-center pr-4 text-luxury-mid transition hover:text-luxury-black">
-        <svg data-eye class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M2.46 12C3.73 7.94 7.52 5 12 5s8.27 2.94 9.54 7c-1.27 4.06-5.06 7-9.54 7s-8.27-2.94-9.54-7z"/></svg>
-        <svg data-eye-off class="hidden h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 3l18 18M10.58 10.58a3 3 0 004.24 4.24M9.88 4.24A9.6 9.6 0 0112 4c4.48 0 8.27 2.94 9.54 7a10.5 10.5 0 01-2.2 3.56M6.1 6.1A10.6 10.6 0 002.46 12c1.27 4.06 5.06 7 9.54 7 1.4 0 2.74-.29 3.96-.81"/></svg>
-      </button>
-    </div>
-    {% if form.password.errors %}<p class="mt-1.5 text-xs text-red-600">{{ form.password.errors.0 }}</p>{% endif %}
+    {{ form.password }}
+    {% if form.password.errors %}<p class="mt-1 px-1 text-xs text-red-700 font-medium">{{ form.password.errors.0 }}</p>{% endif %}
   </div>
 
-  <label class="flex items-center gap-2.5 text-sm text-luxury-mid">
-    {{ form.remember_me }}
-    <span>Keep me signed in</span>
-  </label>
-
-  <button type="submit" class="w-full rounded-xl bg-luxury-black py-3.5 text-sm font-semibold uppercase tracking-[0.15em] text-white transition hover:bg-luxury-black/90 focus:outline-none focus:ring-2 focus:ring-luxury-black/20 active:scale-[0.99]">
-    Sign in
-  </button>
+  <button type="submit" class="auth-btn">Se connecter</button>
 </form>
 
-<div class="my-6 flex items-center gap-4">
-  <span class="h-px flex-1 bg-luxury-line"></span>
-  <span class="text-[11px] uppercase tracking-[0.2em] text-luxury-mid">or</span>
-  <span class="h-px flex-1 bg-luxury-line"></span>
+<div class="mt-5 flex items-center justify-between text-sm font-medium text-auth-red">
+  <a href="{% url 'password_reset' %}" class="transition hover:text-auth-red-dark">Mot de passe oublié ?</a>
+  <a href="{% url 'register' %}" class="underline underline-offset-2 transition hover:text-auth-red-dark">Créer un compte</a>
 </div>
-
-<button type="button" onclick="this.nextElementSibling.classList.remove('hidden')"
-        class="flex w-full items-center justify-center gap-3 rounded-xl border border-luxury-line bg-white py-3.5 text-sm font-semibold text-luxury-black transition hover:bg-luxury-grey">
-  <svg class="h-5 w-5" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.27-4.74 3.27-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84A11 11 0 0012 23z"/><path fill="#FBBC05" d="M5.84 14.1a6.6 6.6 0 010-4.2V7.06H2.18a11 11 0 000 9.88l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15A11 11 0 0012 1 11 11 0 002.18 7.06l3.66 2.84C6.71 7.31 9.14 5.38 12 5.38z"/></svg>
-  Continue with Google
-</button>
-<p class="mt-2 hidden text-center text-xs text-luxury-mid">Social sign-in is coming soon.</p>
 {% endblock %}

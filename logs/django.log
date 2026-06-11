@@ -118,3 +118,10 @@ WARNING 2026-06-11 12:09:36,183 sms_utils Twilio SDK not installed. SMS function
 INFO 2026-06-11 12:09:37,352 email_utils Welcome email sent to lead@community.test
 WARNING 2026-06-11 12:11:35,972 sms_utils Twilio SDK not installed. SMS functionality disabled. Install with: pip install twilio
 WARNING 2026-06-11 12:11:36,404 sms_utils Twilio SDK not installed. SMS functionality disabled. Install with: pip install twilio
+WARNING 2026-06-11 13:48:42,252 sms_utils Twilio SDK not installed. SMS functionality disabled. Install with: pip install twilio
+WARNING 2026-06-11 14:00:22,303 sms_utils Twilio SDK not installed. SMS functionality disabled. Install with: pip install twilio
+WARNING 2026-06-11 14:01:56,193 sms_utils Twilio SDK not installed. SMS functionality disabled. Install with: pip install twilio
+WARNING 2026-06-11 14:01:57,002 sms_utils Twilio SDK not installed. SMS functionality disabled. Install with: pip install twilio
+WARNING 2026-06-11 16:53:46,490 sms_utils Twilio SDK not installed. SMS functionality disabled. Install with: pip install twilio
+WARNING 2026-06-11 16:53:47,129 sms_utils Twilio SDK not installed. SMS functionality disabled. Install with: pip install twilio
+WARNING 2026-06-11 16:54:13,568 sms_utils Twilio SDK not installed. SMS functionality disabled. Install with: pip install twilio

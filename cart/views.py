@@ -91,15 +91,27 @@ def add_to_cart(request, product_id):
     cart = request.session.get('cart', {})
     sizes = {s.size: s for s in product.sizes.all()}
 
+    # Build the requested {size: qty} map. Two input styles are supported:
+    #   - single size:  POST 'size' + 'quantity'   (product page pills)
+    #   - bulk:          POST 'qty_<size>' per size (multi-size form)
+    requested = {}
+    if request.POST.get('size'):
+        try:
+            requested[request.POST['size']] = int(request.POST.get('quantity', 1))
+        except (TypeError, ValueError):
+            requested[request.POST['size']] = 1
+    else:
+        for size in sizes:
+            try:
+                requested[size] = int(request.POST.get(f'qty_{size}', '0'))
+            except (TypeError, ValueError):
+                requested[size] = 0
+
     added = 0
     capped = False
-    for size, size_obj in sizes.items():
-        raw = request.POST.get(f'qty_{size}', '0')
-        try:
-            want = int(raw)
-        except (TypeError, ValueError):
-            want = 0
-        if want <= 0:
+    for size, want in requested.items():
+        size_obj = sizes.get(size)
+        if size_obj is None or want <= 0:
             continue
         if size_obj.quantity <= 0:
             continue  # out of stock — skip silently

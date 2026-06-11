@@ -42,6 +42,7 @@ def product_detail(request, id):
     return render(request, 'shop/product_detail.html', {
         'product': product,
         'similar_products': similar,
+        'share_url': request.build_absolute_uri(),
     })
 
 

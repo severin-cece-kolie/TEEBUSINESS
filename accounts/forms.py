@@ -38,16 +38,16 @@ class LoginForm(AuthenticationForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['username'].label = 'Email'
-        self.fields['username'].widget = forms.EmailInput(attrs={
+        self.fields['username'].label = 'Email ou nom d’utilisateur'
+        self.fields['username'].widget = forms.TextInput(attrs={
             'class': INPUT_CLASS,
-            'placeholder': 'you@example.com',
-            'autocomplete': 'email',
+            'placeholder': 'Email ou nom d’utilisateur',
+            'autocomplete': 'username',
             'autofocus': True,
         })
         self.fields['password'].widget = forms.PasswordInput(attrs={
             'class': INPUT_CLASS,
-            'placeholder': 'Password',
+            'placeholder': 'Mot de passe',
             'autocomplete': 'current-password',
         })
         _strip_help_and_labels(self)
@@ -78,56 +78,61 @@ class LoginForm(AuthenticationForm):
 
 
 class RegisterForm(UserCreationForm):
-    """Premium registration: First name, Last name, Email, Password, Confirm."""
+    """Registration: Full name, Phone, Email, Password, Confirm."""
 
-    first_name = forms.CharField(
-        max_length=150,
+    full_name = forms.CharField(
+        max_length=255,
         widget=forms.TextInput(attrs={
-            'class': INPUT_CLASS, 'placeholder': 'First name', 'autocomplete': 'given-name',
+            'class': INPUT_CLASS, 'placeholder': 'Nom complet', 'autocomplete': 'name',
         }),
-        error_messages={'required': 'Please enter your first name.'},
+        error_messages={'required': 'Veuillez saisir votre nom complet.'},
     )
-    last_name = forms.CharField(
-        max_length=150,
+    phone = forms.CharField(
+        max_length=20,
         widget=forms.TextInput(attrs={
-            'class': INPUT_CLASS, 'placeholder': 'Last name', 'autocomplete': 'family-name',
+            'class': INPUT_CLASS, 'placeholder': 'Téléphone', 'autocomplete': 'tel', 'type': 'tel',
         }),
-        error_messages={'required': 'Please enter your last name.'},
+        error_messages={'required': 'Veuillez saisir votre téléphone.'},
     )
     email = forms.EmailField(
         widget=forms.EmailInput(attrs={
-            'class': INPUT_CLASS, 'placeholder': 'you@example.com', 'autocomplete': 'email',
+            'class': INPUT_CLASS, 'placeholder': 'Email', 'autocomplete': 'email',
         }),
         error_messages={
-            'required': 'Please enter your email address.',
-            'invalid': 'Please enter a valid email address.',
+            'required': 'Veuillez saisir votre email.',
+            'invalid': 'Veuillez saisir un email valide.',
         },
     )
 
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'email')
+        fields = ('email',)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['password1'].widget = forms.PasswordInput(attrs={
-            'class': INPUT_CLASS, 'placeholder': 'Password', 'autocomplete': 'new-password',
+            'class': INPUT_CLASS, 'placeholder': 'Mot de passe', 'autocomplete': 'new-password',
         })
         self.fields['password2'].widget = forms.PasswordInput(attrs={
-            'class': INPUT_CLASS, 'placeholder': 'Confirm password', 'autocomplete': 'new-password',
+            'class': INPUT_CLASS, 'placeholder': 'Confirmation du mot de passe', 'autocomplete': 'new-password',
         })
-        self.error_messages['password_mismatch'] = 'The two passwords don’t match.'
+        self.error_messages['password_mismatch'] = 'Les deux mots de passe ne correspondent pas.'
         _strip_help_and_labels(self)
 
     def clean_email(self):
         email = self.cleaned_data.get('email', '').strip().lower()
         if User.objects.filter(email__iexact=email).exists():
-            raise forms.ValidationError('An account with this email already exists.')
+            raise forms.ValidationError('Un compte existe déjà avec cet email.')
         return email
 
     def save(self, commit=True):
         user = super().save(commit=False)
         email = self.cleaned_data['email']
+        full_name = self.cleaned_data.get('full_name', '').strip()
+        first, _, last = full_name.partition(' ')
+        user.first_name = first
+        user.last_name = last
+        user.phone_number = self.cleaned_data.get('phone', '')
         user.email = email
         user.username = email  # email doubles as the unique username
         if commit:

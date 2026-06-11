@@ -4,107 +4,178 @@
 {% block title %}{{ product.name }} — TEEBUSINESS{% endblock %}
 
 {% block content %}
-{% include 'includes/page_hero.html' with compact=True eyebrow=product.category.name title=product.name %}
-<section class="bg-white py-10 md:py-16">
+<section class="bg-white py-8 md:py-12"
+  x-data="productDetail({
+    images: [{% for img in product.images.all %}'{{ img.image.url }}'{% if not forloop.last %},{% endif %}{% endfor %}],
+    stock: { {% for s in product.sizes.all %}'{{ s.size }}': {{ s.quantity }}{% if not forloop.last %},{% endif %}{% endfor %} }
+  })">
   <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-    <nav class="mb-6 text-xs uppercase tracking-widest text-luxury-mid">
+
+    <!-- Breadcrumb -->
+    <nav class="mb-6 flex items-center gap-2 text-xs uppercase tracking-widest text-luxury-mid">
+      <a href="{% url 'home' %}" class="hover:text-luxury-black" aria-label="Home">
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M3 12l9-9 9 9M5 10v10h14V10"/></svg>
+      </a>
+      <span>›</span>
       <a href="{% url 'catalog' %}" class="hover:text-luxury-black">Shop</a>
-      <span class="mx-2">/</span>
+      <span>›</span>
       <span class="text-luxury-black">{{ product.name }}</span>
     </nav>
 
-    <div class="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:gap-14">
-      <!-- Gallery -->
-      <div>
-        {% if product.images.first %}
-        <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}"
-             class="aspect-square w-full rounded-2xl border border-luxury-line object-cover">
+    <div class="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-12">
+
+      <!-- ===== Gallery ===== -->
+      <div class="flex gap-3 md:gap-4">
+        {% if product.images.all %}
+        <!-- Thumbnails -->
+        <div class="flex w-16 flex-col gap-3 md:w-20">
+          {% for img in product.images.all %}
+          <button type="button" @click="current = {{ forloop.counter0 }}"
+                  :class="current === {{ forloop.counter0 }} ? 'border-luxury-black' : 'border-luxury-line'"
+                  class="aspect-square overflow-hidden rounded-lg border-2 bg-luxury-grey/40 transition">
+            <img src="{{ img.image.url }}" alt="{{ img.label|default:product.name }}" class="h-full w-full object-cover">
+          </button>
+          {% endfor %}
+        </div>
+        <!-- Main image -->
+        <div class="relative flex-1">
+          <div class="relative aspect-square overflow-hidden rounded-2xl border border-luxury-line bg-luxury-grey/40">
+            <template x-for="(src, i) in images" :key="i">
+              <img x-show="current === i" :src="src" alt="{{ product.name }}" class="absolute inset-0 h-full w-full object-cover" x-transition.opacity>
+            </template>
+            <!-- Arrows -->
+            <button type="button" @click="prev()" x-show="images.length > 1" class="absolute left-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-luxury-black shadow transition hover:bg-white" aria-label="Previous image">
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+            </button>
+            <button type="button" @click="next()" x-show="images.length > 1" class="absolute right-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-luxury-black shadow transition hover:bg-white" aria-label="Next image">
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            </button>
+            <!-- Zoom -->
+            <button type="button" @click="zoomOpen = true" class="absolute bottom-3 right-3 flex h-9 w-9 items-center justify-center rounded-lg bg-white/90 text-luxury-black shadow transition hover:bg-white" aria-label="Zoom image">
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 8V4h4M16 4h4v4M20 16v4h-4M8 20H4v-4"/></svg>
+            </button>
+          </div>
+        </div>
         {% else %}
         <div class="flex aspect-square w-full items-center justify-center rounded-2xl border border-luxury-line bg-luxury-grey/50 text-luxury-mid">
           <svg class="h-12 w-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.3" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
         </div>
         {% endif %}
-        {% if product.images.all|length > 1 %}
-        <div class="mt-4 grid grid-cols-5 gap-3">
-          {% for img in product.images.all %}
-          <img src="{{ img.image.url }}" alt="{{ img.label|default:product.name }}"
-               class="aspect-square w-full rounded-lg border border-luxury-line object-cover">
-          {% endfor %}
-        </div>
-        {% endif %}
       </div>
 
-      <!-- Info + size picker -->
+      <!-- ===== Info ===== -->
       <div>
-        {% if product.brand %}<p class="mb-2 text-[11px] font-bold uppercase tracking-[0.2em] text-luxury-mid">{{ product.brand.name }}</p>{% endif %}
-        <div class="flex items-center gap-3">
-          <span class="font-barlow text-2xl font-bold">{{ product.discounted_price|convert_price:request }}</span>
+        <h1 class="font-barlow text-3xl font-black tracking-tight md:text-4xl">{{ product.name }}</h1>
+
+        <!-- Price -->
+        <div class="mt-3 flex items-center gap-3">
+          <span class="text-2xl font-bold">{{ product.discounted_price|convert_price:request }}</span>
           {% if product.discount_percent %}
           <span class="text-sm text-luxury-mid line-through">{{ product.price_gnf|convert_price:request }}</span>
           <span class="rounded-full bg-luxury-black px-2.5 py-0.5 text-[11px] font-bold text-white">-{{ product.discount_percent }}%</span>
           {% endif %}
         </div>
 
-        <p class="mt-5 text-[15px] leading-7 text-luxury-mid">{{ product.description|default:"No description available." }}</p>
-
-        <form method="post" action="{% url 'add_to_cart' product.id %}" class="mt-8"
-              x-data="sizePicker({ {% for s in product.sizes.all %}'{{ s.size }}': 0,{% endfor %} })">
-          {% csrf_token %}
-
-          <div class="mb-3 flex items-center justify-between">
-            <h2 class="text-xs font-bold uppercase tracking-[0.18em] text-luxury-black">Select sizes &amp; quantities</h2>
-            <div class="flex items-center gap-3 text-[11px] uppercase tracking-widest text-luxury-mid">
-              <span class="flex items-center gap-1"><span class="h-2 w-2 rounded-full bg-green-500"></span>In stock</span>
-              <span class="flex items-center gap-1"><span class="h-2 w-2 rounded-full bg-amber-500"></span>Low</span>
-              <span class="flex items-center gap-1"><span class="h-2 w-2 rounded-full bg-red-400"></span>Out</span>
-            </div>
+        <!-- Rating -->
+        <div class="mt-2 flex items-center gap-2">
+          <div class="flex text-amber-400">
+            {% for i in "12345" %}<svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.05 2.93c.3-.92 1.6-.92 1.9 0l1.36 4.18a1 1 0 00.95.69h4.4c.97 0 1.37 1.24.59 1.81l-3.56 2.59a1 1 0 00-.36 1.12l1.36 4.18c.3.92-.76 1.69-1.54 1.12l-3.56-2.59a1 1 0 00-1.18 0l-3.56 2.59c-.78.57-1.84-.2-1.54-1.12l1.36-4.18a1 1 0 00-.36-1.12L1.4 9.6c-.78-.57-.38-1.81.59-1.81h4.4a1 1 0 00.95-.69l1.36-4.18z"/></svg>{% endfor %}
           </div>
+          <span class="text-xs text-luxury-mid">(No reviews yet)</span>
+        </div>
 
-          <div class="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+        <!-- Availability -->
+        <p class="mt-3 text-sm font-semibold {% if product.in_stock %}text-green-600{% else %}text-red-500{% endif %}">
+          {% if product.in_stock %}Available{% else %}Out of stock{% endif %}
+        </p>
+
+        <!-- Description -->
+        <div class="mt-5">
+          <h2 class="mb-1.5 text-sm font-bold uppercase tracking-wide">Product Description</h2>
+          <p class="text-[15px] leading-7 text-luxury-mid">{{ product.description|default:"No description available." }}</p>
+        </div>
+
+        <form method="post" action="{% url 'add_to_cart' product.id %}" class="mt-6">
+          {% csrf_token %}
+          <input type="hidden" name="size" :value="selectedSize">
+          <input type="hidden" name="quantity" :value="quantity">
+
+          <!-- Sizes -->
+          <h2 class="mb-2 text-sm font-bold uppercase tracking-wide">Sizes</h2>
+          <div class="flex flex-wrap gap-2">
             {% for s in product.sizes.all %}
-            {% with status=s.stock_status %}
-            <div class="flex items-center justify-between rounded-xl border px-3 py-2.5
-                        {% if status == 'out_of_stock' %}border-luxury-line bg-luxury-grey/40 opacity-60{% else %}border-luxury-line bg-white{% endif %}">
-              <div>
-                <p class="text-sm font-bold">Size {{ s.size }}</p>
-                <p class="text-[11px] font-semibold uppercase tracking-wide
-                          {% if status == 'in_stock' %}text-green-600{% elif status == 'low_stock' %}text-amber-600{% else %}text-red-500{% endif %}">
-                  {% if status == 'in_stock' %}In stock{% elif status == 'low_stock' %}Low stock{% else %}Out of stock{% endif %}
-                </p>
-              </div>
-
-              {% if status == 'out_of_stock' %}
-              <span class="text-xs font-bold uppercase tracking-widest text-luxury-mid">—</span>
-              <input type="hidden" name="qty_{{ s.size }}" value="0">
-              {% else %}
-              <div class="flex items-center rounded-lg border border-luxury-line">
-                <button type="button" @click="dec('{{ s.size }}')" class="flex h-8 w-8 items-center justify-center text-luxury-mid hover:text-luxury-black" aria-label="Decrease">−</button>
-                <input type="number" name="qty_{{ s.size }}" x-model.number="qty['{{ s.size }}']"
-                       min="0" max="{{ s.quantity }}"
-                       class="h-8 w-10 border-x border-luxury-line text-center text-sm outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
-                <button type="button" @click="inc('{{ s.size }}', {{ s.quantity }})" class="flex h-8 w-8 items-center justify-center text-luxury-mid hover:text-luxury-black" aria-label="Increase">+</button>
-              </div>
-              {% endif %}
-            </div>
-            {% endwith %}
-            {% empty %}
-            <p class="text-sm text-luxury-mid">No sizes available yet.</p>
+            {% if s.stock_status == 'out_of_stock' %}
+            <span class="flex h-11 min-w-[3rem] items-center justify-center rounded-full border border-dashed border-luxury-line px-3 text-sm text-luxury-mid/50 line-through" title="Out of stock">{{ s.size }}</span>
+            {% else %}
+            <button type="button" @click="selectSize('{{ s.size }}')"
+                    :class="selectedSize === '{{ s.size }}' ? 'border-luxury-black bg-luxury-black text-white' : 'border-luxury-line hover:border-luxury-black'"
+                    class="flex h-11 min-w-[3rem] items-center justify-center rounded-full border px-3 text-sm font-semibold transition">{{ s.size }}</button>
+            {% endif %}
             {% endfor %}
           </div>
+          <p x-show="error" class="mt-2 text-xs text-red-600" x-text="error" style="display:none;"></p>
 
-          <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
-            <button type="submit" :disabled="totalCount() === 0"
-                    class="flex-1 rounded-xl bg-luxury-black py-4 text-sm font-semibold uppercase tracking-[0.15em] text-white transition hover:bg-luxury-black/90 disabled:cursor-not-allowed disabled:opacity-40">
-              Add to cart <span x-show="totalCount() > 0">· <span x-text="totalCount()"></span></span>
+          <!-- Quantity -->
+          <h2 class="mb-2 mt-6 text-sm font-bold uppercase tracking-wide">Quantity</h2>
+          <div class="flex items-center gap-4">
+            <div class="flex items-center rounded-xl border border-luxury-line">
+              <button type="button" @click="dec()" class="flex h-11 w-11 items-center justify-center text-lg text-luxury-mid transition hover:text-luxury-black" aria-label="Decrease">−</button>
+              <input type="number" x-model.number="quantity" min="1" :max="maxQty()" class="h-11 w-14 border-x border-luxury-line text-center text-sm outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none">
+              <button type="button" @click="inc()" class="flex h-11 w-11 items-center justify-center text-lg text-luxury-mid transition hover:text-luxury-black" aria-label="Increase">+</button>
+            </div>
+            <button type="submit" :disabled="!selectedSize"
+                    class="flex-1 rounded-xl bg-luxury-black px-8 py-3 text-sm font-semibold uppercase tracking-[0.15em] text-white transition hover:bg-luxury-black/90 disabled:cursor-not-allowed disabled:opacity-40">
+              Add to cart
             </button>
-            <a href="{% url 'cart' %}" class="rounded-xl border border-luxury-line py-4 text-center text-sm font-semibold uppercase tracking-[0.15em] transition hover:bg-luxury-grey sm:px-8">View cart</a>
           </div>
-          <p x-show="totalCount() === 0" class="mt-2 text-xs text-luxury-mid">Choose at least one size to continue.</p>
         </form>
+
+        <!-- Reviews accordion -->
+        <div class="mt-6 border-t border-luxury-line" x-data="{ open: false }">
+          <button type="button" @click="open = !open" class="flex w-full items-center justify-between py-4 text-left">
+            <span class="text-sm font-bold uppercase tracking-wide">Reviews</span>
+            <svg class="h-5 w-5 text-luxury-mid transition-transform" :class="open && 'rotate-180'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div x-show="open" x-transition.opacity class="pb-4 text-sm text-luxury-mid" style="display:none;">
+            No reviews yet. Be the first to share your thoughts on this product.
+          </div>
+        </div>
+
+        <!-- Share -->
+        <div class="mt-6 border-t border-luxury-line pt-6">
+          <p class="mb-3 text-sm font-bold uppercase tracking-wide">Share this Product</p>
+          <div class="flex gap-2">
+            <a href="https://twitter.com/intent/tweet?url={{ share_url|urlencode }}&text={{ product.name|urlencode }}" target="_blank" rel="noopener noreferrer" aria-label="Share on X" class="flex h-10 w-10 items-center justify-center rounded-lg bg-luxury-black text-white transition hover:bg-luxury-black/80">
+              <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18.9 1.6h3.7l-8.1 9.2L24 22.4h-7.4l-5.8-7.6-6.7 7.6H.4l8.6-9.8L0 1.6h7.6l5.2 6.9 6.1-6.9zm-1.3 18.6h2L6.5 3.7H4.4l13.2 16.5z"/></svg>
+            </a>
+            <a href="https://www.facebook.com/sharer/sharer.php?u={{ share_url|urlencode }}" target="_blank" rel="noopener noreferrer" aria-label="Share on Facebook" class="flex h-10 w-10 items-center justify-center rounded-lg bg-luxury-black text-white transition hover:bg-luxury-black/80">
+              <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M22 12a10 10 0 10-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.49-3.89 3.78-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v6.99A10 10 0 0022 12z"/></svg>
+            </a>
+            <a href="https://wa.me/?text={{ share_url|urlencode }}" target="_blank" rel="noopener noreferrer" aria-label="Share on WhatsApp" class="flex h-10 w-10 items-center justify-center rounded-lg bg-luxury-black text-white transition hover:bg-luxury-black/80">
+              <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 004.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0012.04 2zm5.52 11.97c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.25-.64.81-.79.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.5.11-.11.25-.29.37-.43.13-.14.17-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.4-.42-.56-.43h-.48c-.17 0-.43.06-.66.31-.22.25-.86.85-.86 2.07 0 1.22.89 2.4 1.01 2.56.12.17 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.14-1.18-.06-.11-.22-.17-.47-.29z"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Tag -->
+        {% if product.category %}
+        <p class="mt-5 text-sm text-luxury-mid">Tag:
+          <a href="{% url 'catalog' %}?category={{ product.category.slug }}" class="font-semibold uppercase text-luxury-black underline underline-offset-2">{{ product.category.name }}</a>
+        </p>
+        {% endif %}
       </div>
     </div>
 
-    <!-- Similar -->
+    <!-- Zoom overlay -->
+    <div x-show="zoomOpen" x-transition.opacity @click="zoomOpen = false" @keydown.escape.window="zoomOpen = false"
+         class="fixed inset-0 z-[120] flex items-center justify-center bg-black/90 p-6" style="display:none;">
+      <button type="button" class="absolute right-5 top-5 text-white/80 hover:text-white" aria-label="Close">
+        <svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+      <img :src="images[current]" alt="{{ product.name }}" class="max-h-[90vh] max-w-full rounded-lg object-contain">
+    </div>
+
+    <!-- You may also like -->
     {% if similar_products %}
     <section class="mt-16 md:mt-20">
       <h2 class="mb-8 font-barlow text-2xl font-black uppercase tracking-tight">You may also like</h2>
@@ -119,12 +190,26 @@
 
 {% block extra_js %}
 <script>
-  function sizePicker(initial) {
+  function productDetail(config) {
     return {
-      qty: initial,
-      inc(size, max) { if (this.qty[size] < max) this.qty[size]++; },
-      dec(size) { if (this.qty[size] > 0) this.qty[size]--; },
-      totalCount() { return Object.values(this.qty).reduce((a, b) => a + (parseInt(b) || 0), 0); },
+      images: config.images,
+      stock: config.stock,
+      current: 0,
+      selectedSize: null,
+      quantity: 1,
+      zoomOpen: false,
+      error: '',
+      next() { if (this.images.length) this.current = (this.current + 1) % this.images.length; },
+      prev() { if (this.images.length) this.current = (this.current - 1 + this.images.length) % this.images.length; },
+      maxQty() { return this.selectedSize ? (this.stock[this.selectedSize] || 1) : 99; },
+      selectSize(size) {
+        this.selectedSize = size;
+        this.error = '';
+        if (this.quantity > this.maxQty()) this.quantity = this.maxQty();
+        if (this.quantity < 1) this.quantity = 1;
+      },
+      inc() { if (this.quantity < this.maxQty()) this.quantity++; },
+      dec() { if (this.quantity > 1) this.quantity--; },
     };
   }
 </script>
