@@ -1,23 +1,74 @@
 {% extends 'base.html' %}
 
-{% block title %}Profile - TEEBUSINESS{% endblock %}
+{% block title %}Profile Settings — TEEBUSINESS{% endblock %}
 
 {% block content %}
-<section class="py-16 bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 class="text-4xl font-bold text-center mb-8">Profile Settings</h1>
-        
-        <div class="max-w-3xl mx-auto">
-            <div class="bg-gray-50 p-8 rounded-lg">
-                <form method="post">
-                    {% csrf_token %}
-                    {{ form.as_p }}
-                    <button type="submit" class="bg-black text-white px-6 py-3 rounded-full font-bold hover:bg-gray-800 transition">
-                        Update Profile
-                    </button>
-                </form>
-            </div>
-        </div>
+<section class="bg-white py-12 md:py-16">
+  <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+    <div class="mb-8">
+      <p class="mb-1 text-[11px] font-bold uppercase tracking-[0.25em] text-luxury-mid">My account</p>
+      <h1 class="font-barlow text-3xl font-black uppercase tracking-tight md:text-4xl">Profile settings</h1>
+      <p class="mt-2 text-sm text-luxury-mid">Update your details anytime. Address fields are optional — complete them whenever you’re ready.</p>
     </div>
+
+    {% if messages %}
+      {% for message in messages %}
+      <div class="mb-5 rounded-xl border px-4 py-3 text-sm {% if message.tags == 'success' %}border-green-200 bg-green-50 text-green-800{% else %}border-red-200 bg-red-50 text-red-700{% endif %}">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+
+    <form method="post" class="space-y-6 rounded-2xl border border-luxury-line bg-luxury-grey/30 p-6 md:p-8" novalidate>
+      {% csrf_token %}
+
+      <div>
+        <h2 class="mb-4 font-barlow text-sm font-bold uppercase tracking-widest">Personal details</h2>
+        <div class="grid gap-5 sm:grid-cols-2">
+          <div>
+            <label for="{{ form.first_name.id_for_label }}" class="mb-1.5 block text-xs font-semibold uppercase tracking-[0.12em] text-luxury-mid">First name</label>
+            {{ form.first_name }}
+            {% if form.first_name.errors %}<p class="mt-1.5 text-xs text-red-600">{{ form.first_name.errors.0 }}</p>{% endif %}
+          </div>
+          <div>
+            <label for="{{ form.last_name.id_for_label }}" class="mb-1.5 block text-xs font-semibold uppercase tracking-[0.12em] text-luxury-mid">Last name</label>
+            {{ form.last_name }}
+            {% if form.last_name.errors %}<p class="mt-1.5 text-xs text-red-600">{{ form.last_name.errors.0 }}</p>{% endif %}
+          </div>
+          <div>
+            <label for="{{ form.email.id_for_label }}" class="mb-1.5 block text-xs font-semibold uppercase tracking-[0.12em] text-luxury-mid">Email</label>
+            {{ form.email }}
+            {% if form.email.errors %}<p class="mt-1.5 text-xs text-red-600">{{ form.email.errors.0 }}</p>{% endif %}
+          </div>
+          <div>
+            <label for="{{ form.phone_number.id_for_label }}" class="mb-1.5 block text-xs font-semibold uppercase tracking-[0.12em] text-luxury-mid">Phone</label>
+            {{ form.phone_number }}
+            {% if form.phone_number.errors %}<p class="mt-1.5 text-xs text-red-600">{{ form.phone_number.errors.0 }}</p>{% endif %}
+          </div>
+        </div>
+      </div>
+
+      <div class="border-t border-luxury-line pt-6">
+        <h2 class="mb-4 font-barlow text-sm font-bold uppercase tracking-widest">Delivery address <span class="ml-1 text-[10px] font-medium normal-case tracking-normal text-luxury-mid">(optional)</span></h2>
+        <div class="grid gap-5 sm:grid-cols-2">
+          <div class="sm:col-span-2">
+            <label for="{{ form.address.id_for_label }}" class="mb-1.5 block text-xs font-semibold uppercase tracking-[0.12em] text-luxury-mid">Address</label>
+            {{ form.address }}
+          </div>
+          <div>
+            <label for="{{ form.city.id_for_label }}" class="mb-1.5 block text-xs font-semibold uppercase tracking-[0.12em] text-luxury-mid">City</label>
+            {{ form.city }}
+          </div>
+          <div>
+            <label for="{{ form.country.id_for_label }}" class="mb-1.5 block text-xs font-semibold uppercase tracking-[0.12em] text-luxury-mid">Country</label>
+            {{ form.country }}
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3 pt-2">
+        <button type="submit" class="rounded-xl bg-luxury-black px-8 py-3.5 text-sm font-semibold uppercase tracking-[0.15em] text-white transition hover:bg-luxury-black/90">Save changes</button>
+        <a href="{% url 'dashboard' %}" class="text-sm font-semibold uppercase tracking-widest text-luxury-mid hover:text-luxury-black">Back</a>
+      </div>
+    </form>
+  </div>
 </section>
 {% endblock %}

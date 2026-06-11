@@ -213,12 +213,15 @@ class ProfileForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'email', 'phone_number')
+        fields = ('first_name', 'last_name', 'email', 'phone_number', 'address', 'city', 'country')
         widgets = {
             'first_name': forms.TextInput(attrs={'class': INPUT_CLASS, 'placeholder': 'First name'}),
             'last_name': forms.TextInput(attrs={'class': INPUT_CLASS, 'placeholder': 'Last name'}),
             'email': forms.EmailInput(attrs={'class': INPUT_CLASS, 'placeholder': 'you@example.com'}),
             'phone_number': forms.TextInput(attrs={'class': INPUT_CLASS, 'placeholder': 'Phone number'}),
+            'address': forms.TextInput(attrs={'class': INPUT_CLASS, 'placeholder': 'Street address'}),
+            'city': forms.TextInput(attrs={'class': INPUT_CLASS, 'placeholder': 'City'}),
+            'country': forms.TextInput(attrs={'class': INPUT_CLASS, 'placeholder': 'Country'}),
         }
 
     def __init__(self, *args, **kwargs):

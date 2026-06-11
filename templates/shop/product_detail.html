@@ -4,6 +4,7 @@
 {% block title %}{{ product.name }} — TEEBUSINESS{% endblock %}
 
 {% block content %}
+{% include 'includes/page_hero.html' with compact=True eyebrow=product.category.name title=product.name %}
 <section class="bg-white py-10 md:py-16">
   <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
     <nav class="mb-6 text-xs uppercase tracking-widest text-luxury-mid">
@@ -35,10 +36,8 @@
 
       <!-- Info + size picker -->
       <div>
-        {% if product.brand %}<p class="mb-1 text-[11px] font-bold uppercase tracking-[0.2em] text-luxury-mid">{{ product.brand.name }}</p>{% endif %}
-        <h1 class="font-barlow text-3xl font-black uppercase tracking-tight md:text-4xl">{{ product.name }}</h1>
-
-        <div class="mt-3 flex items-center gap-3">
+        {% if product.brand %}<p class="mb-2 text-[11px] font-bold uppercase tracking-[0.2em] text-luxury-mid">{{ product.brand.name }}</p>{% endif %}
+        <div class="flex items-center gap-3">
           <span class="font-barlow text-2xl font-bold">{{ product.discounted_price|convert_price:request }}</span>
           {% if product.discount_percent %}
           <span class="text-sm text-luxury-mid line-through">{{ product.price_gnf|convert_price:request }}</span>

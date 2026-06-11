@@ -1,0 +1,25 @@
+{% load static %}
+{% comment %}
+Reusable hero with the shared brand background.
+Params: eyebrow, title (required), subtitle, cta_url, cta_label, compact (bool).
+{% endcomment %}
+<section class="relative overflow-hidden bg-luxury-black text-white">
+  <img src="{% static 'assets/images/background1.jpg' %}" alt="" aria-hidden="true"
+       fetchpriority="high" decoding="async"
+       class="absolute inset-0 h-full w-full object-cover object-center opacity-70">
+  <div class="absolute inset-0 bg-gradient-to-r from-luxury-black via-luxury-black/80 to-luxury-black/30"></div>
+
+  <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 {% if compact %}py-12 md:py-16{% else %}py-16 md:py-24{% endif %}">
+    <div class="w-full lg:w-3/5">
+      {% if eyebrow %}<p class="mb-3 text-[11px] font-bold uppercase tracking-[0.35em] text-white/60">{{ eyebrow }}</p>{% endif %}
+      <h1 class="font-barlow {% if compact %}text-3xl md:text-4xl{% else %}text-4xl md:text-5xl{% endif %} font-black uppercase leading-[1.05] tracking-tight">{{ title }}</h1>
+      {% if subtitle %}<p class="mt-4 max-w-xl text-sm leading-7 text-white/70 md:text-base">{{ subtitle }}</p>{% endif %}
+      {% if cta_url and cta_label %}
+      <a href="{{ cta_url }}" class="mt-7 inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-xs font-bold uppercase tracking-widest text-luxury-black transition hover:bg-white/90">
+        {{ cta_label }}
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+      </a>
+      {% endif %}
+    </div>
+  </div>
+</section>

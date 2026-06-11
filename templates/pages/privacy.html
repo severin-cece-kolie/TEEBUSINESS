@@ -4,13 +4,10 @@
 {% block meta_desc %}How TEEBUSINESS collects, uses and protects your personal data.{% endblock %}
 
 {% block content %}
+{% include 'includes/page_hero.html' with compact=True eyebrow='Your privacy matters' title='Privacy Policy' %}
 <section class="bg-white py-14 md:py-20">
   <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-    <div class="mb-10 border-b border-luxury-line pb-8">
-      <p class="mb-2 text-[11px] font-bold uppercase tracking-[0.25em] text-luxury-mid">Your privacy matters</p>
-      <h1 class="font-barlow text-3xl font-black uppercase tracking-tight md:text-4xl">Privacy Policy</h1>
-      <p class="mt-3 text-sm text-luxury-mid">Last updated: {% now "F Y" %}</p>
-    </div>
+    <p class="mb-8 border-b border-luxury-line pb-6 text-sm text-luxury-mid">Last updated: {% now "F Y" %}</p>
 
     <div class="space-y-9 text-[15px] leading-7 text-luxury-mid">
       <p>At TEEBUSINESS, we respect your privacy and are committed to protecting your personal data. This policy explains what we collect, why, and the rights you have over your information.</p>

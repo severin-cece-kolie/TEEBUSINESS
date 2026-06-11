@@ -115,13 +115,13 @@ function welcomePopup() {
             this.message = '';
             
             const payload = {
-                source: 'Welcome Popup',
                 full_name: this.fullName,
                 email: this.email,
             };
-            
+
             try {
-                const response = await fetch('{% url "newsletter_subscribe" %}', {
+                // Creates + logs in the visitor without leaving the page.
+                const response = await fetch('{% url "community_signup" %}', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -129,20 +129,19 @@ function welcomePopup() {
                     },
                     body: JSON.stringify(payload)
                 });
-                
+
                 const data = await response.json();
                 this.status = data.status;
                 this.message = data.message;
-                
+
                 if (data.status === 'success') {
-                    // Success! Close after 2 seconds
-                    setTimeout(() => {
-                        this.close();
-                    }, 2000);
+                    // Mark as done and close — visitor keeps browsing, now signed in.
+                    localStorage.setItem('tee_popup_seen', 'true');
+                    setTimeout(() => { this.close(); }, 1500);
                 }
             } catch (error) {
                 this.status = 'error';
-                this.message = 'An error occurred. Please try again.';
+                this.message = 'Something went wrong. Please try again.';
             } finally {
                 this.loading = false;
             }

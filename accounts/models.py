@@ -40,6 +40,10 @@ class User(AbstractUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField(unique=True)
     phone_number = models.CharField(max_length=20, blank=True, null=True)
+    # Optional profile details — can be completed later from Profile Settings.
+    address = models.CharField(max_length=255, blank=True)
+    city = models.CharField(max_length=100, blank=True)
+    country = models.CharField(max_length=100, blank=True)
     is_email_verified = models.BooleanField(default=False)
     email_verification_date = models.DateTimeField(blank=True, null=True)
     failed_login_attempts = models.PositiveIntegerField(default=0)

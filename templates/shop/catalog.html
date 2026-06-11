@@ -1,58 +1,43 @@
 {% extends 'base.html' %}
 
-{% block title %}Shop - TEEBUSINESS{% endblock %}
+{% block title %}Shop — TEEBUSINESS{% endblock %}
 
 {% block content %}
-<section class="py-16 bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 class="text-4xl font-bold text-center mb-8">Our Products</h1>
-        
-        <!-- Filters -->
-        <div class="mb-8 flex flex-wrap gap-4 justify-center">
-            <form method="get" class="flex gap-2">
-                <select name="category" class="px-4 py-2 border rounded">
-                    <option value="">All Categories</option>
-                    {% for category in categories %}
-                    <option value="{{ category.slug }}" {% if selected_category == category.slug %}selected{% endif %}>
-                        {{ category.name }}
-                    </option>
-                    {% endfor %}
-                </select>
-                <select name="brand" class="px-4 py-2 border rounded">
-                    <option value="">All Brands</option>
-                    {% for brand in brands %}
-                    <option value="{{ brand.id }}" {% if selected_brand == brand.id|stringformat:"s" %}selected{% endif %}>
-                        {{ brand.name }}
-                    </option>
-                    {% endfor %}
-                </select>
-                <input type="text" name="q" placeholder="Search..." value="{{ search_q }}" class="px-4 py-2 border rounded">
-                <button type="submit" class="px-6 py-2 bg-black text-white rounded">Filter</button>
-            </form>
-        </div>
-        
-        <!-- Products Grid -->
-        {% if products %}
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {% for product in products %}
-            <div class="product-card">
-                <a href="{% url 'product_detail' product.id %}">
-                    {% if product.images.first %}
-                    <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}" class="w-full h-64 object-cover rounded-lg">
-                    {% else %}
-                    <div class="w-full h-64 bg-gray-200 rounded-lg flex items-center justify-center">
-                        <span class="text-gray-400">No Image</span>
-                    </div>
-                    {% endif %}
-                    <h3 class="mt-4 text-lg font-semibold">{{ product.name }}</h3>
-                    <p class="text-gray-600">{{ current_currency_icon }}{{ product.price }}</p>
-                </a>
-            </div>
-            {% endfor %}
-        </div>
-        {% else %}
-        <p class="text-center text-gray-500">No products found.</p>
-        {% endif %}
+{% include 'includes/page_hero.html' with compact=True eyebrow='The collection' title='Shop all' subtitle='Curated premium footwear — explore the full TEEBUSINESS lineup.' %}
+
+<section class="bg-white py-10 md:py-14">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <!-- Filters -->
+    <form method="get" class="mb-8 flex flex-wrap items-center gap-3">
+      <select name="category" class="rounded-xl border border-luxury-line bg-white px-4 py-2.5 text-sm outline-none focus:border-luxury-black">
+        <option value="">All categories</option>
+        {% for category in categories %}
+        <option value="{{ category.slug }}" {% if selected_category == category.slug %}selected{% endif %}>{{ category.name }}</option>
+        {% endfor %}
+      </select>
+      <select name="brand" class="rounded-xl border border-luxury-line bg-white px-4 py-2.5 text-sm outline-none focus:border-luxury-black">
+        <option value="">All brands</option>
+        {% for brand in brands %}
+        <option value="{{ brand.id }}" {% if selected_brand == brand.id|stringformat:"s" %}selected{% endif %}>{{ brand.name }}</option>
+        {% endfor %}
+      </select>
+      <input type="text" name="q" placeholder="Search products" value="{{ search_q }}"
+             class="min-w-[12rem] flex-1 rounded-xl border border-luxury-line bg-white px-4 py-2.5 text-sm outline-none focus:border-luxury-black sm:flex-none">
+      <button type="submit" class="rounded-xl bg-luxury-black px-6 py-2.5 text-xs font-bold uppercase tracking-widest text-white transition hover:bg-black/90">Filter</button>
+      {% if selected_category or selected_brand or search_q %}
+      <a href="{% url 'catalog' %}" class="text-xs font-semibold uppercase tracking-widest text-luxury-mid hover:text-luxury-black">Clear</a>
+      {% endif %}
+    </form>
+
+    {% if products %}
+    <div class="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 lg:grid-cols-4 md:gap-x-6 md:gap-y-10">
+      {% for product in products %}{% include 'includes/product_card.html' %}{% endfor %}
     </div>
+    {% else %}
+    <div class="rounded-2xl border border-luxury-line bg-luxury-grey/40 p-12 text-center">
+      <p class="text-luxury-mid">No products found.</p>
+    </div>
+    {% endif %}
+  </div>
 </section>
 {% endblock %}

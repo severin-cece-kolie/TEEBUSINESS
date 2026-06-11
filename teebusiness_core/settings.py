@@ -86,6 +86,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'shop.context_processors.currency_processor',
+                'shop.context_processors.business_processor',
                 'cart.context_processors.cart_processor',
             ],
         },
@@ -202,6 +203,19 @@ TWILIO_PHONE_NUMBER = os.environ.get('TWILIO_PHONE_NUMBER', '')
 BUSINESS_PHONE = os.environ.get('BUSINESS_PHONE', '+224 623 70 78 33')
 BUSINESS_EMAIL = os.environ.get('BUSINESS_EMAIL', 'supportteebusiness@gmail.com')
 BUSINESS_NAME = os.environ.get('BUSINESS_NAME', 'TEEBUSINESS')
+
+# ===== SOCIAL MEDIA & WHATSAPP =====
+SOCIAL_TIKTOK = os.environ.get('SOCIAL_TIKTOK', 'https://www.tiktok.com/@teebusines')
+SOCIAL_FACEBOOK = os.environ.get(
+    'SOCIAL_FACEBOOK', 'https://www.facebook.com/share/17Yxep5woR/?mibextid=wwXIfr'
+)
+# WhatsApp support number (digits only, no +/spaces) derived from BUSINESS_PHONE.
+WHATSAPP_NUMBER = os.environ.get(
+    'WHATSAPP_NUMBER', ''.join(ch for ch in BUSINESS_PHONE if ch.isdigit())
+)
+WHATSAPP_MESSAGE = os.environ.get(
+    'WHATSAPP_MESSAGE', 'Hello, I would like information about your products.'
+)
 
 # ===== SECURITY SETTINGS =====
 CSRF_COOKIE_SECURE = not DEBUG

@@ -144,6 +144,78 @@ def resend_otp_view(request):
     return render(request, 'accounts/resend_otp.html', {'form': form})
 
 
+@never_cache
+def community_signup(request):
+    """
+    Lead-capture from the 'Join Community' popup. Creates an active account
+    and logs the visitor in immediately, without leaving the current page.
+    Returns JSON so the popup can close and the user keeps browsing.
+    """
+    import json
+    from django.http import JsonResponse
+    from django.core.validators import validate_email
+    from django.core.exceptions import ValidationError
+
+    if request.method != 'POST':
+        return JsonResponse({'status': 'error', 'message': 'Method not allowed.'}, status=405)
+
+    try:
+        data = json.loads(request.body or '{}')
+    except json.JSONDecodeError:
+        return JsonResponse({'status': 'error', 'message': 'Invalid request.'}, status=400)
+
+    email = (data.get('email') or '').strip().lower()
+    full_name = (data.get('full_name') or '').strip()
+
+    try:
+        validate_email(email)
+    except ValidationError:
+        return JsonResponse({'status': 'error', 'message': 'Please enter a valid email address.'}, status=400)
+
+    first_name, _, last_name = full_name.partition(' ')
+
+    existing = User.objects.filter(email__iexact=email).first()
+    if existing is not None:
+        # Already registered — don't duplicate. Log them in only if already
+        # authenticated isn't possible here, so just acknowledge.
+        if not request.user.is_authenticated and existing.is_active:
+            login(request, existing, backend='accounts.backends.EmailBackend')
+        return JsonResponse({'status': 'success', 'message': 'Welcome back to the TEEBUSINESS community.'})
+
+    user = User(
+        username=email,
+        email=email,
+        first_name=first_name,
+        last_name=last_name,
+        is_active=True,            # No OTP gate for lead capture
+        is_email_verified=False,   # They can verify / set a password later
+    )
+    from django.utils.crypto import get_random_string
+    user.set_password(get_random_string(20))
+    user.save()
+
+    # Also capture them as a newsletter subscriber (best-effort).
+    try:
+        from communication.models import NewsletterSubscriber
+        if not NewsletterSubscriber.objects.filter(email__iexact=email).exists():
+            NewsletterSubscriber.objects.create(
+                full_name=full_name or email.split('@')[0],
+                email=email,
+                source='website',
+                status='active',
+            )
+    except Exception:
+        pass
+
+    login(request, user, backend='accounts.backends.EmailBackend')
+    try:
+        send_welcome_email(user, request)
+    except Exception:
+        pass
+
+    return JsonResponse({'status': 'success', 'message': 'Welcome to the TEEBUSINESS community.'})
+
+
 def logout_view(request):
     if request.method == 'POST':
         user = request.user if request.user.is_authenticated else None
