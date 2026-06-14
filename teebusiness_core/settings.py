@@ -28,11 +28,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY', 'odsa&9q%#ic#7q6kwumdl2o=v9(wy1f96ij%6vi2&%)vbouc@s')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG', 'False') == 'False'
+# (Set DEBUG=True only for local development.)
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-# Raise error if DEBUG is True in production-like environment
+# Refuse to boot a production instance (DEBUG off) without an explicit SECRET_KEY.
 if not DEBUG and not os.environ.get('SECRET_KEY'):
-    raise ValueError("SECRET_KEY must be set in production when DEBUG=False")
+    raise ValueError("SECRET_KEY must be set in the environment when DEBUG=False")
 
 ALLOWED_HOSTS = os.environ.get(
     'DJANGO_ALLOWED_HOSTS',
@@ -189,6 +190,11 @@ SERVER_EMAIL = os.environ.get('SERVER_EMAIL', DEFAULT_FROM_EMAIL)
 # ===== SITE CONFIGURATION =====
 SITE_URL = os.environ.get('SITE_URL', 'http://localhost:8000')
 
+# ===== CHECKOUT =====
+# Flat shipping fee and tax rate (%) applied at checkout. GNF.
+SHIPPING_COST_GNF = int(os.environ.get('SHIPPING_COST_GNF', '25000'))
+TAX_RATE_PERCENT = float(os.environ.get('TAX_RATE_PERCENT', '0'))
+
 # Master switch for automatic subscriber product alerts (new/restock/discount).
 # Set False (e.g. during data imports/seeding) to avoid emailing on bulk changes.
 PRODUCT_NOTIFICATIONS_ENABLED = os.environ.get('PRODUCT_NOTIFICATIONS_ENABLED', 'True') == 'True'
@@ -251,12 +257,21 @@ if not DEBUG:
     SECURE_HSTS_INCLUDE_SUBDOMAINS = os.environ.get('SECURE_HSTS_INCLUDE_SUBDOMAINS', 'True') == 'True'
     SECURE_HSTS_PRELOAD = os.environ.get('SECURE_HSTS_PRELOAD', 'True') == 'True'
 
-SECURE_CONTENT_SECURITY_POLICY = {
-    "default-src": ("'self'",),
-    "script-src": ("'self'", "'unsafe-inline'", "cdn.jsdelivr.net"),
-    "style-src": ("'self'", "'unsafe-inline'", "fonts.googleapis.com", "cdn.tailwindcss.com"),
-    "font-src": ("'self'", "fonts.gstatic.com"),
-}
+# Content-Security-Policy. NOTE: Django 5.2 has no native CSP setting
+# (SECURE_CSP arrives in 6.0), so this is emitted by SecurityHeadersMiddleware.
+# 'unsafe-inline' is required because the UI uses inline scripts/styles
+# (Alpine, Tailwind CDN, chart init). It still restricts external origins.
+CONTENT_SECURITY_POLICY = (
+    "default-src 'self'; "
+    "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdn.tailwindcss.com; "
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.tailwindcss.com; "
+    "font-src 'self' https://fonts.gstatic.com data:; "
+    "img-src 'self' data: blob: https:; "
+    "connect-src 'self'; "
+    "frame-ancestors 'none'; "
+    "base-uri 'self'; "
+    "form-action 'self'"
+)
 
 # ===== PASSWORD RESET SETTINGS =====
 PASSWORD_RESET_TIMEOUT = 3600 * 24  # 24 hours

@@ -139,6 +139,11 @@ class SecurityHeadersMiddleware:
         response['X-XSS-Protection'] = '1; mode=block'
         response['Referrer-Policy'] = 'strict-origin-when-cross-origin'
         response['Permissions-Policy'] = 'geolocation=(), microphone=(), camera=()'
+
+        # Content-Security-Policy (Django 5.2 has no native setting).
+        csp = getattr(settings, 'CONTENT_SECURITY_POLICY', '')
+        if csp and 'Content-Security-Policy' not in response:
+            response['Content-Security-Policy'] = csp
         
         # HSTS header (only in production with HTTPS)
         if not settings.DEBUG:

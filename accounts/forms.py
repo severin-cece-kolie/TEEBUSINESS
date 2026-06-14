@@ -1,5 +1,7 @@
 from django import forms
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, SetPasswordForm
+from django.contrib.auth.forms import (
+    AuthenticationForm, UserCreationForm, SetPasswordForm, PasswordChangeForm,
+)
 from accounts.models import User
 
 
@@ -275,6 +277,24 @@ class StyledSetPasswordForm(SetPasswordForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['new_password1'].widget = forms.PasswordInput(attrs={
+            'class': INPUT_CLASS, 'placeholder': 'New password', 'autocomplete': 'new-password',
+        })
+        self.fields['new_password2'].widget = forms.PasswordInput(attrs={
+            'class': INPUT_CLASS, 'placeholder': 'Confirm new password', 'autocomplete': 'new-password',
+        })
+        self.error_messages['password_mismatch'] = 'The two passwords don’t match.'
+        _strip_help_and_labels(self)
+
+
+class StyledPasswordChangeForm(PasswordChangeForm):
+    """Change-password form (logged-in users) with premium inputs."""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['old_password'].widget = forms.PasswordInput(attrs={
+            'class': INPUT_CLASS, 'placeholder': 'Current password', 'autocomplete': 'current-password',
+        })
         self.fields['new_password1'].widget = forms.PasswordInput(attrs={
             'class': INPUT_CLASS, 'placeholder': 'New password', 'autocomplete': 'new-password',
         })

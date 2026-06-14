@@ -1,9 +1,23 @@
+from decimal import Decimal, ROUND_HALF_UP
+
+from django.conf import settings
 from django.contrib import messages
 from django.db import transaction
 from django.db.models import F
 from django.shortcuts import get_object_or_404, redirect, render
 
 from shop.models import Product, ProductSize
+from .models import Order, OrderItem
+
+
+def _checkout_totals(subtotal):
+    """Return (shipping, tax, total) as Decimals from a GNF subtotal."""
+    subtotal = Decimal(str(subtotal))
+    shipping = Decimal('0') if subtotal <= 0 else Decimal(str(settings.SHIPPING_COST_GNF))
+    tax = (subtotal * Decimal(str(settings.TAX_RATE_PERCENT)) / Decimal('100')).quantize(
+        Decimal('1'), rounding=ROUND_HALF_UP)
+    total = subtotal + shipping + tax
+    return shipping, tax, total
 
 
 # ─────────────────────────────────────────────────────────────
@@ -193,14 +207,27 @@ def checkout(request):
     if not groups:
         messages.error(request, 'Your cart is empty.')
         return redirect('cart')
+
+    shipping, tax, total = _checkout_totals(total_gnf)
+    user = request.user if request.user.is_authenticated else None
+    prefill = {
+        'full_name': (user.get_full_name() if user else '') or (user.first_name if user else ''),
+        'phone': getattr(user, 'phone_number', '') or '' if user else '',
+        'email': user.email if user else '',
+        'city': getattr(user, 'city', '') if user else '',
+        'address': getattr(user, 'address', '') if user else '',
+    }
     return render(request, 'cart/checkout.html', {
-        'groups': groups, 'total_gnf': total_gnf, 'total_qty': total_qty,
+        'groups': groups, 'subtotal_gnf': total_gnf, 'total_qty': total_qty,
+        'shipping_gnf': shipping, 'tax_gnf': tax, 'total_gnf': total,
+        'tax_rate': settings.TAX_RATE_PERCENT, 'prefill': prefill,
+        'payment_choices': Order.PAYMENT_CHOICES,
     })
 
 
 @transaction.atomic
 def place_order(request):
-    """Validate stock, deduct it atomically, then clear the cart."""
+    """Validate input + stock, create the Order, deduct stock, clear the cart."""
     if request.method != 'POST':
         return redirect('checkout')
 
@@ -209,11 +236,20 @@ def place_order(request):
         messages.error(request, 'Your cart is empty.')
         return redirect('cart')
 
-    # Lock the size rows we're about to decrement to avoid oversells.
-    summary = []
-    total_gnf = 0.0
-    total_qty = 0
+    # --- Customer / shipping fields ---
+    fields = {k: request.POST.get(k, '').strip() for k in
+              ('full_name', 'phone', 'email', 'city', 'district', 'address', 'payment_method')}
+    required = ['full_name', 'phone', 'email', 'city', 'address']
+    missing = [f for f in required if not fields[f]]
+    if missing or '@' not in fields['email']:
+        messages.error(request, 'Please complete all required fields with a valid email.')
+        return redirect('checkout')
+    if fields['payment_method'] not in dict(Order.PAYMENT_CHOICES):
+        fields['payment_method'] = 'cod'
 
+    # --- Validate stock (lock rows) and build line snapshots ---
+    line_rows = []
+    subtotal = Decimal('0')
     for key, qty in cart.items():
         pid, size = _split_key(key)
         try:
@@ -222,8 +258,7 @@ def place_order(request):
             continue
 
         size_obj = (
-            ProductSize.objects
-            .select_for_update()
+            ProductSize.objects.select_for_update()
             .select_related('product')
             .filter(product_id=pid, size=size, product__is_active=True)
             .first()
@@ -231,46 +266,47 @@ def place_order(request):
         if size_obj is None:
             messages.error(request, 'A product in your cart is no longer available. Please review your cart.')
             return redirect('cart')
-
         if quantity > size_obj.quantity:
-            messages.error(
-                request,
-                f'Only {size_obj.quantity} left of {size_obj.product.name} (size {size}). Please adjust your cart.',
-            )
+            messages.error(request, f'Only {size_obj.quantity} left of {size_obj.product.name} (size {size}). Please adjust your cart.')
             return redirect('cart')
 
-        unit_price = float(size_obj.product.discounted_price)
-        subtotal = unit_price * quantity
-        summary.append({
-            'name': size_obj.product.name,
-            'size': size,
-            'qty': quantity,
-            'unit_price': unit_price,
-            'subtotal': subtotal,
+        unit_price = Decimal(str(size_obj.product.discounted_price)).quantize(Decimal('1'), rounding=ROUND_HALF_UP)
+        line_rows.append({
+            'product': size_obj.product, 'name': size_obj.product.name,
+            'size': size, 'qty': quantity, 'unit_price': unit_price,
+            'subtotal': unit_price * quantity,
         })
-        total_gnf += subtotal
-        total_qty += quantity
+        subtotal += unit_price * quantity
 
-    # Deduct stock now that everything validated.
-    for key, qty in cart.items():
-        pid, size = _split_key(key)
-        quantity = max(1, int(qty))
-        ProductSize.objects.filter(product_id=pid, size=size).update(
-            quantity=F('quantity') - quantity
+    shipping, tax, total = _checkout_totals(subtotal)
+
+    # --- Create the order ---
+    order = Order.objects.create(
+        user=request.user if request.user.is_authenticated else None,
+        full_name=fields['full_name'], phone=fields['phone'], email=fields['email'],
+        city=fields['city'], district=fields['district'], address=fields['address'],
+        payment_method=fields['payment_method'], status='pending',
+        subtotal_gnf=subtotal, shipping_gnf=shipping, tax_gnf=tax, total_gnf=total,
+    )
+    for row in line_rows:
+        OrderItem.objects.create(
+            order=order, product=row['product'], product_name=row['name'],
+            size=row['size'], quantity=row['qty'], unit_price_gnf=row['unit_price'],
         )
+        ProductSize.objects.filter(product=row['product'], size=row['size']).update(
+            quantity=F('quantity') - row['qty'])
 
     request.session['cart'] = {}
     request.session.modified = True
 
-    # Group the snapshot by product for a clean confirmation page.
-    grouped = {}
-    for row in summary:
-        g = grouped.setdefault(row['name'], {'name': row['name'], 'lines': [], 'subtotal': 0.0})
-        g['lines'].append(row)
-        g['subtotal'] += row['subtotal']
+    return redirect('order_confirmation', order_number=order.order_number)
 
-    return render(request, 'cart/order_complete.html', {
-        'groups': sorted(grouped.values(), key=lambda g: g['name']),
-        'total_gnf': total_gnf,
-        'total_qty': total_qty,
-    })
+
+def order_confirmation(request, order_number):
+    order = get_object_or_404(Order.objects.prefetch_related('items'), order_number=order_number)
+    return render(request, 'cart/order_complete.html', {'order': order})
+
+
+def order_invoice(request, order_number):
+    order = get_object_or_404(Order.objects.prefetch_related('items'), order_number=order_number)
+    return render(request, 'cart/invoice.html', {'order': order})

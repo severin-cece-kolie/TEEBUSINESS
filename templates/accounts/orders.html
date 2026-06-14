@@ -1,20 +1,48 @@
 {% extends 'base.html' %}
+{% load currency_tags %}
 
-{% block title %}My Orders - TEEBUSINESS{% endblock %}
+{% block title %}My Orders — TEEBUSINESS{% endblock %}
 
 {% block content %}
-<section class="py-16 bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 class="text-4xl font-bold text-center mb-8">My Orders</h1>
-        
-        <div class="max-w-3xl mx-auto">
-            <div class="bg-gray-50 p-8 rounded-lg">
-                <p class="text-gray-600">You have no orders yet.</p>
-                <a href="{% url 'catalog' %}" class="inline-block mt-4 bg-black text-white px-6 py-3 rounded-full font-bold hover:bg-gray-800 transition">
-                    Start Shopping
-                </a>
-            </div>
+<section class="bg-white py-12 md:py-16">
+  <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+    <h1 class="mb-8 font-barlow text-3xl font-black uppercase tracking-tight md:text-4xl">My orders</h1>
+
+    {% if orders %}
+    <div class="space-y-4">
+      {% for order in orders %}
+      <div class="overflow-hidden rounded-2xl border border-luxury-line">
+        <div class="flex flex-wrap items-center justify-between gap-3 bg-luxury-grey/40 px-5 py-3">
+          <div>
+            <p class="text-sm font-bold tracking-widest">#{{ order.order_number }}</p>
+            <p class="text-xs text-luxury-mid">{{ order.created_at|date:"d M Y" }} · {{ order.total_items }} item{{ order.total_items|pluralize }}</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-white" style="background:{{ order.status_color }}">{{ order.get_status_display }}</span>
+            <span class="font-barlow text-base font-black">{{ order.total_gnf|convert_price:request }}</span>
+          </div>
         </div>
+        <div class="divide-y divide-luxury-line">
+          {% for item in order.items.all %}
+          <div class="flex items-center justify-between px-5 py-2.5 text-sm">
+            <span class="text-luxury-mid">{{ item.product_name }} · Size {{ item.size }} × {{ item.quantity }}</span>
+            <span class="font-semibold">{{ item.subtotal_gnf|convert_price:request }}</span>
+          </div>
+          {% endfor %}
+        </div>
+        <div class="flex justify-end gap-3 px-5 py-3">
+          <a href="{% url 'order_invoice' order.order_number %}" target="_blank" class="text-xs font-bold uppercase tracking-widest text-luxury-mid hover:text-luxury-black">Invoice</a>
+          <a href="{% url 'order_confirmation' order.order_number %}" class="text-xs font-bold uppercase tracking-widest text-luxury-black underline">Details</a>
+        </div>
+      </div>
+      {% endfor %}
     </div>
+    {% else %}
+    <div class="rounded-2xl border border-luxury-line bg-luxury-grey/40 p-12 text-center">
+      <p class="text-luxury-mid">You have no orders yet.</p>
+      <a href="{% url 'catalog' %}" class="mt-5 inline-block rounded-full bg-luxury-black px-7 py-3.5 text-xs font-bold uppercase tracking-widest text-white transition hover:bg-black/90">Start shopping</a>
+    </div>
+    {% endif %}
+  </div>
 </section>
 {% endblock %}

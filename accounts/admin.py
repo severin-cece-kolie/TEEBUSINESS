@@ -15,10 +15,26 @@ from .sms_utils import send_batch_promotional_sms
 
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
-    list_display = ['username', 'email', 'is_email_verified', 'is_active', 'is_staff',
-                    'failed_login_attempts', 'is_locked_display', 'created_at']
+    list_display = ['username', 'email', 'orders_count', 'total_spent', 'is_email_verified',
+                    'is_active', 'is_staff', 'is_locked_display', 'created_at']
     list_filter = ['is_active', 'is_staff', 'is_superuser', 'is_email_verified', 'created_at']
     search_fields = ['username', 'email', 'first_name', 'last_name', 'phone_number']
+
+    def get_queryset(self, request):
+        from django.db.models import Count, Sum, Q
+        return super().get_queryset(request).annotate(
+            _orders_count=Count('orders', distinct=True),
+            _total_spent=Sum('orders__total_gnf', filter=~Q(orders__status='cancelled')),
+        )
+
+    @admin.display(description='Orders', ordering='_orders_count')
+    def orders_count(self, obj):
+        return getattr(obj, '_orders_count', 0) or 0
+
+    @admin.display(description='Total spent', ordering='_total_spent')
+    def total_spent(self, obj):
+        amount = getattr(obj, '_total_spent', 0) or 0
+        return f"{int(amount):,}".replace(',', ' ') + ' GNF'
     readonly_fields = ['id', 'last_login', 'date_joined', 'created_at', 'updated_at',
                        'last_login_ip', 'last_failed_login_ip', 'last_failed_login_at',
                        'email_verification_date']

@@ -11,6 +11,7 @@ urlpatterns = [
     path('orders/', views.orders_view, name='orders'),
     path('wishlist/', views.wishlist_view, name='wishlist'),
     path('profile/', views.profile_view, name='profile'),
+    path('change-password/', views.change_password_view, name='change_password'),
     path('verify-otp/<uuid:user_id>/', views.verify_otp_view, name='verify_otp'),
     path('verify-otp/', views.verify_otp_view, name='verify_otp_default'),
     path('resend-otp/', views.resend_otp_view, name='resend_otp'),

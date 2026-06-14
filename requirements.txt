@@ -1,8 +1,12 @@
-# Django Core
-Django>=6.0.0,<7.0.0
+# Django Core (pinned to the installed major; do not auto-jump to 6.x untested)
+Django>=5.2,<6.0
 
 # Environment Variables
 python-dotenv>=1.0.0
+
+# Production WSGI server + static file serving (recommended for deploy)
+# gunicorn>=21.2.0
+# whitenoise>=6.6.0
 
 # Email Backends (Optional - install based on your provider)
 # SendGrid

@@ -2,6 +2,7 @@
 Utility functions for OTP generation, verification, and email sending.
 """
 
+import logging
 import random
 import string
 from datetime import timedelta
@@ -10,6 +11,8 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.conf import settings
 from .models import OTP, LoginSecurityLog
+
+logger = logging.getLogger('accounts')
 
 
 def generate_otp(user, purpose='email_verification', expiration_minutes=10):
@@ -147,8 +150,8 @@ def send_otp_email(user, otp, request=None):
         
         return result == 1
         
-    except Exception as e:
-        print(f"Error sending OTP email: {str(e)}")
+    except Exception:
+        logger.exception("Failed to send OTP email")
         return False
 
 

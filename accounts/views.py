@@ -6,6 +6,7 @@ from django.contrib.auth.views import PasswordResetView, PasswordResetConfirmVie
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.utils.decorators import method_decorator
+from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.decorators.cache import never_cache
 
 from .forms import (
@@ -55,7 +56,13 @@ def login_view(request):
         if user.requires_email_verification and not user.is_email_verified:
             return redirect('verify_otp', user_id=user.id)
 
-        return redirect(request.GET.get('next') or 'dashboard')
+        # Validate ?next= to prevent open-redirect attacks.
+        next_url = request.GET.get('next') or request.POST.get('next')
+        if next_url and url_has_allowed_host_and_scheme(
+            next_url, allowed_hosts={request.get_host()}, require_https=request.is_secure()
+        ):
+            return redirect(next_url)
+        return redirect('dashboard')
 
     elif request.method == 'POST':
         identifier = request.POST.get('username')
@@ -232,12 +239,32 @@ def dashboard_view(request):
 
 @login_required(login_url='login')
 def orders_view(request):
-    return render(request, 'accounts/orders.html')
+    from cart.models import Order
+    orders = (Order.objects
+              .filter(user=request.user)
+              .prefetch_related('items')
+              .order_by('-created_at'))
+    return render(request, 'accounts/orders.html', {'orders': orders})
 
 
 @login_required(login_url='login')
 def wishlist_view(request):
     return render(request, 'accounts/wishlist.html')
+
+
+@login_required(login_url='login')
+def change_password_view(request):
+    from django.contrib.auth import update_session_auth_hash
+    from .forms import StyledPasswordChangeForm
+
+    form = StyledPasswordChangeForm(user=request.user, data=request.POST or None)
+    if request.method == 'POST' and form.is_valid():
+        user = form.save()
+        update_session_auth_hash(request, user)  # stay logged in
+        log_security_event(user, 'password_changed', request, {'action': 'changed_in_account'})
+        messages.success(request, 'Your password has been updated.')
+        return redirect('profile')
+    return render(request, 'accounts/change_password.html', {'form': form})
 
 
 @login_required(login_url='login')

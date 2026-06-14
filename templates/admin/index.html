@@ -1,0 +1,87 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block extrahead %}{{ block.super }}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+{% endblock %}
+
+{% block extrastyle %}{{ block.super }}
+<style>
+  .dash-wrap { margin-bottom: 28px; }
+  .dash-h { font-size: 13px; text-transform: uppercase; letter-spacing: 1px; color: var(--body-quiet-color); margin: 0 0 12px; }
+  .dash-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; }
+  .dash-card {
+    background: var(--body-bg); border: 1px solid var(--border-color);
+    border-radius: 12px; padding: 18px 20px; box-shadow: 0 1px 2px rgba(0,0,0,.04);
+  }
+  .dash-card .label { font-size: 12px; text-transform: uppercase; letter-spacing: .6px; color: var(--body-quiet-color); }
+  .dash-card .value { font-size: 26px; font-weight: 800; color: var(--body-fg); margin-top: 6px; line-height: 1.1; }
+  .dash-card .value.accent { color: var(--primary); }
+  .dash-card .value.warn { color: #dc2626; }
+  .dash-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 18px; margin-top: 18px; }
+  @media (max-width: 900px){ .dash-grid { grid-template-columns: 1fr; } }
+  .dash-panel { background: var(--body-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 18px 20px; }
+  .dash-panel h3 { margin: 0 0 14px; font-size: 14px; }
+  .best-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--hairline-color); font-size: 13px; }
+  .best-row:last-child { border-bottom: none; }
+  .best-row .qty { color: var(--body-quiet-color); }
+</style>
+{% endblock %}
+
+{% block content %}
+{% if dash %}
+<div class="dash-wrap">
+  <p class="dash-h">{% trans "Overview" %}</p>
+  <div class="dash-cards">
+    <div class="dash-card"><div class="label">Revenue</div><div class="value accent">{{ dash.revenue_display }}</div></div>
+    <div class="dash-card"><div class="label">Today's orders</div><div class="value">{{ dash.today_orders }}</div></div>
+    <div class="dash-card"><div class="label">Monthly orders</div><div class="value">{{ dash.month_orders }}</div></div>
+    <div class="dash-card"><div class="label">Products sold</div><div class="value">{{ dash.products_sold }}</div></div>
+    <div class="dash-card"><div class="label">Out of stock</div><div class="value warn">{{ dash.out_of_stock }}</div></div>
+    <div class="dash-card"><div class="label">New customers</div><div class="value">{{ dash.new_customers }}</div></div>
+  </div>
+
+  <div class="dash-grid">
+    <div class="dash-panel">
+      <h3>Daily sales — last 14 days</h3>
+      <canvas id="salesChart" height="110"></canvas>
+    </div>
+    <div class="dash-panel">
+      <h3>Best sellers</h3>
+      {% for b in dash.best_sellers %}
+      <div class="best-row"><span>{{ b.product_name }}</span><span class="qty">{{ b.qty }} sold</span></div>
+      {% empty %}
+      <p style="color:var(--body-quiet-color);font-size:13px;">No sales yet.</p>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{{ dash.chart_labels|json_script:"chart-labels" }}
+{{ dash.chart_data|json_script:"chart-data" }}
+<script>
+  (function () {
+    var el = document.getElementById('salesChart');
+    if (!el || typeof Chart === 'undefined') return;
+    var labels = JSON.parse(document.getElementById('chart-labels').textContent);
+    var data = JSON.parse(document.getElementById('chart-data').textContent);
+    var styles = getComputedStyle(document.body);
+    var primary = (styles.getPropertyValue('--primary') || '#417690').trim();
+    new Chart(el, {
+      type: 'line',
+      data: { labels: labels, datasets: [{
+        label: 'Revenue (GNF)', data: data,
+        borderColor: primary, backgroundColor: primary + '22',
+        fill: true, tension: 0.35, pointRadius: 2,
+      }]},
+      options: { responsive: true, plugins: { legend: { display: false } },
+        scales: { y: { beginAtZero: true } } }
+    });
+  })();
+</script>
+{% endif %}
+
+<div id="content-main">
+  {% include "admin/app_list.html" with app_list=app_list show_changelinks=True %}
+</div>
+{% endblock %}

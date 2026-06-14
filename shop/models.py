@@ -1,5 +1,8 @@
+from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.utils.text import slugify
+
+IMAGE_EXTENSIONS = ['jpg', 'jpeg', 'png', 'webp', 'gif']
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
@@ -61,7 +64,11 @@ class Product(models.Model):
 
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images')
-    image = models.FileField(upload_to='products/')
+    image = models.FileField(
+        upload_to='products/',
+        validators=[FileExtensionValidator(allowed_extensions=IMAGE_EXTENSIONS)],
+        help_text='JPG, PNG, WEBP or GIF.',
+    )
     is_primary = models.BooleanField(default=False)
     label = models.CharField(max_length=50, blank=True, help_text="e.g., Front view, Side view")
     order = models.PositiveIntegerField(default=0)

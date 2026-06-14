@@ -4,43 +4,41 @@
 {% block title %}Order Confirmed — TEEBUSINESS{% endblock %}
 
 {% block content %}
-<section class="bg-white py-12 md:py-20">
+<section class="bg-white py-12 md:py-16">
   <div class="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
     <div class="text-center">
       <div class="mx-auto mb-6 inline-flex h-16 w-16 items-center justify-center rounded-full bg-green-50">
         <svg class="h-8 w-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M5 13l4 4L19 7"/></svg>
       </div>
       <h1 class="font-barlow text-3xl font-black uppercase tracking-tight md:text-4xl">Order confirmed</h1>
-      <p class="mx-auto mt-3 max-w-md text-sm leading-6 text-luxury-mid">Thank you! Your order has been received and stock has been updated. Our team will reach out to arrange delivery and payment.</p>
+      <p class="mx-auto mt-3 max-w-md text-sm leading-6 text-luxury-mid">Thank you, {{ order.full_name }}! Your order has been received. Our team will contact you to arrange delivery and payment.</p>
+      <p class="mt-4 inline-block rounded-full bg-luxury-grey px-4 py-1.5 text-sm font-bold tracking-widest">Order #{{ order.order_number }}</p>
     </div>
 
     <div class="mt-10 overflow-hidden rounded-2xl border border-luxury-line">
-      <div class="bg-luxury-grey/50 px-6 py-4">
+      <div class="flex items-center justify-between bg-luxury-grey/50 px-6 py-4">
         <h2 class="font-barlow text-base font-black uppercase tracking-tight">Order summary</h2>
+        <span class="rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-white" style="background:{{ order.status_color }}">{{ order.get_status_display }}</span>
       </div>
       <div class="divide-y divide-luxury-line">
-        {% for group in groups %}
-        <div class="px-6 py-4">
-          <p class="font-barlow text-sm font-bold uppercase tracking-tight">{{ group.name }}</p>
-          <ul class="mt-2 space-y-1 text-sm">
-            {% for line in group.lines %}
-            <li class="flex justify-between">
-              <span class="text-luxury-mid">Size {{ line.size }} × {{ line.qty }}</span>
-              <span class="font-semibold">{{ line.subtotal|convert_price:request }}</span>
-            </li>
-            {% endfor %}
-          </ul>
+        {% for item in order.items.all %}
+        <div class="flex items-center justify-between px-6 py-3 text-sm">
+          <span class="text-luxury-mid">{{ item.product_name }} · Size {{ item.size }} × {{ item.quantity }}</span>
+          <span class="font-semibold">{{ item.subtotal_gnf|convert_price:request }}</span>
         </div>
         {% endfor %}
       </div>
-      <div class="flex items-center justify-between bg-luxury-grey/50 px-6 py-4">
-        <span class="text-xs uppercase tracking-widest text-luxury-mid">{{ total_qty }} item{{ total_qty|pluralize }}</span>
-        <span class="font-barlow text-lg font-black uppercase">Total {{ total_gnf|convert_price:request }}</span>
+      <div class="space-y-2 border-t border-luxury-line px-6 py-4 text-sm">
+        <div class="flex justify-between text-luxury-mid"><span>Subtotal</span><span>{{ order.subtotal_gnf|convert_price:request }}</span></div>
+        <div class="flex justify-between text-luxury-mid"><span>Shipping</span><span>{{ order.shipping_gnf|convert_price:request }}</span></div>
+        <div class="flex justify-between text-luxury-mid"><span>Taxes</span><span>{{ order.tax_gnf|convert_price:request }}</span></div>
+        <div class="flex justify-between border-t border-luxury-line pt-2 text-base font-bold"><span>Total</span><span>{{ order.total_gnf|convert_price:request }}</span></div>
       </div>
     </div>
 
-    <div class="mt-8 text-center">
-      <a href="{% url 'catalog' %}" class="inline-block rounded-full bg-luxury-black px-8 py-3.5 text-xs font-bold uppercase tracking-widest text-white transition hover:bg-black/90">Continue shopping</a>
+    <div class="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
+      <a href="{% url 'order_invoice' order.order_number %}" target="_blank" class="rounded-xl border border-luxury-line px-6 py-3.5 text-center text-xs font-bold uppercase tracking-widest transition hover:bg-luxury-grey">View / print invoice</a>
+      <a href="{% url 'catalog' %}" class="rounded-xl bg-luxury-black px-6 py-3.5 text-center text-xs font-bold uppercase tracking-widest text-white transition hover:bg-black/90">Continue shopping</a>
     </div>
   </div>
 </section>

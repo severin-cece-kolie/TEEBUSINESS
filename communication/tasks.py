@@ -47,7 +47,7 @@ def send_email_campaign_task(campaign_id):
             msg = EmailMultiAlternatives(
                 subject=campaign.subject,
                 body=campaign.plain_text_content or '',
-                from_email=campaign.from_email,
+                from_email=campaign.sender_email,
                 to=[subscriber.email],
             )
             msg.attach_alternative(campaign.html_content, 'text/html')

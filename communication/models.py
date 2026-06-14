@@ -100,7 +100,10 @@ class EmailCampaign(models.Model):
     preview_text = models.CharField(max_length=255, blank=True, help_text="Text shown in email preview")
     html_content = models.TextField()
     plain_text_content = models.TextField(blank=True)
-    from_email = models.EmailField(default=settings.DEFAULT_FROM_EMAIL)
+    # Left blank → falls back to settings.DEFAULT_FROM_EMAIL at send time.
+    # (Don't bake the settings value into the field default; it makes the
+    # migration history depend on the environment.)
+    from_email = models.EmailField(blank=True)
     reply_to = models.EmailField(blank=True, null=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='draft')
     target_subscribers = models.ManyToManyField(
@@ -137,7 +140,12 @@ class EmailCampaign(models.Model):
     
     def __str__(self):
         return f"{self.name} ({self.campaign_type})"
-    
+
+    @property
+    def sender_email(self):
+        """The address to send from — falls back to the project default."""
+        return self.from_email or settings.DEFAULT_FROM_EMAIL
+
     def get_progress_percentage(self):
         """Calculate campaign progress percentage."""
         if self.total_recipients == 0:

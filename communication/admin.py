@@ -178,7 +178,7 @@ class EmailCampaignAdmin(admin.ModelAdmin):
                         subject=campaign.subject,
                         body=(campaign.plain_text_content
                               or 'Please view this email in an HTML-compatible client.'),
-                        from_email=campaign.from_email,
+                        from_email=campaign.sender_email,
                         to=[subscriber.email],
                         reply_to=[campaign.reply_to] if campaign.reply_to else None,
                     )
