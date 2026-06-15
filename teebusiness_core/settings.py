@@ -14,11 +14,16 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 
-# Load environment variables from .env file
-load_dotenv()
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Load environment variables from the project's .env file.
+# IMPORTANT: pass an EXPLICIT path. Under a WSGI server (PythonAnywhere, gunicorn,
+# mod_wsgi) the process working directory is NOT the project directory, so a bare
+# load_dotenv() (which searches from the CWD) finds nothing — SECRET_KEY and every
+# other variable go missing and Django refuses to start. BASE_DIR is derived from
+# __file__, so this resolves correctly no matter where the process is launched.
+load_dotenv(BASE_DIR / '.env')
 
 
 # Quick-start development settings - unsuitable for production
@@ -44,6 +49,8 @@ ALLOWED_HOSTS.extend([
     'teebusiness.pythonanywhere.com',
     '.ngrok-free.dev',
 ])
+# Normalise: strip blanks and drop duplicates while preserving order.
+ALLOWED_HOSTS = list(dict.fromkeys(h.strip() for h in ALLOWED_HOSTS if h.strip()))
 
 # Application definition
 
@@ -183,7 +190,9 @@ EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.gmail.com')
 EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 587))
 EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'True') == 'True'
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
+# Gmail App Passwords are frequently copied as "xxxx xxxx xxxx xxxx" (16 chars +
+# spaces). Strip spaces so SMTP auth succeeds regardless of how it was pasted.
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '').replace(' ', '')
 DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'noreply@teebusiness.com')
 SERVER_EMAIL = os.environ.get('SERVER_EMAIL', DEFAULT_FROM_EMAIL)
 
@@ -248,8 +257,16 @@ if os.environ.get('USE_PROXY_SSL_HEADER', 'False') == 'True':
 # Domains allowed to submit cross-origin POST/CSRF (your production hostnames).
 # e.g. CSRF_TRUSTED_ORIGINS=https://teebusiness.com,https://www.teebusiness.com
 CSRF_TRUSTED_ORIGINS = [
-    o.strip() for o in os.environ.get('CSRF_TRUSTED_ORIGINS', '').split(',') if o.strip()
+    o.strip().rstrip('/') for o in os.environ.get('CSRF_TRUSTED_ORIGINS', '').split(',') if o.strip()
 ]
+# Safety net: every non-local allowed host is also a trusted HTTPS CSRF origin,
+# so admin/login POST works on the production domain even if the env var is unset.
+for _host in ALLOWED_HOSTS:
+    _h = _host.strip().rstrip('/')
+    if _h and not _h.startswith('.') and _h not in ('localhost', '127.0.0.1', 'testserver'):
+        _origin = f"https://{_h.split('//')[-1]}"
+        if _origin not in CSRF_TRUSTED_ORIGINS:
+            CSRF_TRUSTED_ORIGINS.append(_origin)
 
 # HSTS Settings (only in production)
 if not DEBUG:
