@@ -1,0 +1,60 @@
+{% extends 'gestion/base_gestion.html' %}
+
+{% block content %}
+<div class="rounded-2xl border border-line bg-white shadow-sm">
+  <div class="flex flex-wrap items-center gap-3 px-5 py-4">
+    <div>
+      <h2 class="font-barlow text-lg font-black uppercase tracking-tight text-ink">Clients</h2>
+      <p class="text-xs text-ink/50">{{ total_count }} client{{ total_count|pluralize }}</p>
+    </div>
+    <form method="get" class="ml-auto flex items-center gap-2">
+      <input name="q" value="{{ q }}" placeholder="Nom ou email…"
+             class="rounded-lg border border-line bg-canvas px-3 py-2 text-sm outline-none focus:border-brand">
+      <button class="rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-dark">Rechercher</button>
+    </form>
+  </div>
+
+  <div class="overflow-x-auto">
+    <table class="w-full text-sm">
+      <thead>
+        <tr class="border-y border-line bg-canvas/60 text-left text-xs uppercase tracking-wide text-ink/50">
+          <th class="px-5 py-3 font-semibold">Client</th>
+          <th class="px-5 py-3 font-semibold">Localisation</th>
+          <th class="px-5 py-3 font-semibold">Commandes</th>
+          <th class="px-5 py-3 font-semibold">Total dépensé</th>
+          <th class="px-5 py-3 font-semibold">Inscrit le</th>
+          <th class="px-5 py-3 font-semibold">Vérifié</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-line">
+        {% for u in clients %}
+        <tr class="hover:bg-canvas/50">
+          <td class="px-5 py-3">
+            <div class="flex items-center gap-3">
+              <span class="flex h-9 w-9 items-center justify-center rounded-full bg-brand/10 text-sm font-bold text-brand">
+                {{ u.first_name.0|default:u.email.0|upper }}{{ u.last_name.0|upper }}
+              </span>
+              <div>
+                <p class="font-semibold text-ink">{{ u.get_full_name|default:"—" }}</p>
+                <p class="text-xs text-ink/40">{{ u.email }}</p>
+              </div>
+            </div>
+          </td>
+          <td class="px-5 py-3 text-ink/70">{{ u.city|default:"" }}{% if u.city and u.country %}, {% endif %}{{ u.country|default:"" }}{% if not u.city and not u.country %}—{% endif %}</td>
+          <td class="px-5 py-3"><span class="rounded-full bg-canvas px-2.5 py-1 text-xs font-bold text-ink">{{ u.orders_count }}</span></td>
+          <td class="px-5 py-3 font-semibold text-ink">{{ u.spent|floatformat:0 }} GNF</td>
+          <td class="px-5 py-3 text-ink/60">{{ u.date_joined|date:"d M Y" }}</td>
+          <td class="px-5 py-3">
+            {% if u.is_email_verified %}{% include 'gestion/_status_badge.html' with color='#16a34a' label='Vérifié' %}
+            {% else %}{% include 'gestion/_status_badge.html' with color='#d97706' label='En attente' %}{% endif %}
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="6" class="px-5 py-12 text-center text-ink/50">Aucun client trouvé.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% include 'gestion/_pagination.html' with page=clients %}
+</div>
+{% endblock %}

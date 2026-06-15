@@ -1,0 +1,15 @@
+{% comment %} Sidebar nav item. Params: key, url, label, icon. Active when key == active. {% endcomment %}
+<a href="{% url url %}"
+   class="group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors {% if active == key %}bg-brand text-white shadow-lg shadow-brand/30{% else %}text-white/70 hover:bg-ink-soft hover:text-white{% endif %}">
+  <svg class="h-5 w-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.7">
+    {% if icon == 'home' %}<path stroke-linecap="round" stroke-linejoin="round" d="M3 10.5L12 3l9 7.5M5 9.5V20a1 1 0 001 1h3v-6h6v6h3a1 1 0 001-1V9.5"/>
+    {% elif icon == 'box' %}<path stroke-linecap="round" stroke-linejoin="round" d="M20 7L12 3 4 7m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+    {% elif icon == 'cart' %}<path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.3 2.3M17 13l2 2M9 19a1 1 0 11-2 0 1 1 0 012 0zm8 0a1 1 0 11-2 0 1 1 0 012 0z"/>
+    {% elif icon == 'users' %}<path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-1a4 4 0 00-3-3.87M9 20H4v-1a4 4 0 013-3.87m6-1.13a4 4 0 10-4-4 4 4 0 004 4zm6-3a3 3 0 10-3-3"/>
+    {% elif icon == 'chart' %}<path stroke-linecap="round" stroke-linejoin="round" d="M4 19V5m0 14h16M8 16v-5m4 5V8m4 8v-3"/>
+    {% elif icon == 'doc' %}<path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h7l5 5v11a2 2 0 01-2 2z"/>
+    {% elif icon == 'gear' %}<path stroke-linecap="round" stroke-linejoin="round" d="M10.3 3.3a1 1 0 011.4 0l.9.9a1 1 0 00.9.27l1.25-.22a1 1 0 011.16.83l.2 1.26a1 1 0 00.55.74l1.14.56a1 1 0 01.45 1.34l-.56 1.14a1 1 0 000 .92l.56 1.14a1 1 0 01-.45 1.34l-1.14.56a1 1 0 00-.55.74l-.2 1.26a1 1 0 01-1.16.83l-1.25-.22a1 1 0 00-.9.27l-.9.9a1 1 0 01-1.4 0l-.9-.9a1 1 0 00-.9-.27l-1.25.22a1 1 0 01-1.16-.83l-.2-1.26a1 1 0 00-.55-.74l-1.14-.56a1 1 0 01-.45-1.34l.56-1.14a1 1 0 000-.92L3.3 9.4a1 1 0 01.45-1.34l1.14-.56a1 1 0 00.55-.74l.2-1.26a1 1 0 011.16-.83l1.25.22a1 1 0 00.9-.27zM12 15a3 3 0 100-6 3 3 0 000 6z"/>
+    {% endif %}
+  </svg>
+  <span>{{ label }}</span>
+</a>

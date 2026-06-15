@@ -1,0 +1,72 @@
+{% extends 'gestion/base_gestion.html' %}
+
+{% block content %}
+<div class="grid grid-cols-1 gap-4 xl:grid-cols-3">
+  <!-- Revenue 12m -->
+  <div class="rounded-2xl border border-line bg-white p-5 shadow-sm xl:col-span-2">
+    <h2 class="font-barlow text-lg font-black uppercase tracking-tight text-ink">Revenus · 12 mois</h2>
+    <div class="mt-4 h-[280px]"><canvas id="aRev"></canvas></div>
+  </div>
+  <!-- Orders by status -->
+  <div class="rounded-2xl border border-line bg-white p-5 shadow-sm">
+    <h2 class="font-barlow text-lg font-black uppercase tracking-tight text-ink">Commandes par statut</h2>
+    <div class="mt-4 h-[280px]"><canvas id="aStatus"></canvas></div>
+  </div>
+  <!-- Best sellers -->
+  <div class="rounded-2xl border border-line bg-white p-5 shadow-sm xl:col-span-2">
+    <h2 class="font-barlow text-lg font-black uppercase tracking-tight text-ink">Meilleures ventes</h2>
+    <div class="mt-4 h-[300px]"><canvas id="aBest"></canvas></div>
+  </div>
+  <!-- New customers -->
+  <div class="rounded-2xl border border-line bg-white p-5 shadow-sm">
+    <h2 class="font-barlow text-lg font-black uppercase tracking-tight text-ink">Nouveaux clients · 12 mois</h2>
+    <div class="mt-4 h-[300px]"><canvas id="aCust"></canvas></div>
+  </div>
+  <!-- Revenue by payment -->
+  <div class="rounded-2xl border border-line bg-white p-5 shadow-sm xl:col-span-3">
+    <h2 class="font-barlow text-lg font-black uppercase tracking-tight text-ink">Revenus par moyen de paiement</h2>
+    <div class="mt-4 h-[260px]"><canvas id="aPay"></canvas></div>
+  </div>
+</div>
+
+{{ rev_labels|json_script:"aRevLabels" }}{{ rev_data|json_script:"aRevData" }}
+{{ status_labels|json_script:"aStatusLabels" }}{{ status_data|json_script:"aStatusData" }}{{ status_colors|json_script:"aStatusColors" }}
+{{ best_labels|json_script:"aBestLabels" }}{{ best_data|json_script:"aBestData" }}
+{{ cust_labels|json_script:"aCustLabels" }}{{ cust_data|json_script:"aCustData" }}
+{{ pay_labels|json_script:"aPayLabels" }}{{ pay_data|json_script:"aPayData" }}
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+(function(){
+  const J = id => JSON.parse(document.getElementById(id).textContent);
+  const BRAND = '#A4182B';
+  const gnf = v => new Intl.NumberFormat('fr-FR').format(v) + ' GNF';
+  const grid = { color:'#f0ece5' }, tickc = { color:'#9ca3af' };
+  const noLegend = { legend:{ display:false } };
+  const tip = { backgroundColor:'#171311', displayColors:false };
+
+  new Chart(aRev, { type:'line',
+    data:{ labels:J('aRevLabels'), datasets:[{ data:J('aRevData'), borderColor:BRAND, backgroundColor:'rgba(164,24,43,0.12)', borderWidth:2.5, fill:true, tension:0.4, pointRadius:0 }] },
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{...noLegend, tooltip:{...tip, callbacks:{ label:c=>gnf(c.parsed.y) }}},
+      scales:{ x:{ grid:{display:false}, ticks:tickc }, y:{ grid, ticks:{...tickc, callback:v=>v>=1000?(v/1000)+'k':v } } } } });
+
+  new Chart(aStatus, { type:'doughnut',
+    data:{ labels:J('aStatusLabels'), datasets:[{ data:J('aStatusData'), backgroundColor:J('aStatusColors'), borderWidth:0 }] },
+    options:{ responsive:true, maintainAspectRatio:false, cutout:'62%', plugins:{ legend:{ position:'bottom', labels:{ color:'#6b7280', boxWidth:12, padding:12 } }, tooltip:tip } } });
+
+  new Chart(aBest, { type:'bar', data:{ labels:J('aBestLabels'), datasets:[{ data:J('aBestData'), backgroundColor:BRAND, borderRadius:6, maxBarThickness:26 }] },
+    options:{ indexAxis:'y', responsive:true, maintainAspectRatio:false, plugins:{...noLegend, tooltip:tip},
+      scales:{ x:{ beginAtZero:true, grid, ticks:{...tickc, precision:0} }, y:{ grid:{display:false}, ticks:tickc } } } });
+
+  new Chart(aCust, { type:'bar', data:{ labels:J('aCustLabels'), datasets:[{ data:J('aCustData'), backgroundColor:'#7c3aed', borderRadius:6, maxBarThickness:18 }] },
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{...noLegend, tooltip:tip},
+      scales:{ x:{ grid:{display:false}, ticks:tickc }, y:{ beginAtZero:true, grid, ticks:{...tickc, precision:0} } } } });
+
+  new Chart(aPay, { type:'bar', data:{ labels:J('aPayLabels'), datasets:[{ data:J('aPayData'), backgroundColor:['#A4182B','#2563eb','#16a34a'], borderRadius:6, maxBarThickness:60 }] },
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{...noLegend, tooltip:{...tip, callbacks:{ label:c=>gnf(c.parsed.y) }}},
+      scales:{ x:{ grid:{display:false}, ticks:tickc }, y:{ beginAtZero:true, grid, ticks:{...tickc, callback:v=>v>=1000?(v/1000)+'k':v } } } } });
+})();
+</script>
+{% endblock %}
