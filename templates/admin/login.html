@@ -1,0 +1,46 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block title %}{% if form.errors %}{% translate "Erreur :" %} {% endif %}{{ block.super }}{% endblock %}
+{% block extrastyle %}{{ block.super }}{{ form.media }}{% endblock %}
+
+{% block bodyclass %}{{ block.super }} login{% endblock %}
+{% block usertools %}{% endblock %}
+{% block nav-global %}{% endblock %}
+{% block nav-sidebar %}{% endblock %}
+{% block content_title %}{% endblock %}
+{% block nav-breadcrumbs %}{% endblock %}
+
+{% block content %}
+<p class="tb-login-sub">{% translate "Espace d'administration sécurisé" %}</p>
+
+{% if form.errors and not form.non_field_errors %}
+<p class="errornote">{% blocktranslate count counter=form.errors.items|length %}Veuillez corriger l'erreur ci-dessous.{% plural %}Veuillez corriger les erreurs ci-dessous.{% endblocktranslate %}</p>
+{% endif %}
+{% if form.non_field_errors %}{% for error in form.non_field_errors %}<p class="errornote">{{ error }}</p>{% endfor %}{% endif %}
+
+<div id="content-main">
+{% if user.is_authenticated %}
+<p class="errornote">{% blocktranslate trimmed %}Vous êtes connecté en tant que {{ username }}, mais vous n'êtes pas autorisé à accéder à cette page.{% endblocktranslate %}</p>
+{% endif %}
+
+<form action="{{ app_path }}" method="post" id="login-form">{% csrf_token %}
+  <div class="form-row">
+    {{ form.username.errors }}
+    {{ form.username.label_tag }} {{ form.username }}
+  </div>
+  <div class="form-row">
+    {{ form.password.errors }}
+    {{ form.password.label_tag }} {{ form.password }}
+    <input type="hidden" name="next" value="{{ next }}">
+  </div>
+  {% url 'admin_password_reset' as password_reset_url %}
+  {% if password_reset_url %}
+  <div class="password-reset-link"><a href="{{ password_reset_url }}">{% translate 'Identifiants oubliés ?' %}</a></div>
+  {% endif %}
+  <div class="submit-row">
+    <input type="submit" value="{% translate 'Se connecter' %}" class="default">
+  </div>
+</form>
+</div>
+{% endblock %}

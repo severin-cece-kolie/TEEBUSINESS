@@ -7,51 +7,81 @@
 
 {% block extrastyle %}{{ block.super }}
 <style>
-  .dash-wrap { margin-bottom: 28px; }
-  .dash-h { font-size: 13px; text-transform: uppercase; letter-spacing: 1px; color: var(--body-quiet-color); margin: 0 0 12px; }
-  .dash-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; }
-  .dash-card {
+  .tb-dash { margin-bottom: 26px; }
+  .tb-dash h2.tb-title { font-size: 13px; text-transform: uppercase; letter-spacing: .8px;
+    color: var(--body-quiet-color); font-weight: 700; margin: 0 0 14px; }
+  .tb-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 16px; }
+  .tb-card {
     background: var(--body-bg); border: 1px solid var(--border-color);
-    border-radius: 12px; padding: 18px 20px; box-shadow: 0 1px 2px rgba(0,0,0,.04);
+    border-radius: 14px; padding: 18px; box-shadow: var(--tb-shadow);
+    transition: transform .12s ease, box-shadow .15s ease;
   }
-  .dash-card .label { font-size: 12px; text-transform: uppercase; letter-spacing: .6px; color: var(--body-quiet-color); }
-  .dash-card .value { font-size: 26px; font-weight: 800; color: var(--body-fg); margin-top: 6px; line-height: 1.1; }
-  .dash-card .value.accent { color: var(--primary); }
-  .dash-card .value.warn { color: #dc2626; }
-  .dash-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 18px; margin-top: 18px; }
-  @media (max-width: 900px){ .dash-grid { grid-template-columns: 1fr; } }
-  .dash-panel { background: var(--body-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 18px 20px; }
-  .dash-panel h3 { margin: 0 0 14px; font-size: 14px; }
-  .best-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--hairline-color); font-size: 13px; }
-  .best-row:last-child { border-bottom: none; }
-  .best-row .qty { color: var(--body-quiet-color); }
+  .tb-card:hover { transform: translateY(-2px); box-shadow: var(--tb-shadow-md); }
+  .tb-ico { width: 40px; height: 40px; border-radius: 11px; display: flex; align-items: center;
+    justify-content: center; margin-bottom: 14px; }
+  .tb-ico svg { width: 21px; height: 21px; }
+  .tb-card .lbl { font-size: 11.5px; text-transform: uppercase; letter-spacing: .6px; color: var(--body-quiet-color); font-weight: 600; }
+  .tb-card .val { font-size: 25px; font-weight: 800; color: var(--body-loud-color); margin-top: 4px; line-height: 1.15; }
+  .i-red { background: #fbe9ec; color: #A4182B; }
+  .i-green { background: #e7f7ee; color: #16a34a; }
+  .i-amber { background: #fef3e2; color: #d97706; }
+  .i-blue { background: #e8f0fe; color: #2563eb; }
+  .i-violet { background: #f1ebfe; color: #7c3aed; }
+  .i-slate { background: #eef1f5; color: #475569; }
+  .tb-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 18px; margin-top: 18px; }
+  @media (max-width: 900px){ .tb-grid { grid-template-columns: 1fr; } }
+  .tb-panel { background: var(--body-bg); border: 1px solid var(--border-color); border-radius: 14px;
+    padding: 18px 20px; box-shadow: var(--tb-shadow); }
+  .tb-panel h3 { margin: 0 0 16px; font-size: 14px; font-weight: 700; color: var(--body-loud-color); }
+  .tb-best { display: flex; justify-content: space-between; align-items: center; padding: 9px 0;
+    border-bottom: 1px solid var(--hairline-color); font-size: 13.5px; }
+  .tb-best:last-child { border-bottom: none; }
+  .tb-best .q { color: var(--body-quiet-color); font-weight: 600; font-size: 12.5px; }
 </style>
 {% endblock %}
 
 {% block content %}
 {% if dash %}
-<div class="dash-wrap">
-  <p class="dash-h">{% trans "Overview" %}</p>
-  <div class="dash-cards">
-    <div class="dash-card"><div class="label">Revenue</div><div class="value accent">{{ dash.revenue_display }}</div></div>
-    <div class="dash-card"><div class="label">Today's orders</div><div class="value">{{ dash.today_orders }}</div></div>
-    <div class="dash-card"><div class="label">Monthly orders</div><div class="value">{{ dash.month_orders }}</div></div>
-    <div class="dash-card"><div class="label">Products sold</div><div class="value">{{ dash.products_sold }}</div></div>
-    <div class="dash-card"><div class="label">Out of stock</div><div class="value warn">{{ dash.out_of_stock }}</div></div>
-    <div class="dash-card"><div class="label">New customers</div><div class="value">{{ dash.new_customers }}</div></div>
+<div class="tb-dash">
+  <h2 class="tb-title">{% trans "Vue d'ensemble" %}</h2>
+  <div class="tb-cards">
+    <div class="tb-card">
+      <div class="tb-ico i-red"><svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 17l6-6 4 4 8-8M21 7v5m0-5h-5"/></svg></div>
+      <div class="lbl">{% trans "Chiffre d'affaires" %}</div><div class="val">{{ dash.revenue_display }}</div>
+    </div>
+    <div class="tb-card">
+      <div class="tb-ico i-green"><svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2 4h12m-9 4a1 1 0 11-2 0 1 1 0 012 0zm8 0a1 1 0 11-2 0 1 1 0 012 0z"/></svg></div>
+      <div class="lbl">{% trans "Commandes du jour" %}</div><div class="val">{{ dash.today_orders }}</div>
+    </div>
+    <div class="tb-card">
+      <div class="tb-ico i-blue"><svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3M4 11h16M5 5h14a1 1 0 011 1v13a1 1 0 01-1 1H5a1 1 0 01-1-1V6a1 1 0 011-1z"/></svg></div>
+      <div class="lbl">{% trans "Commandes du mois" %}</div><div class="val">{{ dash.month_orders }}</div>
+    </div>
+    <div class="tb-card">
+      <div class="tb-ico i-violet"><svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 7L12 3 4 7m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg></div>
+      <div class="lbl">{% trans "Produits vendus" %}</div><div class="val">{{ dash.products_sold }}</div>
+    </div>
+    <div class="tb-card">
+      <div class="tb-ico i-amber"><svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v4m0 4h.01M10.3 3.9l-8 14A1.5 1.5 0 003.7 20h16.6a1.5 1.5 0 001.3-2.1l-8-14a1.5 1.5 0 00-2.6 0z"/></svg></div>
+      <div class="lbl">{% trans "Produits en rupture" %}</div><div class="val">{{ dash.out_of_stock }}</div>
+    </div>
+    <div class="tb-card">
+      <div class="tb-ico i-slate"><svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-1a4 4 0 00-3-3.87M9 20H4v-1a4 4 0 013-3.87m6-1.13a4 4 0 10-4-4 4 4 0 004 4z"/></svg></div>
+      <div class="lbl">{% trans "Nouveaux clients" %}</div><div class="val">{{ dash.new_customers }}</div>
+    </div>
   </div>
 
-  <div class="dash-grid">
-    <div class="dash-panel">
-      <h3>Daily sales — last 14 days</h3>
+  <div class="tb-grid">
+    <div class="tb-panel">
+      <h3>{% trans "Ventes quotidiennes — 14 derniers jours" %}</h3>
       <canvas id="salesChart" height="110"></canvas>
     </div>
-    <div class="dash-panel">
-      <h3>Best sellers</h3>
+    <div class="tb-panel">
+      <h3>{% trans "Meilleures ventes" %}</h3>
       {% for b in dash.best_sellers %}
-      <div class="best-row"><span>{{ b.product_name }}</span><span class="qty">{{ b.qty }} sold</span></div>
+      <div class="tb-best"><span>{{ b.product_name }}</span><span class="q">{{ b.qty }} vendus</span></div>
       {% empty %}
-      <p style="color:var(--body-quiet-color);font-size:13px;">No sales yet.</p>
+      <p style="color:var(--body-quiet-color);font-size:13px;">{% trans "Pas encore de ventes." %}</p>
       {% endfor %}
     </div>
   </div>
@@ -65,17 +95,21 @@
     if (!el || typeof Chart === 'undefined') return;
     var labels = JSON.parse(document.getElementById('chart-labels').textContent);
     var data = JSON.parse(document.getElementById('chart-data').textContent);
-    var styles = getComputedStyle(document.body);
-    var primary = (styles.getPropertyValue('--primary') || '#417690').trim();
+    var ctx = el.getContext('2d');
+    var grad = ctx.createLinearGradient(0, 0, 0, 220);
+    grad.addColorStop(0, 'rgba(164,24,43,0.20)');
+    grad.addColorStop(1, 'rgba(164,24,43,0)');
     new Chart(el, {
       type: 'line',
       data: { labels: labels, datasets: [{
-        label: 'Revenue (GNF)', data: data,
-        borderColor: primary, backgroundColor: primary + '22',
-        fill: true, tension: 0.35, pointRadius: 2,
+        label: 'Revenus (GNF)', data: data,
+        borderColor: '#A4182B', backgroundColor: grad, borderWidth: 2.5,
+        fill: true, tension: 0.4, pointRadius: 0, pointHoverRadius: 5,
+        pointHoverBackgroundColor: '#A4182B', pointHoverBorderColor: '#fff', pointHoverBorderWidth: 2,
       }]},
-      options: { responsive: true, plugins: { legend: { display: false } },
-        scales: { y: { beginAtZero: true } } }
+      options: { responsive: true, maintainAspectRatio: true,
+        plugins: { legend: { display: false }, tooltip: { backgroundColor: '#171311', displayColors: false } },
+        scales: { x: { grid: { display: false } }, y: { beginAtZero: true, grid: { color: '#f0ece5' } } } }
     });
   })();
 </script>

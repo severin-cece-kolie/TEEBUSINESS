@@ -91,21 +91,25 @@ function welcomePopup() {
         status: '',
         
         init() {
-            // Check if seen before
-            const hasSeenPopup = localStorage.getItem('tee_popup_seen');
-            
-            if (!hasSeenPopup) {
-                // Determine if this is the absolute first request of the session, or wait a bit to show
+            // Permanent: only set once the visitor actually joins / creates an account.
+            const joined = localStorage.getItem('tee_community_joined');
+            // Per-visit: dismissed only for the current session (reappears next visit).
+            let dismissedThisVisit = false;
+            try { dismissedThisVisit = sessionStorage.getItem('tee_popup_dismissed') === '1'; } catch (e) {}
+
+            // Show on every visit until they join — but never twice in the same visit.
+            if (!joined && !dismissedThisVisit) {
                 setTimeout(() => {
-                    this.isOpen = true;
-                }, 2000); // 2 second delay so it doesn't jarringly block the initial load
+                    if (!localStorage.getItem('tee_community_joined')) this.isOpen = true;
+                }, 2500); // small delay so it isn't intrusive on initial load
             }
         },
-        
+
         close() {
             this.isOpen = false;
-            // Mark as seen so it doesn't show again
-            localStorage.setItem('tee_popup_seen', 'true');
+            // Hide for THIS visit only — it will invite again next time they come back,
+            // unless they have joined.
+            try { sessionStorage.setItem('tee_popup_dismissed', '1'); } catch (e) {}
         },
         
         async submitPopup() {
@@ -135,9 +139,9 @@ function welcomePopup() {
                 this.message = data.message;
 
                 if (data.status === 'success') {
-                    // Mark as done and close — visitor keeps browsing, now signed in.
-                    localStorage.setItem('tee_popup_seen', 'true');
-                    setTimeout(() => { this.close(); }, 1500);
+                    // Joined successfully → never invite again (permanent).
+                    localStorage.setItem('tee_community_joined', 'true');
+                    setTimeout(() => { this.isOpen = false; }, 1500);
                 }
             } catch (error) {
                 this.status = 'error';

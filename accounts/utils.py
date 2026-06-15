@@ -132,9 +132,15 @@ def send_otp_email(user, otp, request=None):
         # Attach HTML content
         email.attach_alternative(html_content, 'text/html')
         
-        # Send email
-        result = email.send()
-        
+        # Send email — fail_silently=False so SMTP errors raise and are logged
+        # (the previous default swallowed connection/auth errors invisibly).
+        logger.info(
+            "Sending OTP email to %s via backend=%s host=%s:%s",
+            user.email, settings.EMAIL_BACKEND,
+            getattr(settings, 'EMAIL_HOST', '-'), getattr(settings, 'EMAIL_PORT', '-'),
+        )
+        result = email.send(fail_silently=False)
+
         # Log to email history
         from communication.models import EmailHistory
         EmailHistory.objects.create(
@@ -147,11 +153,32 @@ def send_otp_email(user, otp, request=None):
             related_user=user,
             sent_at=timezone.now() if result == 1 else None
         )
-        
+
+        if result == 1:
+            logger.info("OTP email accepted by the mail server for %s", user.email)
+        else:
+            logger.error("OTP email send() returned %s (not 1) for %s", result, user.email)
         return result == 1
-        
-    except Exception:
-        logger.exception("Failed to send OTP email")
+
+    except Exception as exc:
+        # Detailed, non-silent diagnostics — visible in the PythonAnywhere error log.
+        logger.exception(
+            "OTP EMAIL FAILED for %s | backend=%s host=%s:%s tls=%s user=%s | %s: %s",
+            getattr(user, 'email', '?'), settings.EMAIL_BACKEND,
+            getattr(settings, 'EMAIL_HOST', '-'), getattr(settings, 'EMAIL_PORT', '-'),
+            getattr(settings, 'EMAIL_USE_TLS', '-'), getattr(settings, 'EMAIL_HOST_USER', '-'),
+            type(exc).__name__, exc,
+        )
+        # Record the failure so it shows in the admin Message History too.
+        try:
+            from communication.models import EmailHistory
+            EmailHistory.objects.create(
+                email_type='otp', to_email=getattr(user, 'email', ''),
+                from_email=settings.DEFAULT_FROM_EMAIL, subject='OTP verification (FAILED)',
+                body=f'{type(exc).__name__}: {exc}', status='failed', related_user=user,
+            )
+        except Exception:
+            pass
         return False
 
 

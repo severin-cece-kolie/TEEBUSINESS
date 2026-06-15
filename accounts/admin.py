@@ -355,3 +355,9 @@ def _admin_get_urls_with_comms(self):
 
 
 admin.AdminSite.get_urls = _admin_get_urls_with_comms
+
+
+# ── Admin branding (text fallbacks; logo comes from templates/admin/base_site.html) ──
+admin.site.site_header = 'TEEBUSINESS'
+admin.site.site_title = 'TEEBUSINESS Admin'
+admin.site.index_title = 'Tableau de bord'

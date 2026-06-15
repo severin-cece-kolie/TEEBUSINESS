@@ -103,9 +103,9 @@
 
   <main class="relative z-10 flex min-h-screen items-center justify-center p-4 sm:p-6">
     <div class="auth-card auth-rise w-full max-w-md rounded-[28px] px-6 py-9 sm:px-10 sm:py-11">
-      <div class="mx-auto mb-6 flex h-24 w-24 items-center justify-center overflow-hidden rounded-full bg-white/90 shadow-md ring-1 ring-white/60 sm:h-28 sm:w-28">
+      <div class="mx-auto mb-6 h-24 w-24 overflow-hidden rounded-full bg-white shadow-md ring-1 ring-white/60 sm:h-28 sm:w-28">
         <img src="{% static 'assets/images/logo.png' %}" alt="TEEBUSINESS"
-             class="h-16 w-16 object-contain sm:h-20 sm:w-20">
+             class="h-full w-full scale-[1.2] object-contain object-center">
       </div>
       {% block form_panel %}{% endblock %}
       <a href="{% url 'home' %}"

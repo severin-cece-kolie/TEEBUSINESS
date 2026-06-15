@@ -91,10 +91,21 @@ def register_view(request):
         user.save()
 
         otp = generate_otp(user, purpose='email_verification')
-        send_otp_email(user, otp, request)
+        sent = send_otp_email(user, otp, request)
 
         request.session['pending_verification_user_id'] = str(user.id)
-        messages.success(request, 'We’ve sent a 6-digit code to your email.')
+        if sent:
+            messages.success(
+                request,
+                'Votre compte est créé. Nous avons envoyé un code à 6 chiffres à '
+                f'{user.email}. Pensez à vérifier vos spams.'
+            )
+        else:
+            messages.error(
+                request,
+                "Votre compte est créé, mais l'envoi du code a échoué. "
+                "Cliquez sur « Renvoyer le code » ci-dessous, ou contactez le support."
+            )
         return redirect('verify_otp', user_id=user.id)
 
     return render(request, 'accounts/register.html', {'form': form})
@@ -144,8 +155,15 @@ def resend_otp_view(request):
     if request.method == 'POST' and form.is_valid():
         user = form.cleaned_data['user']
         otp = generate_otp(user, purpose='email_verification')
-        send_otp_email(user, otp, request)
-        messages.success(request, 'A new code is on its way to your inbox.')
+        sent = send_otp_email(user, otp, request)
+        if sent:
+            messages.success(request, 'Un nouveau code est en route. Vérifiez aussi vos spams.')
+        else:
+            messages.error(
+                request,
+                "Impossible d'envoyer le code pour le moment. Réessayez dans un instant "
+                "ou contactez le support."
+            )
         return redirect('verify_otp', user_id=user.id)
 
     return render(request, 'accounts/resend_otp.html', {'form': form})

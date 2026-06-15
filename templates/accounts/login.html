@@ -37,4 +37,9 @@
   <a href="{% url 'password_reset' %}" class="transition hover:text-auth-red-dark">Mot de passe oublié ?</a>
   <a href="{% url 'register' %}" class="underline underline-offset-2 transition hover:text-auth-red-dark">Créer un compte</a>
 </div>
+
+<p class="mt-4 text-center text-xs text-[#6b5a50]">
+  Compte non vérifié ?
+  <a href="{% url 'resend_otp' %}" class="font-semibold text-auth-red underline-offset-2 hover:underline">Recevoir un nouveau code</a>
+</p>
 {% endblock %}
