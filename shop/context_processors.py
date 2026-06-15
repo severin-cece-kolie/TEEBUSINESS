@@ -1,6 +1,5 @@
-from urllib.parse import quote
-
 from django.conf import settings
+from django.urls import reverse
 
 CURRENCY_OPTIONS = {
     'EUR': {'symbol': '€', 'label': 'Euro'},
@@ -12,7 +11,9 @@ CURRENCY_OPTIONS = {
 def business_processor(request):
     """Expose business contact + social links to every template."""
     whatsapp_number = settings.WHATSAPP_NUMBER
-    whatsapp_url = f"https://wa.me/{whatsapp_number}?text={quote(settings.WHATSAPP_MESSAGE)}"
+    # Internal route — the real wa.me URL is built server-side in
+    # pages.views.whatsapp_redirect so the number never hits the page source.
+    whatsapp_url = reverse('whatsapp_redirect')
     return {
         'business_name': settings.BUSINESS_NAME,
         'business_phone': settings.BUSINESS_PHONE,

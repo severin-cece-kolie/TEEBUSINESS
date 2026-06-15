@@ -29,7 +29,10 @@ db.sqlite3
 db.sqlite3-journal
 /media
 /staticfiles
-/static
+# NOTE: do NOT ignore /static — it holds hand-authored source assets (logo,
+# premium.css, currency.js, etc.) that must be deployed. Only the collectstatic
+# OUTPUT (/staticfiles) is ignored. Ignoring /static silently drops new assets
+# from deploys.
 
 # Environment Variables
 .env

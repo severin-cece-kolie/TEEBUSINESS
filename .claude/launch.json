@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "django",
+      "runtimeExecutable": "cmd",
+      "runtimeArgs": ["/c", ".claude\\run_django_preview.cmd"],
+      "port": 8001
+    }
+  ]
+}

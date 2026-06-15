@@ -1,9 +1,41 @@
+from urllib.parse import quote
+
+from django.conf import settings
 from django.contrib import messages
+from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
 
 from shop.models import Product, Brand
 from accounts.email_utils import send_contact_form_email
 from .forms import ContactForm
+
+
+def whatsapp_redirect(request):
+    """Server-side redirect to WhatsApp.
+
+    The frontend only ever links to this internal route, so the real wa.me URL
+    and the business number stay out of the page source. The destination host is
+    always wa.me (with our own number), so the user-supplied ``text``/``product``
+    only controls the prefilled message — there is no open-redirect surface.
+
+    Optional query params:
+        text     -- prefilled message (overrides the default)
+        product  -- product name; builds an "interested in ..." message
+        share    -- if truthy, use the no-recipient share intent (wa.me/?text=)
+    """
+    text = request.GET.get('text', '').strip()
+    product = request.GET.get('product', '').strip()
+    if not text:
+        if product:
+            text = f"Hello, I'm interested in the {product}."
+        else:
+            text = settings.WHATSAPP_MESSAGE
+
+    if request.GET.get('share'):
+        target = f"https://wa.me/?text={quote(text)}"
+    else:
+        target = f"https://wa.me/{settings.WHATSAPP_NUMBER}?text={quote(text)}"
+    return HttpResponseRedirect(target)
 
 def home(request):
     products = Product.objects.filter(is_active=True).select_related('category', 'brand').prefetch_related('images')

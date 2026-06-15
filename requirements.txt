@@ -4,9 +4,11 @@ Django>=5.2,<6.0
 # Environment Variables
 python-dotenv>=1.0.0
 
-# Production WSGI server + static file serving (recommended for deploy)
-# gunicorn>=21.2.0
-# whitenoise>=6.6.0
+# Static file serving in production (DEBUG=False). Required so Django/admin
+# assets are served by the app itself — works on PythonAnywhere even without
+# a Web-tab static mapping.
+whitenoise>=6.6.0
+# gunicorn>=21.2.0  # not needed on PythonAnywhere (it provides the WSGI server)
 
 # Email Backends (Optional - install based on your provider)
 # SendGrid

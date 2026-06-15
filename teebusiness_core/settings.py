@@ -70,6 +70,9 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    # WhiteNoise serves static files (incl. Django admin CSS/JS) under STATIC_URL
+    # from STATIC_ROOT when DEBUG=False. Must sit right after SecurityMiddleware.
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -164,8 +167,21 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_DIRS = [BASE_DIR / 'static']
+STATIC_ROOT = BASE_DIR / 'staticfiles'          # collectstatic target (served by WhiteNoise)
+STATICFILES_DIRS = [BASE_DIR / 'static']        # project source assets
+
+# WhiteNoise: compress + far-future cache headers. Non-manifest (no hashed
+# filenames) so a missing {% static %} reference 404s that one asset instead of
+# raising a 500 on the whole page. Switch to CompressedManifestStaticFilesStorage
+# for cache-busting only after confirming every static reference resolves.
+STORAGES = {
+    'default': {
+        'BACKEND': 'django.core.files.storage.FileSystemStorage',
+    },
+    'staticfiles': {
+        'BACKEND': 'whitenoise.storage.CompressedStaticFilesStorage',
+    },
+}
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
@@ -277,10 +293,13 @@ if not DEBUG:
 # Content-Security-Policy. NOTE: Django 5.2 has no native CSP setting
 # (SECURE_CSP arrives in 6.0), so this is emitted by SecurityHeadersMiddleware.
 # 'unsafe-inline' is required because the UI uses inline scripts/styles
-# (Alpine, Tailwind CDN, chart init). It still restricts external origins.
+# (Alpine, Tailwind CDN, chart init). 'unsafe-eval' is required because
+# Alpine.js' default build evaluates directive expressions via new Function();
+# without it every Alpine component (popups, dropdowns, this widget) is inert.
+# It still restricts external origins.
 CONTENT_SECURITY_POLICY = (
     "default-src 'self'; "
-    "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdn.tailwindcss.com; "
+    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdn.tailwindcss.com; "
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.tailwindcss.com; "
     "font-src 'self' https://fonts.gstatic.com data:; "
     "img-src 'self' data: blob: https:; "
