@@ -4,6 +4,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.db import transaction
 from django.db.models import F
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
 from shop.models import Product, ProductSize
@@ -142,13 +143,25 @@ def add_to_cart(request, product_id):
     request.session['cart'] = cart
     request.session.modified = True
 
+    cart_count = sum(int(v) for v in cart.values())
+
     if added > 0:
         msg = f'Added {added} item{"s" if added != 1 else ""} to your cart.'
         if capped:
             msg += ' Some quantities were limited by available stock.'
-        messages.success(request, msg)
+        ok = True
     else:
-        messages.error(request, 'Please choose at least one size that is in stock.')
+        msg = 'Please choose at least one size that is in stock.'
+        ok = False
+
+    # AJAX (Fetch) → JSON for the toast + bell counter. No Django banner message
+    # is created on this path, so the green banner no longer appears for adds.
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return JsonResponse({'ok': ok, 'added': added, 'capped': capped,
+                             'message': msg, 'cart_count': cart_count})
+
+    # No-JS fallback: preserve the original Django-messages + redirect behaviour.
+    (messages.success if ok else messages.error)(request, msg)
     return redirect('cart')
 
 

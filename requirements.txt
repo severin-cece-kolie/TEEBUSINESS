@@ -10,6 +10,12 @@ python-dotenv>=1.0.0
 whitenoise>=6.6.0
 # gunicorn>=21.2.0  # not needed on PythonAnywhere (it provides the WSGI server)
 
+# Modern admin theme (Django Unfold) + data export (CSV/XLSX/JSON) + PDF
+django-unfold>=0.82.0
+django-import-export>=4.4.0
+openpyxl>=3.1.0          # XLSX export backend for import-export
+reportlab>=4.0.0         # PDF export (admin actions)
+
 # Email Backends (Optional - install based on your provider)
 # SendGrid
 # django-sendgrid>=6.2.0

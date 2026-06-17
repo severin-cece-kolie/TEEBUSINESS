@@ -1,5 +1,6 @@
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin, GroupAdmin as BaseGroupAdmin
+from django.contrib.auth.models import Group
 from django.urls import path, reverse
 from django.shortcuts import render, redirect
 from django.contrib import messages
@@ -8,13 +9,47 @@ from django.utils.html import format_html
 from django.http import HttpResponse
 import csv
 
+from unfold.admin import ModelAdmin
+from unfold.forms import AdminPasswordChangeForm, UserChangeForm, UserCreationForm
+
+from teebusiness_core.admin_exports import export_pdf_response
 from .models import User, OTP, LoginSecurityLog
 from .email_utils import send_batch_newsletter
 from .sms_utils import send_batch_promotional_sms
 
 
+@admin.action(description='Exporter la sélection en PDF')
+def export_users_pdf(modeladmin, request, queryset):
+    cols = ['Nom', 'Email', 'Vérifié', 'Actif', 'Inscrit le']
+    rows = [[
+        u.get_full_name() or u.username, u.email,
+        'Oui' if getattr(u, 'is_email_verified', False) else 'Non',
+        'Oui' if u.is_active else 'Non',
+        u.date_joined.strftime('%d/%m/%Y'),
+    ] for u in queryset]
+    return export_pdf_response('Clients TEEBUSINESS', cols, rows, 'clients.pdf',
+                               subtitle=f'{queryset.count()} client(s)')
+
+
+@admin.action(description='Exporter la sélection en CSV')
+def export_users_csv(modeladmin, request, queryset):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="clients.csv"'
+    w = csv.writer(response)
+    w.writerow(['Nom', 'Email', 'Téléphone', 'Vérifié', 'Actif', 'Inscrit le'])
+    for u in queryset:
+        w.writerow([u.get_full_name() or u.username, u.email, getattr(u, 'phone_number', '') or '',
+                    'Oui' if getattr(u, 'is_email_verified', False) else 'Non',
+                    'Oui' if u.is_active else 'Non', u.date_joined.strftime('%Y-%m-%d %H:%M')])
+    return response
+
+
 @admin.register(User)
-class UserAdmin(BaseUserAdmin):
+class UserAdmin(BaseUserAdmin, ModelAdmin):
+    # Unfold-styled auth forms (modern inputs, password widgets)
+    form = UserChangeForm
+    add_form = UserCreationForm
+    change_password_form = AdminPasswordChangeForm
     list_display = ['username', 'email', 'orders_count', 'total_spent', 'is_email_verified',
                     'is_active', 'is_staff', 'is_locked_display', 'created_at']
     list_filter = ['is_active', 'is_staff', 'is_superuser', 'is_email_verified', 'created_at']
@@ -38,7 +73,8 @@ class UserAdmin(BaseUserAdmin):
     readonly_fields = ['id', 'last_login', 'date_joined', 'created_at', 'updated_at',
                        'last_login_ip', 'last_failed_login_ip', 'last_failed_login_at',
                        'email_verification_date']
-    actions = ['unlock_accounts', 'reset_failed_attempts', 'verify_emails', 'send_otp_email_action']
+    actions = ['unlock_accounts', 'reset_failed_attempts', 'verify_emails', 'send_otp_email_action',
+               export_users_csv, export_users_pdf]
 
     fieldsets = (
         ('Authentication', {'fields': ('username', 'password')}),
@@ -100,7 +136,7 @@ class UserAdmin(BaseUserAdmin):
 
 
 @admin.register(OTP)
-class OTPAdmin(admin.ModelAdmin):
+class OTPAdmin(ModelAdmin):
     list_display = ['user', 'code', 'purpose', 'is_used', 'expires_at', 'created_at']
     list_filter = ['purpose', 'is_used', 'created_at', 'expires_at']
     search_fields = ['user__username', 'user__email', 'code']
@@ -125,7 +161,7 @@ class OTPAdmin(admin.ModelAdmin):
 
 
 @admin.register(LoginSecurityLog)
-class LoginSecurityLogAdmin(admin.ModelAdmin):
+class LoginSecurityLogAdmin(ModelAdmin):
     list_display = ['event_type', 'user', 'username_attempted', 'ip_address', 'created_at']
     list_filter = ['event_type', 'created_at']
     search_fields = ['user__username', 'username_attempted', 'ip_address']
@@ -357,7 +393,16 @@ def _admin_get_urls_with_comms(self):
 admin.AdminSite.get_urls = _admin_get_urls_with_comms
 
 
-# ── Admin branding (text fallbacks; logo comes from templates/admin/base_site.html) ──
+# ── Admin branding (text fallbacks; Unfold reads SITE_HEADER/SITE_TITLE too) ──
 admin.site.site_header = 'TEEBUSINESS'
 admin.site.site_title = 'TEEBUSINESS Admin'
 admin.site.index_title = 'Tableau de bord'
+
+
+# Re-register Groups so the roles page is Unfold-styled as well.
+admin.site.unregister(Group)
+
+
+@admin.register(Group)
+class GroupAdmin(BaseGroupAdmin, ModelAdmin):
+    pass

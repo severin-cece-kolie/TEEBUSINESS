@@ -36,7 +36,7 @@
     {% block extra_css %}{% endblock %}
 </head>
 <body class="bg-luxury-grey font-inter text-luxury-black antialiased">
-    <header x-data="{ mobileMenuOpen: false, currencyOpen: false, accountOpen: false }" class="sticky top-0 z-50 border-b border-luxury-line bg-white/95 backdrop-blur-xl">
+    <header x-data="{ mobileMenuOpen: false, currencyOpen: false, accountOpen: false, cartCount: {{ cart_count|default:0 }} }" @cart-count.window="cartCount = $event.detail" class="sticky top-0 z-50 border-b border-luxury-line bg-white/95 backdrop-blur-xl">
         <div class="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8">
             <div class="flex h-14 items-center gap-2 md:h-18 md:gap-4">
                 <a href="{% url 'home' %}" class="flex shrink-0 items-center" aria-label="TEEBUSINESS home">
@@ -100,9 +100,35 @@
                     </div>
                 </div>
 
-                <a href="{% url 'cart' %}" class="relative ml-auto rounded-full p-2 transition-colors hover:bg-luxury-grey md:ml-0" aria-label="Cart">
+                <!-- Notifications bell -->
+                <div class="relative ml-auto md:ml-0" x-data="{ open: false }" @click.away="open = false" @keydown.escape="open = false">
+                    <button type="button" @click="open = !open; if (open) $store.notif.markAllRead()" :aria-expanded="open" class="relative rounded-full p-2 transition-colors hover:bg-luxury-grey" aria-label="Notifications">
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.4-1.4A2 2 0 0118 14.2V11a6 6 0 10-12 0v3.2c0 .5-.2 1-.6 1.4L4 17h5m6 0a3 3 0 11-6 0"/></svg>
+                        <span x-show="$store.notif.unread > 0" x-text="$store.notif.unread > 9 ? '9+' : $store.notif.unread" style="display:none;" class="absolute -right-0.5 -top-0.5 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-red-600 px-1 text-[10px] font-bold leading-none text-white"></span>
+                    </button>
+                    <div x-show="open" x-transition role="menu" class="absolute right-0 mt-2 w-80 max-w-[calc(100vw-1.5rem)] overflow-hidden rounded-xl border border-luxury-line bg-white shadow-2xl" style="display:none;">
+                        <div class="flex items-center justify-between border-b border-luxury-line px-4 py-3">
+                            <p class="text-xs font-bold uppercase tracking-widest">Notifications</p>
+                            <button @click="$store.notif.clear()" x-show="$store.notif.items.length" style="display:none;" class="text-[11px] font-semibold text-luxury-mid transition hover:text-luxury-black">Effacer</button>
+                        </div>
+                        <div class="max-h-80 overflow-y-auto">
+                            <template x-for="n in $store.notif.items" :key="n.id">
+                                <div class="flex gap-3 border-b border-luxury-line/60 px-4 py-3 last:border-b-0">
+                                    <span class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full" :class="n.ok ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600'">
+                                        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                                    </span>
+                                    <div class="min-w-0"><p class="text-sm text-luxury-black" x-text="n.text"></p><p class="mt-0.5 text-xs text-luxury-mid" x-text="n.time"></p></div>
+                                </div>
+                            </template>
+                            <p x-show="!$store.notif.items.length" class="px-4 py-8 text-center text-sm text-luxury-mid">Aucune notification pour le moment.</p>
+                        </div>
+                        <a href="{% url 'cart' %}" class="block border-t border-luxury-line px-4 py-3 text-center text-xs font-bold uppercase tracking-widest text-luxury-black transition hover:bg-luxury-grey">Voir le panier</a>
+                    </div>
+                </div>
+
+                <a href="{% url 'cart' %}" class="relative rounded-full p-2 transition-colors hover:bg-luxury-grey" aria-label="Cart">
                     <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 10-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
-                    {% if cart_count %}<span class="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-luxury-black text-[10px] font-bold text-white">{{ cart_count }}</span>{% endif %}
+                    <span x-show="cartCount > 0" x-text="cartCount" style="display:none;" class="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-luxury-black text-[10px] font-bold text-white"></span>
                 </a>
 
                 <div class="relative md:hidden" x-data="{ open: false }" @click.away="open = false" @keydown.escape="open = false">
@@ -205,6 +231,7 @@
     
     {% if not request.user.is_authenticated %}{% include 'includes/welcome_popup.html' %}{% endif %}
     {% include 'includes/whatsapp_button.html' %}
+    {% include 'includes/notifications.html' %}
 
     {% block extra_js %}{% endblock %}
 </body>

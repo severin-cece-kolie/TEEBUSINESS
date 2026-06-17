@@ -4,13 +4,30 @@ from django.utils.html import format_html
 from django.urls import reverse
 from django.http import HttpResponse
 import csv
+
+from unfold.admin import ModelAdmin, TabularInline
+from import_export.admin import ImportExportModelAdmin
+from import_export import resources
+from import_export.formats import base_formats
+
 from .models import NewsletterSubscriber, EmailCampaign, CampaignRecipient, EmailHistory
+
+EXPORT_FORMATS = [base_formats.CSV, base_formats.XLSX, base_formats.JSON]
+
+
+class SubscriberResource(resources.ModelResource):
+    class Meta:
+        model = NewsletterSubscriber
+        fields = ('full_name', 'email', 'phone_number', 'status', 'source', 'subscription_date')
+        export_order = fields
 
 
 @admin.register(NewsletterSubscriber)
-class NewsletterSubscriberAdmin(admin.ModelAdmin):
+class NewsletterSubscriberAdmin(ImportExportModelAdmin, ModelAdmin):
     """Admin interface for NewsletterSubscriber model."""
-    
+
+    resource_class = SubscriberResource
+    formats = EXPORT_FORMATS
     list_display = ['full_name', 'email', 'status', 'source', 'subscription_date', 'verified_at']
     list_filter = ['status', 'source', 'subscription_date']
     search_fields = ['full_name', 'email', 'phone_number']
@@ -92,7 +109,7 @@ class NewsletterSubscriberAdmin(admin.ModelAdmin):
     export_subscribers.short_description = 'Export selected to CSV'
 
 
-class CampaignRecipientInline(admin.TabularInline):
+class CampaignRecipientInline(TabularInline):
     """Inline admin for campaign recipients."""
     model = CampaignRecipient
     extra = 0
@@ -101,7 +118,7 @@ class CampaignRecipientInline(admin.TabularInline):
 
 
 @admin.register(EmailCampaign)
-class EmailCampaignAdmin(admin.ModelAdmin):
+class EmailCampaignAdmin(ModelAdmin):
     """Admin interface for EmailCampaign model."""
     
     list_display = ['name', 'campaign_type', 'status', 'total_recipients', 'sent_count', 'get_progress_percentage', 'scheduled_for', 'created_at']
@@ -247,7 +264,7 @@ class EmailCampaignAdmin(admin.ModelAdmin):
 
 
 @admin.register(CampaignRecipient)
-class CampaignRecipientAdmin(admin.ModelAdmin):
+class CampaignRecipientAdmin(ModelAdmin):
     """Admin interface for CampaignRecipient model."""
     
     list_display = ['subscriber', 'campaign', 'status', 'sent_at', 'delivered_at', 'opened_at']
@@ -274,7 +291,7 @@ class CampaignRecipientAdmin(admin.ModelAdmin):
 
 
 @admin.register(EmailHistory)
-class EmailHistoryAdmin(admin.ModelAdmin):
+class EmailHistoryAdmin(ModelAdmin):
     """Admin interface for EmailHistory model."""
     
     list_display = ['subject', 'to_email', 'email_type', 'status', 'sent_at', 'created_at']

@@ -1,0 +1,88 @@
+{% comment %}
+  Notification system: toast (top-right) + global Alpine store (persisted in
+  localStorage) + AJAX interceptor for the add-to-cart form. The bell icon lives
+  in the navbar (base.html) and reads $store.notif. No business logic changes.
+{% endcomment %}
+
+<!-- Toasts (top-right) -->
+<div x-data class="pointer-events-none fixed right-4 top-4 z-[120] flex w-[340px] max-w-[calc(100vw-2rem)] flex-col gap-2">
+  <template x-for="t in $store.notif.toasts" :key="t.id">
+    <div x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="translate-x-8 opacity-0" x-transition:enter-end="translate-x-0 opacity-100"
+         x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+         class="pointer-events-auto flex items-start gap-3 rounded-xl border border-luxury-line bg-white px-4 py-3 shadow-xl">
+      <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full"
+            :class="t.ok ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600'">
+        <svg x-show="t.ok" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+        <svg x-show="!t.ok" class="h-4 w-4" style="display:none;" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v4m0 4h.01M10.3 3.9l-8 14A1.5 1.5 0 003.7 20h16.6a1.5 1.5 0 001.3-2.1l-8-14a1.5 1.5 0 00-2.6 0z"/></svg>
+      </span>
+      <div class="flex-1 pt-0.5"><p class="text-sm font-medium text-luxury-black" x-text="t.text"></p></div>
+      <button @click="$store.notif.dismissToast(t.id)" class="text-luxury-mid transition hover:text-luxury-black" aria-label="Fermer">
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+  </template>
+</div>
+
+<script>
+  // Global notification store — registered before Alpine boots (Alpine is `defer`).
+  document.addEventListener('alpine:init', () => {
+    Alpine.store('notif', {
+      items: [], unread: 0, toasts: [], _seq: 0,
+      init() {
+        try {
+          const raw = localStorage.getItem('tee_notifs');
+          if (raw) { const d = JSON.parse(raw); this.items = d.items || []; this.unread = d.unread || 0; }
+        } catch (e) {}
+      },
+      _save() {
+        try { localStorage.setItem('tee_notifs', JSON.stringify({ items: this.items.slice(0, 30), unread: this.unread })); } catch (e) {}
+      },
+      push(text, ok = true) {
+        const id = ++this._seq;
+        const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        this.items.unshift({ id, text, time, ok });
+        this.items = this.items.slice(0, 30);
+        this.unread++;
+        this._save();
+        this.toasts.push({ id, text, ok });
+        setTimeout(() => this.dismissToast(id), 4500);
+      },
+      dismissToast(id) { this.toasts = this.toasts.filter(t => t.id !== id); },
+      markAllRead() { if (this.unread) { this.unread = 0; this._save(); } },
+      clear() { this.items = []; this.unread = 0; this._save(); },
+    });
+  });
+
+  // Intercept the add-to-cart form → AJAX (toast + bell), no full-page reload.
+  document.addEventListener('submit', function (e) {
+    const form = e.target;
+    if (!(form instanceof HTMLFormElement)) return;
+    const action = form.getAttribute('action') || '';
+    if (!/\/cart\/add\//.test(action)) return;
+
+    e.preventDefault();
+    if (form.dataset.submitting === '1') return;   // guard against double-submit
+    form.dataset.submitting = '1';
+
+    fetch(action, {
+      method: 'POST',
+      headers: { 'X-Requested-With': 'XMLHttpRequest' },
+      body: new FormData(form),
+      credentials: 'same-origin',
+    })
+      .then(r => r.json())
+      .then(data => {
+        const store = window.Alpine && Alpine.store('notif');
+        if (store) store.push(data.message, !!data.ok);
+        if (typeof data.cart_count !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('cart-count', { detail: data.cart_count }));
+        }
+      })
+      .catch(() => {
+        const store = window.Alpine && Alpine.store('notif');
+        if (store) store.push('Une erreur réseau est survenue. Veuillez réessayer.', false);
+      })
+      .finally(() => { form.dataset.submitting = ''; });
+  });
+</script>
