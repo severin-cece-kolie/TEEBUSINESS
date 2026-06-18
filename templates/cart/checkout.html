@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
-{% load currency_tags %}
+{% load currency_tags l10n %}
 
 {% block title %}Checkout — TEEBUSINESS{% endblock %}
 
 {% block content %}
 <section class="bg-white py-8 md:py-12" x-data="checkoutWizard()">
   <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-    <h1 class="mb-6 font-barlow text-3xl font-black uppercase tracking-tight md:text-4xl">Checkout</h1>
+    <h1 class="mb-6 font-barlow text-3xl font-black uppercase tracking-tight md:text-4xl">Commande</h1>
 
     {% if messages %}
       {% for message in messages %}
@@ -38,20 +38,20 @@
         <!-- ===== Step 1: Customer + Shipping ===== -->
         <div x-show="step === 1" x-transition.opacity class="space-y-8">
           <div>
-            <h2 class="mb-4 font-barlow text-lg font-black uppercase tracking-tight">Customer Information</h2>
+            <h2 class="mb-4 font-barlow text-lg font-black uppercase tracking-tight">Informations client</h2>
             <div class="grid gap-4 sm:grid-cols-2">
               <div class="sm:col-span-2">
-                <label class="mb-1.5 block text-xs font-semibold uppercase tracking-[0.12em] text-luxury-mid">Full Name *</label>
-                <input type="text" name="full_name" x-model="f.full_name" class="ck-input" placeholder="Your full name">
+                <label class="mb-1.5 block text-xs font-semibold uppercase tracking-[0.12em] text-luxury-mid">Nom complet *</label>
+                <input type="text" name="full_name" x-model="f.full_name" class="ck-input" placeholder="Votre nom complet">
                 <p x-show="e.full_name" x-text="e.full_name" class="ck-err" style="display:none;"></p>
               </div>
               <div>
-                <label class="mb-1.5 block text-xs font-semibold uppercase tracking-[0.12em] text-luxury-mid">Phone Number *</label>
+                <label class="mb-1.5 block text-xs font-semibold uppercase tracking-[0.12em] text-luxury-mid">Numéro de téléphone *</label>
                 <input type="tel" name="phone" x-model="f.phone" class="ck-input" placeholder="620 00 00 00">
                 <p x-show="e.phone" x-text="e.phone" class="ck-err" style="display:none;"></p>
               </div>
               <div>
-                <label class="mb-1.5 block text-xs font-semibold uppercase tracking-[0.12em] text-luxury-mid">Email Address *</label>
+                <label class="mb-1.5 block text-xs font-semibold uppercase tracking-[0.12em] text-luxury-mid">Adresse email *</label>
                 <input type="email" name="email" x-model="f.email" class="ck-input" placeholder="you@example.com">
                 <p x-show="e.email" x-text="e.email" class="ck-err" style="display:none;"></p>
               </div>
@@ -59,29 +59,47 @@
           </div>
 
           <div>
-            <h2 class="mb-4 font-barlow text-lg font-black uppercase tracking-tight">Shipping Address</h2>
+            <h2 class="mb-4 font-barlow text-lg font-black uppercase tracking-tight">Adresse de livraison</h2>
             <div class="grid gap-4 sm:grid-cols-2">
               <div>
-                <label class="mb-1.5 block text-xs font-semibold uppercase tracking-[0.12em] text-luxury-mid">City *</label>
+                <label class="mb-1.5 block text-xs font-semibold uppercase tracking-[0.12em] text-luxury-mid">Ville *</label>
                 <input type="text" name="city" x-model="f.city" class="ck-input" placeholder="Conakry">
                 <p x-show="e.city" x-text="e.city" class="ck-err" style="display:none;"></p>
               </div>
               <div>
-                <label class="mb-1.5 block text-xs font-semibold uppercase tracking-[0.12em] text-luxury-mid">District / Area</label>
+                <label class="mb-1.5 block text-xs font-semibold uppercase tracking-[0.12em] text-luxury-mid">Quartier / Zone</label>
                 <input type="text" name="district" x-model="f.district" class="ck-input" placeholder="Kaloum, Ratoma…">
               </div>
               <div class="sm:col-span-2">
-                <label class="mb-1.5 block text-xs font-semibold uppercase tracking-[0.12em] text-luxury-mid">Full Address *</label>
-                <textarea name="address" x-model="f.address" rows="3" class="ck-input" placeholder="Street, building, landmark…"></textarea>
+                <label class="mb-1.5 block text-xs font-semibold uppercase tracking-[0.12em] text-luxury-mid">Adresse complète *</label>
+                <textarea name="address" x-model="f.address" rows="3" class="ck-input" placeholder="Rue, immeuble, point de repère…"></textarea>
                 <p x-show="e.address" x-text="e.address" class="ck-err" style="display:none;"></p>
               </div>
             </div>
+          </div>
+
+          <!-- Zone de livraison -->
+          <div>
+            <h2 class="mb-4 font-barlow text-lg font-black uppercase tracking-tight">Zone de livraison</h2>
+            <div class="grid gap-3 sm:grid-cols-3">
+              {% for z in shipping_zones %}
+              <label class="flex cursor-pointer flex-col gap-1.5 rounded-xl border p-4 transition"
+                     :class="shippingZone === '{{ z.key }}' ? 'border-luxury-black bg-luxury-grey/40' : 'border-luxury-line hover:border-luxury-black'">
+                <span class="flex items-center gap-2">
+                  <input type="radio" name="shipping_zone" value="{{ z.key }}" x-model="shippingZone" class="h-4 w-4 accent-black">
+                  <span class="text-sm font-bold">{{ z.label }}</span>
+                </span>
+                <span class="pl-6 text-sm font-semibold text-luxury-mid" x-text="money({{ z.gnf }})"></span>
+              </label>
+              {% endfor %}
+            </div>
+            <p class="mt-2 text-xs text-luxury-mid">Prix de livraison fixe selon la zone choisie.</p>
           </div>
         </div>
 
         <!-- ===== Step 2: Payment ===== -->
         <div x-show="step === 2" x-transition.opacity style="display:none;">
-          <h2 class="mb-4 font-barlow text-lg font-black uppercase tracking-tight">Payment Method</h2>
+          <h2 class="mb-4 font-barlow text-lg font-black uppercase tracking-tight">Mode de paiement</h2>
           <div class="space-y-3">
             {% for value, label in payment_choices %}
             <label class="flex cursor-pointer items-center gap-4 rounded-xl border p-4 transition"
@@ -95,7 +113,7 @@
               <span>
                 <span class="block text-sm font-bold">{{ label }}</span>
                 <span class="block text-xs text-luxury-mid">
-                  {% if value == 'mobile_money' %}Orange Money, MTN MoMo{% elif value == 'card' %}Visa, Mastercard{% else %}Pay when your order arrives{% endif %}
+                  {% if value == 'mobile_money' %}Orange Money, MTN MoMo{% elif value == 'card' %}Visa, Mastercard{% else %}Payez à la réception de votre commande{% endif %}
                 </span>
               </span>
             </label>
@@ -105,12 +123,12 @@
 
         <!-- ===== Step 3: Review ===== -->
         <div x-show="step === 3" x-transition.opacity style="display:none;">
-          <h2 class="mb-4 font-barlow text-lg font-black uppercase tracking-tight">Review &amp; Confirm</h2>
+          <h2 class="mb-4 font-barlow text-lg font-black uppercase tracking-tight">Vérification &amp; confirmation</h2>
           <div class="space-y-4 text-sm">
             <div class="rounded-xl border border-luxury-line p-4">
               <div class="mb-2 flex items-center justify-between">
-                <span class="text-xs font-bold uppercase tracking-widest text-luxury-mid">Delivery to</span>
-                <button type="button" @click="step = 1" class="text-xs font-semibold text-luxury-black underline">Edit</button>
+                <span class="text-xs font-bold uppercase tracking-widest text-luxury-mid">Livraison à</span>
+                <button type="button" @click="step = 1" class="text-xs font-semibold text-luxury-black underline">Modifier</button>
               </div>
               <p class="font-semibold" x-text="f.full_name"></p>
               <p class="text-luxury-mid" x-text="f.phone + ' · ' + f.email"></p>
@@ -118,18 +136,18 @@
             </div>
             <div class="flex items-center justify-between rounded-xl border border-luxury-line p-4">
               <div>
-                <span class="block text-xs font-bold uppercase tracking-widest text-luxury-mid">Payment</span>
+                <span class="block text-xs font-bold uppercase tracking-widest text-luxury-mid">Paiement</span>
                 <span class="font-semibold" x-text="paymentLabel()"></span>
               </div>
-              <button type="button" @click="step = 2" class="text-xs font-semibold text-luxury-black underline">Edit</button>
+              <button type="button" @click="step = 2" class="text-xs font-semibold text-luxury-black underline">Modifier</button>
             </div>
             <div class="rounded-xl border border-luxury-line p-4">
-              <span class="mb-3 block text-xs font-bold uppercase tracking-widest text-luxury-mid">Items</span>
+              <span class="mb-3 block text-xs font-bold uppercase tracking-widest text-luxury-mid">Articles</span>
               {% for group in groups %}
               <div class="mb-2">
                 <p class="font-semibold">{{ group.product.name }}</p>
                 {% for line in group.lines %}
-                <p class="flex justify-between text-luxury-mid"><span>Size {{ line.size }} × {{ line.qty }}</span><span>{{ line.subtotal|convert_price:request }}</span></p>
+                <p class="flex justify-between text-luxury-mid"><span>Taille {{ line.size }} × {{ line.qty }}</span><span>{{ line.subtotal|convert_price:request }}</span></p>
                 {% endfor %}
               </div>
               {% endfor %}
@@ -139,17 +157,17 @@
 
         <!-- Nav buttons -->
         <div class="mt-8 flex items-center justify-between">
-          <button type="button" x-show="step > 1" @click="step--" class="rounded-xl border border-luxury-line px-6 py-3 text-sm font-semibold uppercase tracking-widest transition hover:bg-luxury-grey" style="display:none;">Back</button>
-          <a x-show="step === 1" href="{% url 'cart' %}" class="text-sm font-semibold uppercase tracking-widest text-luxury-mid hover:text-luxury-black">Back to cart</a>
-          <button type="button" x-show="step < 3" @click="next()" class="rounded-xl bg-luxury-black px-8 py-3 text-sm font-semibold uppercase tracking-[0.15em] text-white transition hover:bg-luxury-black/90">Continue</button>
-          <button type="submit" x-show="step === 3" class="rounded-xl bg-luxury-black px-8 py-3 text-sm font-semibold uppercase tracking-[0.15em] text-white transition hover:bg-luxury-black/90" style="display:none;">Place order</button>
+          <button type="button" x-show="step > 1" @click="step--" class="rounded-xl border border-luxury-line px-6 py-3 text-sm font-semibold uppercase tracking-widest transition hover:bg-luxury-grey" style="display:none;">Retour</button>
+          <a x-show="step === 1" href="{% url 'cart' %}" class="text-sm font-semibold uppercase tracking-widest text-luxury-mid hover:text-luxury-black">Retour au panier</a>
+          <button type="button" x-show="step < 3" @click="next()" class="rounded-xl bg-luxury-black px-8 py-3 text-sm font-semibold uppercase tracking-[0.15em] text-white transition hover:bg-luxury-black/90">Continuer</button>
+          <button type="submit" x-show="step === 3" class="rounded-xl bg-luxury-black px-8 py-3 text-sm font-semibold uppercase tracking-[0.15em] text-white transition hover:bg-luxury-black/90" style="display:none;">Valider la commande</button>
         </div>
       </div>
 
       <!-- ===== Order summary (sticky) ===== -->
       <aside class="lg:col-span-1">
         <div class="sticky top-24 rounded-2xl border border-luxury-line bg-luxury-grey/40 p-6">
-          <h2 class="font-barlow text-lg font-black uppercase tracking-tight">Order summary</h2>
+          <h2 class="font-barlow text-lg font-black uppercase tracking-tight">Récapitulatif</h2>
           <div class="mt-4 max-h-56 space-y-3 overflow-auto pr-1">
             {% for group in groups %}{% for line in group.lines %}
             <div class="flex items-start justify-between gap-3 text-sm">
@@ -159,16 +177,16 @@
             {% endfor %}{% endfor %}
           </div>
           <div class="mt-4 space-y-2 border-t border-luxury-line pt-4 text-sm">
-            <div class="flex justify-between text-luxury-mid"><span>Subtotal</span><span>{{ subtotal_gnf|convert_price:request }}</span></div>
-            <div class="flex justify-between text-luxury-mid"><span>Shipping</span><span>{{ shipping_gnf|convert_price:request }}</span></div>
+            <div class="flex justify-between text-luxury-mid"><span>Sous-total</span><span>{{ subtotal_gnf|convert_price:request }}</span></div>
+            <div class="flex justify-between text-luxury-mid"><span>Livraison</span><span x-text="shippingDisplay()">{{ shipping_gnf|convert_price:request }}</span></div>
             <div class="flex justify-between text-luxury-mid"><span>Taxes{% if tax_rate %} ({{ tax_rate }}%){% endif %}</span><span>{{ tax_gnf|convert_price:request }}</span></div>
           </div>
           <div class="mt-3 flex justify-between border-t border-luxury-line pt-3 text-base font-bold">
-            <span>Grand Total</span><span>{{ total_gnf|convert_price:request }}</span>
+            <span>Total</span><span x-text="totalDisplay()">{{ total_gnf|convert_price:request }}</span>
           </div>
           <p class="mt-4 flex items-center gap-2 text-xs text-luxury-mid">
             <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-            Secure checkout
+            Paiement sécurisé
           </p>
         </div>
       </aside>
@@ -184,12 +202,18 @@
 {% endblock %}
 
 {% block extra_js %}
+{% localize off %}
 <script>
   function checkoutWizard() {
     return {
       step: 1,
-      steps: ['Information', 'Payment', 'Review'],
+      steps: ['Informations', 'Paiement', 'Récapitulatif'],
       payment: '{{ payment_choices.0.0 }}',
+      shippingZone: '{{ default_zone }}',
+      zonesGnf: { {% for z in shipping_zones %}"{{ z.key }}": {{ z.gnf }}{% if not forloop.last %}, {% endif %}{% endfor %} },
+      subtotalGnf: {{ subtotal_gnf|default:0 }},
+      taxGnf: {{ tax_gnf|default:0 }},
+      cur: { rate: {{ currency_js.rate }}, symbol: '{{ currency_js.symbol|escapejs }}', decimals: {{ currency_js.decimals }} },
       f: {
         full_name: '{{ prefill.full_name|escapejs }}',
         phone: '{{ prefill.phone|escapejs }}',
@@ -199,16 +223,23 @@
         address: '{{ prefill.address|escapejs }}',
       },
       e: {},
+      money(gnf) {
+        const v = gnf * this.cur.rate;
+        return this.cur.symbol + ' ' + v.toLocaleString('fr-FR', { minimumFractionDigits: this.cur.decimals, maximumFractionDigits: this.cur.decimals });
+      },
+      shippingGnf() { return this.zonesGnf[this.shippingZone] || 0; },
+      shippingDisplay() { return this.money(this.shippingGnf()); },
+      totalDisplay() { return this.money(this.subtotalGnf + this.shippingGnf() + this.taxGnf); },
       paymentLabel() {
-        return { mobile_money: 'Mobile Money', card: 'Credit/Debit Card', cod: 'Cash on Delivery' }[this.payment] || '';
+        return { mobile_money: 'Mobile Money', card: 'Carte bancaire', cod: 'Paiement à la livraison' }[this.payment] || '';
       },
       validateStep1() {
         this.e = {};
-        if (!this.f.full_name.trim()) this.e.full_name = 'Please enter your full name.';
-        if (!this.f.phone.trim()) this.e.phone = 'Please enter your phone number.';
-        if (!/^\S+@\S+\.\S+$/.test(this.f.email)) this.e.email = 'Please enter a valid email.';
-        if (!this.f.city.trim()) this.e.city = 'Please enter your city.';
-        if (!this.f.address.trim()) this.e.address = 'Please enter your full address.';
+        if (!this.f.full_name.trim()) this.e.full_name = 'Veuillez saisir votre nom complet.';
+        if (!this.f.phone.trim()) this.e.phone = 'Veuillez saisir votre numéro de téléphone.';
+        if (!/^\S+@\S+\.\S+$/.test(this.f.email)) this.e.email = 'Veuillez saisir un email valide.';
+        if (!this.f.city.trim()) this.e.city = 'Veuillez saisir votre ville.';
+        if (!this.f.address.trim()) this.e.address = 'Veuillez saisir votre adresse complète.';
         return Object.keys(this.e).length === 0;
       },
       next() {
@@ -218,4 +249,5 @@
     };
   }
 </script>
+{% endlocalize %}
 {% endblock %}

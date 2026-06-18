@@ -76,16 +76,28 @@
       <!-- Summary -->
       <aside class="lg:col-span-1">
         <div class="rounded-2xl border border-luxury-line bg-luxury-grey/40 p-6">
-          <h2 class="font-barlow text-lg font-black uppercase tracking-tight">Order summary</h2>
+          <h2 class="font-barlow text-lg font-black uppercase tracking-tight">Récapitulatif</h2>
           <div class="mt-4 space-y-2 text-sm">
-            <div class="flex justify-between text-luxury-mid"><span>Items</span><span>{{ total_qty }}</span></div>
-            <div class="flex justify-between text-luxury-mid"><span>Subtotal</span><span>{{ total_gnf|convert_price:request }}</span></div>
+            <div class="flex justify-between text-luxury-mid"><span>Articles</span><span>{{ total_qty }}</span></div>
+            <div class="flex justify-between text-luxury-mid"><span>Sous-total</span><span>{{ total_gnf|convert_price:request }}</span></div>
           </div>
+
+          <!-- Tarifs de livraison (fixes par zone, choisis au paiement) -->
+          <div class="mt-4 rounded-xl border border-luxury-line bg-white/60 p-3 text-xs">
+            <p class="mb-2 font-bold uppercase tracking-widest text-luxury-mid">Frais de livraison</p>
+            <div class="space-y-1">
+              {% for z in shipping_zones %}
+              <div class="flex justify-between text-luxury-mid"><span>{{ z.label }}</span><span class="font-semibold text-luxury-black">{{ z.gnf|convert_price:request }}</span></div>
+              {% endfor %}
+            </div>
+            <p class="mt-2 text-[11px] text-luxury-mid">Le tarif est appliqué selon la zone choisie au paiement.</p>
+          </div>
+
           <div class="mt-4 flex justify-between border-t border-luxury-line pt-4 text-base font-bold">
-            <span>Total</span><span>{{ total_gnf|convert_price:request }}</span>
+            <span>Sous-total</span><span>{{ total_gnf|convert_price:request }}</span>
           </div>
           <a href="{% url 'checkout' %}" class="mt-6 block rounded-xl bg-luxury-black py-3.5 text-center text-sm font-semibold uppercase tracking-[0.15em] text-white transition hover:bg-luxury-black/90">
-            Proceed to checkout
+            Passer au paiement
           </a>
         </div>
       </aside>

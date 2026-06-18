@@ -38,6 +38,7 @@ class Order(models.Model):
     city = models.CharField(max_length=120)
     district = models.CharField(max_length=120, blank=True)
     address = models.TextField()
+    shipping_zone = models.CharField(max_length=20, default='conakry', blank=True)
 
     payment_method = models.CharField(max_length=20, choices=PAYMENT_CHOICES, default='cod')
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
@@ -71,6 +72,12 @@ class Order(models.Model):
     @property
     def total_items(self):
         return sum(i.quantity for i in self.items.all())
+
+    @property
+    def shipping_zone_label(self):
+        from django.conf import settings
+        zone = settings.SHIPPING_ZONES.get(self.shipping_zone or '')
+        return zone['label'] if zone else (self.shipping_zone or '—')
 
     @property
     def status_color(self):

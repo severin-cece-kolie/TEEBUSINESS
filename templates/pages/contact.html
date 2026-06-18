@@ -10,10 +10,11 @@
     <div class="grid gap-10 lg:grid-cols-5 lg:gap-12">
       <!-- Form -->
       <div class="lg:col-span-3">
-        {% if messages %}
-          {% for message in messages %}
-          <div class="mb-5 rounded-xl border px-4 py-3 text-sm {% if message.tags == 'success' %}border-green-200 bg-green-50 text-green-800{% else %}border-red-200 bg-red-50 text-red-700{% endif %}">{{ message }}</div>
-          {% endfor %}
+        {% if sent %}
+        <div class="mb-5 flex items-start gap-3 rounded-xl border border-green-200 bg-green-50 px-4 py-3.5 text-sm text-green-800">
+          <svg class="mt-0.5 h-5 w-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+          <span><strong>Message envoyé.</strong> Merci de nous avoir contactés — notre équipe vous répond très vite.</span>
+        </div>
         {% endif %}
 
         <form method="post" class="space-y-5" novalidate>

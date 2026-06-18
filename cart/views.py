@@ -11,14 +11,47 @@ from shop.models import Product, ProductSize
 from .models import Order, OrderItem
 
 
-def _checkout_totals(subtotal):
-    """Return (shipping, tax, total) as Decimals from a GNF subtotal."""
+def shipping_for_zone(zone):
+    """Fixed shipping price (GNF, Decimal) for a delivery zone."""
+    z = settings.SHIPPING_ZONES.get(zone) or settings.SHIPPING_ZONES[settings.SHIPPING_DEFAULT_ZONE]
+    if 'gnf' in z:
+        return Decimal(str(z['gnf']))
+    return Decimal(str(int(z['usd']) * settings.USD_TO_GNF))
+
+
+def _shipping_zones_for_display():
+    """List of zones with their GNF price (and USD label for international)."""
+    out = []
+    for key, z in settings.SHIPPING_ZONES.items():
+        out.append({
+            'key': key, 'label': z['label'],
+            'gnf': int(shipping_for_zone(key)), 'usd': z.get('usd'),
+        })
+    return out
+
+
+def _checkout_totals(subtotal, zone=None):
+    """Return (shipping, tax, total) as Decimals from a GNF subtotal + zone."""
     subtotal = Decimal(str(subtotal))
-    shipping = Decimal('0') if subtotal <= 0 else Decimal(str(settings.SHIPPING_COST_GNF))
+    if zone is None:
+        zone = settings.SHIPPING_DEFAULT_ZONE
+    shipping = Decimal('0') if subtotal <= 0 else shipping_for_zone(zone)
     tax = (subtotal * Decimal(str(settings.TAX_RATE_PERCENT)) / Decimal('100')).quantize(
         Decimal('1'), rounding=ROUND_HALF_UP)
     total = subtotal + shipping + tax
     return shipping, tax, total
+
+
+def _currency_js(request):
+    """Current-currency rate/symbol/decimals so the checkout JS can reformat live."""
+    from shop.templatetags.currency_tags import CURRENCY_RATES, CURRENCY_FORMATS
+    cur = request.session.get('currency', 'GNF')
+    symbol, precision = CURRENCY_FORMATS.get(cur, CURRENCY_FORMATS['GNF'])
+    return {
+        'rate': float(CURRENCY_RATES.get(cur, 1)),
+        'symbol': symbol,
+        'decimals': max(0, -precision.as_tuple().exponent),
+    }
 
 
 # ─────────────────────────────────────────────────────────────
@@ -94,6 +127,7 @@ def cart(request):
     groups, total_gnf, total_qty = _build_cart(request)
     return render(request, 'cart/cart.html', {
         'groups': groups, 'total_gnf': total_gnf, 'total_qty': total_qty,
+        'shipping_zones': _shipping_zones_for_display(),
     })
 
 
@@ -146,12 +180,12 @@ def add_to_cart(request, product_id):
     cart_count = sum(int(v) for v in cart.values())
 
     if added > 0:
-        msg = f'Added {added} item{"s" if added != 1 else ""} to your cart.'
+        msg = f'{added} article{"s" if added != 1 else ""} ajouté{"s" if added != 1 else ""} au panier.'
         if capped:
-            msg += ' Some quantities were limited by available stock.'
+            msg += ' Certaines quantités ont été limitées par le stock disponible.'
         ok = True
     else:
-        msg = 'Please choose at least one size that is in stock.'
+        msg = 'Veuillez choisir au moins une taille en stock.'
         ok = False
 
     # AJAX (Fetch) → JSON for the toast + bell counter. No Django banner message
@@ -182,18 +216,18 @@ def update_cart(request):
 
     if qty <= 0:
         cart.pop(key, None)
-        messages.success(request, 'Item removed from your cart.')
+        messages.success(request, 'Article retiré du panier.')
     else:
         pid, size = _split_key(key)
         size_obj = ProductSize.objects.filter(product_id=pid, size=size).first()
         available = size_obj.quantity if size_obj else 0
         if available <= 0:
             cart.pop(key, None)
-            messages.error(request, 'That size is now out of stock and was removed.')
+            messages.error(request, 'Cette taille est en rupture de stock et a été retirée.')
         else:
             if qty > available:
                 qty = available
-                messages.success(request, f'Only {available} left in that size — quantity adjusted.')
+                messages.success(request, f'Il ne reste que {available} unité(s) de cette taille — quantité ajustée.')
             cart[key] = qty
 
     request.session['cart'] = cart
@@ -211,17 +245,18 @@ def remove_from_cart(request):
         del cart[key]
         request.session['cart'] = cart
         request.session.modified = True
-        messages.success(request, 'Item removed from your cart.')
+        messages.success(request, 'Article retiré du panier.')
     return redirect('cart')
 
 
 def checkout(request):
     groups, total_gnf, total_qty = _build_cart(request)
     if not groups:
-        messages.error(request, 'Your cart is empty.')
+        messages.error(request, 'Votre panier est vide.')
         return redirect('cart')
 
-    shipping, tax, total = _checkout_totals(total_gnf)
+    default_zone = settings.SHIPPING_DEFAULT_ZONE
+    shipping, tax, total = _checkout_totals(total_gnf, default_zone)
     user = request.user if request.user.is_authenticated else None
     prefill = {
         'full_name': (user.get_full_name() if user else '') or (user.first_name if user else ''),
@@ -235,6 +270,9 @@ def checkout(request):
         'shipping_gnf': shipping, 'tax_gnf': tax, 'total_gnf': total,
         'tax_rate': settings.TAX_RATE_PERCENT, 'prefill': prefill,
         'payment_choices': Order.PAYMENT_CHOICES,
+        'shipping_zones': _shipping_zones_for_display(),
+        'default_zone': default_zone,
+        'currency_js': _currency_js(request),
     })
 
 
@@ -246,7 +284,7 @@ def place_order(request):
 
     cart = request.session.get('cart', {})
     if not cart:
-        messages.error(request, 'Your cart is empty.')
+        messages.error(request, 'Votre panier est vide.')
         return redirect('cart')
 
     # --- Customer / shipping fields ---
@@ -255,10 +293,15 @@ def place_order(request):
     required = ['full_name', 'phone', 'email', 'city', 'address']
     missing = [f for f in required if not fields[f]]
     if missing or '@' not in fields['email']:
-        messages.error(request, 'Please complete all required fields with a valid email.')
+        messages.error(request, 'Veuillez remplir tous les champs obligatoires avec un email valide.')
         return redirect('checkout')
     if fields['payment_method'] not in dict(Order.PAYMENT_CHOICES):
         fields['payment_method'] = 'cod'
+
+    # --- Delivery zone (authoritative shipping price is computed server-side) ---
+    zone = request.POST.get('shipping_zone', '').strip()
+    if zone not in settings.SHIPPING_ZONES:
+        zone = settings.SHIPPING_DEFAULT_ZONE
 
     # --- Validate stock (lock rows) and build line snapshots ---
     line_rows = []
@@ -277,10 +320,10 @@ def place_order(request):
             .first()
         )
         if size_obj is None:
-            messages.error(request, 'A product in your cart is no longer available. Please review your cart.')
+            messages.error(request, "Un produit de votre panier n'est plus disponible. Veuillez vérifier votre panier.")
             return redirect('cart')
         if quantity > size_obj.quantity:
-            messages.error(request, f'Only {size_obj.quantity} left of {size_obj.product.name} (size {size}). Please adjust your cart.')
+            messages.error(request, f'Il ne reste que {size_obj.quantity} unité(s) de {size_obj.product.name} (taille {size}). Veuillez ajuster votre panier.')
             return redirect('cart')
 
         unit_price = Decimal(str(size_obj.product.discounted_price)).quantize(Decimal('1'), rounding=ROUND_HALF_UP)
@@ -291,13 +334,14 @@ def place_order(request):
         })
         subtotal += unit_price * quantity
 
-    shipping, tax, total = _checkout_totals(subtotal)
+    shipping, tax, total = _checkout_totals(subtotal, zone)
 
     # --- Create the order ---
     order = Order.objects.create(
         user=request.user if request.user.is_authenticated else None,
         full_name=fields['full_name'], phone=fields['phone'], email=fields['email'],
         city=fields['city'], district=fields['district'], address=fields['address'],
+        shipping_zone=zone,
         payment_method=fields['payment_method'], status='pending',
         subtotal_gnf=subtotal, shipping_gnf=shipping, tax_gnf=tax, total_gnf=total,
     )

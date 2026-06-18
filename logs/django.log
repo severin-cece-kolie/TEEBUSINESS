@@ -201,3 +201,12 @@ WARNING 2026-06-18 16:56:11,755 sms_utils Twilio SDK not installed. SMS function
 ERROR 2026-06-18 16:56:13,288 email_backends Email to ['t_fail@example.com'] FAILED after 2 attempt(s): RuntimeError: Brevo request failed: network blocked by free tier
 WARNING 2026-06-18 16:56:39,151 sms_utils Twilio SDK not installed. SMS functionality disabled. Install with: pip install twilio
 WARNING 2026-06-18 17:28:09,810 sms_utils Twilio SDK not installed. SMS functionality disabled. Install with: pip install twilio
+WARNING 2026-06-18 19:38:15,279 sms_utils Twilio SDK not installed. SMS functionality disabled. Install with: pip install twilio
+WARNING 2026-06-18 20:15:03,203 sms_utils Twilio SDK not installed. SMS functionality disabled. Install with: pip install twilio
+WARNING 2026-06-18 20:15:05,266 sms_utils Twilio SDK not installed. SMS functionality disabled. Install with: pip install twilio
+WARNING 2026-06-18 20:15:07,142 sms_utils Twilio SDK not installed. SMS functionality disabled. Install with: pip install twilio
+INFO 2026-06-18 20:15:08,756 email_utils Contact form email received from t@example.com
+WARNING 2026-06-18 20:16:12,733 sms_utils Twilio SDK not installed. SMS functionality disabled. Install with: pip install twilio
+WARNING 2026-06-18 20:21:09,706 sms_utils Twilio SDK not installed. SMS functionality disabled. Install with: pip install twilio
+WARNING 2026-06-18 20:26:33,714 sms_utils Twilio SDK not installed. SMS functionality disabled. Install with: pip install twilio
+WARNING 2026-06-18 20:26:34,604 sms_utils Twilio SDK not installed. SMS functionality disabled. Install with: pip install twilio

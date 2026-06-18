@@ -55,7 +55,7 @@ class OrderAdmin(ImportExportModelAdmin, ModelAdmin):
     formats = EXPORT_FORMATS
     list_display = ('order_number', 'full_name', 'status_badge', 'payment_method',
                     'total_gnf', 'created_at', 'invoice_link')
-    list_filter = ('status', 'payment_method', 'created_at')
+    list_filter = ('status', 'payment_method', 'shipping_zone', 'created_at')
     search_fields = ('order_number', 'full_name', 'email', 'phone')
     date_hierarchy = 'created_at'
     inlines = [OrderItemInline]
@@ -68,7 +68,7 @@ class OrderAdmin(ImportExportModelAdmin, ModelAdmin):
     fieldsets = (
         ('Order', {'fields': ('order_number', 'status', 'invoice_link', 'created_at', 'updated_at')}),
         ('Customer', {'fields': ('user', 'full_name', 'phone', 'email')}),
-        ('Shipping', {'fields': ('city', 'district', 'address')}),
+        ('Shipping', {'fields': ('shipping_zone', 'city', 'district', 'address')}),
         ('Payment & totals', {'fields': ('payment_method', 'subtotal_gnf', 'shipping_gnf', 'tax_gnf', 'total_gnf')}),
         ('Note', {'fields': ('note',), 'classes': ('collapse',)}),
     )

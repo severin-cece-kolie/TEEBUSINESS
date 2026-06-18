@@ -5,6 +5,8 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    # Language switcher endpoint (sets language in session/cookie; no content URL change).
+    path('i18n/', include('django.conf.urls.i18n')),
     path('', include('pages.urls')),
     path('shop/', include('shop.urls')),
     path('cart/', include('cart.urls')),

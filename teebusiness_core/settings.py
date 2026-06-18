@@ -33,7 +33,7 @@ load_dotenv(BASE_DIR / '.env')
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY', 'odsa&9q%#ic#7q6kwumdl2o=v9(wy1f96ij%6vi2&%)vbouc@s')
+SECRET_KEY = os.environ.get('SECRET_KEY', "odsa&9q%#ic#7q6kwumdl2o=v9(wy1f96ij%6vi2&%)vbouc@s")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # (Set DEBUG=True only for local development.)
@@ -139,6 +139,9 @@ MIDDLEWARE = [
     # from STATIC_ROOT when DEBUG=False. Must sit right after SecurityMiddleware.
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    # i18n: pick language from session/cookie (no URL change). Must be after
+    # SessionMiddleware and before CommonMiddleware.
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -219,7 +222,15 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'fr'  # French by default
+
+# Available languages for the manual switcher (no URL prefixes — language is
+# kept in the session/cookie via LocaleMiddleware, so product URLs/slugs never change).
+LANGUAGES = [
+    ('fr', 'Français'),
+    ('en', 'English'),
+]
+LOCALE_PATHS = [BASE_DIR / 'locale']
 
 TIME_ZONE = 'UTC'
 
@@ -292,9 +303,21 @@ SERVER_EMAIL = os.environ.get('SERVER_EMAIL', DEFAULT_FROM_EMAIL)
 SITE_URL = os.environ.get('SITE_URL', 'http://localhost:8000')
 
 # ===== CHECKOUT =====
-# Flat shipping fee and tax rate (%) applied at checkout. GNF.
-SHIPPING_COST_GNF = int(os.environ.get('SHIPPING_COST_GNF', '25000'))
 TAX_RATE_PERCENT = float(os.environ.get('TAX_RATE_PERCENT', '0'))
+
+# Fixed shipping price by delivery zone.
+#   conakry        -> 15 000 FG
+#   guinea (inland)-> 20 000 FG
+#   international  -> 10 USD (converted to GNF at USD_TO_GNF for the order total)
+USD_TO_GNF = int(os.environ.get('USD_TO_GNF', '9100'))  # 1 USD ≈ 9 100 GNF
+SHIPPING_DEFAULT_ZONE = 'conakry'
+SHIPPING_ZONES = {
+    'conakry':       {'label': 'Conakry',                'gnf': int(os.environ.get('SHIP_CONAKRY_GNF', '15000'))},
+    'guinea':        {'label': 'Intérieur de la Guinée', 'gnf': int(os.environ.get('SHIP_GUINEA_GNF', '20000'))},
+    'international': {'label': 'International',           'usd': int(os.environ.get('SHIP_INTL_USD', '10'))},
+}
+# Back-compat: some older code referenced a single flat fee.
+SHIPPING_COST_GNF = SHIPPING_ZONES['conakry']['gnf']
 
 # Master switch for automatic subscriber product alerts (new/restock/discount).
 # Set False (e.g. during data imports/seeding) to avoid emailing on bulk changes.

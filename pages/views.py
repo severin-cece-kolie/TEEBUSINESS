@@ -4,6 +4,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
+from django.urls import reverse
 
 from shop.models import Product, Brand
 from shop.pagination import paginate
@@ -70,7 +71,7 @@ def contact(request):
         form = ContactForm(request.POST)
         if form.is_valid():
             cd = form.cleaned_data
-            sent = send_contact_form_email(
+            send_contact_form_email(
                 full_name=cd['full_name'],
                 email=cd['email'],
                 phone=cd.get('phone', ''),
@@ -78,11 +79,9 @@ def contact(request):
                 message=cd['message'],
                 request=request,
             )
-            if sent:
-                messages.success(request, 'Thanks for reaching out — we’ll get back to you shortly.')
-            else:
-                messages.success(request, 'Thanks for your message — we’ll be in touch soon.')
-            return redirect('contact')
+            # No Django auto-message. A clean, controlled confirmation is shown
+            # on the page via ?sent=1 (handled in the template).
+            return redirect(f"{reverse('contact')}?sent=1")
     else:
         form = ContactForm()
 
@@ -93,6 +92,7 @@ def contact(request):
         'business_phone': settings.BUSINESS_PHONE,
         'business_email': settings.BUSINESS_EMAIL,
         'whatsapp_number': digits,
+        'sent': request.GET.get('sent') == '1',
     })
 def faq(request):
     faqs = [
