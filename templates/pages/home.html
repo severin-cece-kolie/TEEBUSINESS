@@ -7,6 +7,7 @@
 <!-- Hero -->
 <section class="relative overflow-hidden bg-luxury-black text-white">
   <img src="{% static 'assets/images/background1.jpg' %}" alt="" aria-hidden="true"
+       fetchpriority="high" decoding="async"
        class="absolute inset-0 h-full w-full object-cover object-center opacity-70">
   <div class="absolute inset-0 bg-gradient-to-r from-luxury-black via-luxury-black/80 to-luxury-black/30"></div>
   <div class="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 md:py-28 lg:px-8">
@@ -58,6 +59,25 @@
     <div class="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 lg:grid-cols-4 md:gap-x-6 md:gap-y-10">
       {% for product in best_sellers %}{% include 'includes/product_card.html' %}{% endfor %}
     </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- All Products (full catalogue, paginated — same items as Shop) -->
+{% if all_products %}
+<section id="all-products" class="scroll-mt-24 bg-white py-14 md:py-20">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="mb-8 flex items-end justify-between md:mb-10">
+      <div>
+        <p class="mb-1 text-[11px] font-bold uppercase tracking-[0.25em] text-luxury-mid">The full collection</p>
+        <h2 class="font-barlow text-2xl font-black uppercase tracking-tight md:text-3xl">All Products</h2>
+      </div>
+      <a href="{% url 'catalog' %}" class="hidden text-xs font-bold uppercase tracking-widest text-luxury-mid transition hover:text-luxury-black sm:block">Open shop</a>
+    </div>
+    <div class="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 lg:grid-cols-4 md:gap-x-6 md:gap-y-10">
+      {% for product in all_products %}{% include 'includes/product_card.html' %}{% endfor %}
+    </div>
+    {% include 'includes/pagination.html' with page=all_products page_range=page_range anchor='all-products' %}
   </div>
 </section>
 {% endif %}

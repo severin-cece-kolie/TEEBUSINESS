@@ -1,0 +1,57 @@
+{% comment %}
+  Reusable pagination. Params:
+    page        — a Django Page object (required)
+    page_range  — output of paginator.get_elided_page_range (ints + '…')
+  Preserves all existing query params (filters) except `page`.
+{% endcomment %}
+{% if page.paginator.num_pages > 1 %}
+<nav class="mt-10 flex items-center justify-center md:mt-14" aria-label="Pagination">
+  <ul class="flex items-center gap-1.5">
+    <!-- Previous -->
+    <li>
+      {% if page.has_previous %}
+      <a href="?page={{ page.previous_page_number }}{% for k,v in request.GET.items %}{% if k != 'page' and v %}&{{ k }}={{ v|urlencode }}{% endif %}{% endfor %}{% if anchor %}#{{ anchor }}{% endif %}"
+         class="flex h-10 items-center gap-1 rounded-lg border border-luxury-line bg-white px-3 text-sm font-semibold text-luxury-black transition hover:border-luxury-black hover:bg-luxury-grey" aria-label="Previous page">
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+        <span class="hidden sm:inline">Précédent</span>
+      </a>
+      {% else %}
+      <span class="flex h-10 items-center gap-1 rounded-lg border border-luxury-line/60 bg-luxury-grey/40 px-3 text-sm font-semibold text-luxury-mid/40">
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+        <span class="hidden sm:inline">Précédent</span>
+      </span>
+      {% endif %}
+    </li>
+
+    <!-- Page numbers -->
+    {% for num in page_range %}
+    <li>
+      {% if num == page.number %}
+      <span aria-current="page" class="flex h-10 w-10 items-center justify-center rounded-lg bg-luxury-black text-sm font-bold text-white">{{ num }}</span>
+      {% elif num == '…' %}
+      <span class="flex h-10 w-10 items-center justify-center text-sm text-luxury-mid">…</span>
+      {% else %}
+      <a href="?page={{ num }}{% for k,v in request.GET.items %}{% if k != 'page' and v %}&{{ k }}={{ v|urlencode }}{% endif %}{% endfor %}{% if anchor %}#{{ anchor }}{% endif %}"
+         class="flex h-10 w-10 items-center justify-center rounded-lg border border-luxury-line bg-white text-sm font-semibold text-luxury-black transition hover:border-luxury-black hover:bg-luxury-grey">{{ num }}</a>
+      {% endif %}
+    </li>
+    {% endfor %}
+
+    <!-- Next -->
+    <li>
+      {% if page.has_next %}
+      <a href="?page={{ page.next_page_number }}{% for k,v in request.GET.items %}{% if k != 'page' and v %}&{{ k }}={{ v|urlencode }}{% endif %}{% endfor %}{% if anchor %}#{{ anchor }}{% endif %}"
+         class="flex h-10 items-center gap-1 rounded-lg border border-luxury-line bg-white px-3 text-sm font-semibold text-luxury-black transition hover:border-luxury-black hover:bg-luxury-grey" aria-label="Next page">
+        <span class="hidden sm:inline">Suivant</span>
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+      </a>
+      {% else %}
+      <span class="flex h-10 items-center gap-1 rounded-lg border border-luxury-line/60 bg-luxury-grey/40 px-3 text-sm font-semibold text-luxury-mid/40">
+        <span class="hidden sm:inline">Suivant</span>
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+      </span>
+      {% endif %}
+    </li>
+  </ul>
+</nav>
+{% endif %}

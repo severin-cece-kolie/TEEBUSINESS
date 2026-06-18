@@ -155,11 +155,16 @@ class EmailCampaignAdmin(ModelAdmin):
     )
     
     def get_progress_percentage(self, obj):
-        """Display progress as a progress bar."""
+        """Display progress as a progress bar.
+
+        NOTE: format the float in Python first. `format_html` escapes each arg
+        into a SafeString, and `'{:.1f}'.format(<str>)` raises ValueError — that
+        was the source of the HTTP 500 on the Email Campaigns changelist.
+        """
         percentage = obj.get_progress_percentage()
         return format_html(
-            '<progress value="{0}" max="100"></progress> {0:.1f}%',
-            percentage
+            '<progress value="{}" max="100"></progress> {}%',
+            int(percentage), f'{percentage:.1f}',
         )
     get_progress_percentage.short_description = 'Progress'
     

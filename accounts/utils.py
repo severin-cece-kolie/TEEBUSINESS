@@ -126,7 +126,10 @@ def send_otp_email(user, otp, request=None):
             subject=subject,
             body=plain_text_content,
             from_email=settings.DEFAULT_FROM_EMAIL,
-            to=[user.email]
+            to=[user.email],
+            # This helper writes its own (richer) EmailHistory row below, so tell
+            # the LoggingEmailBackend not to journal this message a second time.
+            headers={'X-TEE-NoLog': '1'},
         )
         
         # Attach HTML content

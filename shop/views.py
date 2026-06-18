@@ -3,10 +3,11 @@ from django.shortcuts import render, get_object_or_404
 from django.utils.http import url_has_allowed_host_and_scheme
 
 from .models import Product, Category, Brand
+from .pagination import paginate
 
 
 def catalog(request):
-    products = Product.objects.filter(is_active=True).select_related('category', 'brand').prefetch_related('images')
+    products = Product.objects.active_listing()
     categories = Category.objects.all()
     brands = Brand.objects.all()
 
@@ -21,8 +22,11 @@ def catalog(request):
     if search_q:
         products = products.filter(name__icontains=search_q)
 
+    page, page_range = paginate(request, products)
+
     return render(request, 'shop/catalog.html', {
-        'products': products,
+        'products': page,
+        'page_range': page_range,
         'categories': categories,
         'brands': brands,
         'selected_category': category_slug,

@@ -189,3 +189,15 @@ WARNING 2026-06-17 11:50:19,734 sms_utils Twilio SDK not installed. SMS function
 WARNING 2026-06-17 11:50:20,887 sms_utils Twilio SDK not installed. SMS functionality disabled. Install with: pip install twilio
 WARNING 2026-06-17 11:50:51,464 sms_utils Twilio SDK not installed. SMS functionality disabled. Install with: pip install twilio
 WARNING 2026-06-17 11:50:52,266 sms_utils Twilio SDK not installed. SMS functionality disabled. Install with: pip install twilio
+WARNING 2026-06-18 16:00:32,371 sms_utils Twilio SDK not installed. SMS functionality disabled. Install with: pip install twilio
+WARNING 2026-06-18 16:00:33,315 sms_utils Twilio SDK not installed. SMS functionality disabled. Install with: pip install twilio
+WARNING 2026-06-18 16:00:34,347 sms_utils Twilio SDK not installed. SMS functionality disabled. Install with: pip install twilio
+WARNING 2026-06-18 16:00:36,140 sms_utils Twilio SDK not installed. SMS functionality disabled. Install with: pip install twilio
+WARNING 2026-06-18 16:01:26,446 sms_utils Twilio SDK not installed. SMS functionality disabled. Install with: pip install twilio
+WARNING 2026-06-18 16:01:40,898 sms_utils Twilio SDK not installed. SMS functionality disabled. Install with: pip install twilio
+WARNING 2026-06-18 16:01:41,556 sms_utils Twilio SDK not installed. SMS functionality disabled. Install with: pip install twilio
+WARNING 2026-06-18 16:28:38,018 sms_utils Twilio SDK not installed. SMS functionality disabled. Install with: pip install twilio
+WARNING 2026-06-18 16:56:11,755 sms_utils Twilio SDK not installed. SMS functionality disabled. Install with: pip install twilio
+ERROR 2026-06-18 16:56:13,288 email_backends Email to ['t_fail@example.com'] FAILED after 2 attempt(s): RuntimeError: Brevo request failed: network blocked by free tier
+WARNING 2026-06-18 16:56:39,151 sms_utils Twilio SDK not installed. SMS functionality disabled. Install with: pip install twilio
+WARNING 2026-06-18 17:28:09,810 sms_utils Twilio SDK not installed. SMS functionality disabled. Install with: pip install twilio

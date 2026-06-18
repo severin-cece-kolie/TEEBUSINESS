@@ -33,6 +33,7 @@
     <div class="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 lg:grid-cols-4 md:gap-x-6 md:gap-y-10">
       {% for product in products %}{% include 'includes/product_card.html' %}{% endfor %}
     </div>
+    {% include 'includes/pagination.html' with page=products page_range=page_range %}
     {% else %}
     <div class="rounded-2xl border border-luxury-line bg-luxury-grey/40 p-12 text-center">
       <p class="text-luxury-mid">No products found.</p>

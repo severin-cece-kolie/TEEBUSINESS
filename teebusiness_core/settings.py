@@ -260,12 +260,23 @@ LOGOUT_REDIRECT_URL = 'home'
 _EMAIL_BACKEND_ALIASES = {
     'console':   'django.core.mail.backends.console.EmailBackend',
     'smtp':      'django.core.mail.backends.smtp.EmailBackend',
+    'brevo':     'communication.email_backends.BrevoApiEmailBackend',
     'dummy':     'django.core.mail.backends.dummy.EmailBackend',
     'filebased': 'django.core.mail.backends.filebased.EmailBackend',
     'locmem':    'django.core.mail.backends.locmem.EmailBackend',
 }
+# The EMAIL_BACKEND env var selects the PROVIDER (console / smtp / brevo).
+# Django itself always uses LoggingEmailBackend, which wraps that provider with
+# retry + per-email journaling to EmailHistory (and never raises → no 500s).
 _backend_key = os.environ.get('EMAIL_BACKEND', 'console')
-EMAIL_BACKEND = _EMAIL_BACKEND_ALIASES.get(_backend_key, _backend_key)
+EMAIL_PROVIDER_BACKEND = _EMAIL_BACKEND_ALIASES.get(_backend_key, _backend_key)
+EMAIL_BACKEND = 'communication.email_backends.LoggingEmailBackend'
+EMAIL_MAX_RETRIES = int(os.environ.get('EMAIL_MAX_RETRIES', '2'))
+EMAIL_HTTP_TIMEOUT = int(os.environ.get('EMAIL_HTTP_TIMEOUT', '20'))
+
+# Brevo (freemium, 300 emails/day) — HTTPS API that works on PythonAnywhere's
+# free tier where outbound SMTP is blocked. Set EMAIL_BACKEND=brevo + this key.
+BREVO_API_KEY = os.environ.get('BREVO_API_KEY', '')
 
 EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.gmail.com')
 EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 587))
