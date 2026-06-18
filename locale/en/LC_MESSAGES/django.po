@@ -1,0 +1,573 @@
+# TEEBUSINESS — English translations
+# Copyright (C) 2026 TEEBUSINESS
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: en\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+# === Navigation ===
+msgid "Shop"
+msgstr "Shop"
+
+msgid "About"
+msgstr "About"
+
+msgid "Contact"
+msgstr "Contact"
+
+msgid "Search products"
+msgstr "Search products"
+
+# === Account menu ===
+msgid "Signed in as"
+msgstr "Signed in as"
+
+msgid "My Profile"
+msgstr "My Profile"
+
+msgid "My Orders"
+msgstr "My Orders"
+
+msgid "Wishlist"
+msgstr "Wishlist"
+
+msgid "Account Settings"
+msgstr "Account Settings"
+
+msgid "Login"
+msgstr "Login"
+
+msgid "Register"
+msgstr "Register"
+
+msgid "My Wishlist"
+msgstr "My Wishlist"
+
+msgid "Logout"
+msgstr "Logout"
+
+# === Notifications ===
+msgid "Notifications"
+msgstr "Notifications"
+
+msgid "Clear"
+msgstr "Clear"
+
+msgid "No notifications yet."
+msgstr "No notifications yet."
+
+msgid "View cart"
+msgstr "View cart"
+
+# === Footer ===
+msgid "Information"
+msgstr "Information"
+
+msgid "Contact Us"
+msgstr "Contact Us"
+
+msgid "Follow Us"
+msgstr "Follow Us"
+
+msgid "All Products"
+msgstr "All Products"
+
+msgid "Cart"
+msgstr "Cart"
+
+msgid "Account"
+msgstr "Account"
+
+msgid "About Us"
+msgstr "About Us"
+
+msgid "FAQ"
+msgstr "FAQ"
+
+msgid "Privacy Policy"
+msgstr "Privacy Policy"
+
+msgid "© 2026 TEEBUSINESS. All rights reserved."
+msgstr "© 2026 TEEBUSINESS. All rights reserved."
+
+# === Home page ===
+msgid "New Season · 2026"
+msgstr "New Season · 2026"
+
+msgid "Curated footwear, elevated service."
+msgstr "Curated footwear, elevated service."
+
+msgid "Discover premium silhouettes and limited releases — handpicked for the TEEBUSINESS community."
+msgstr "Discover premium silhouettes and limited releases — handpicked for the TEEBUSINESS community."
+
+msgid "Shop the collection"
+msgstr "Shop the collection"
+
+msgid "Just in"
+msgstr "Just in"
+
+msgid "New Arrivals"
+msgstr "New Arrivals"
+
+msgid "View all"
+msgstr "View all"
+
+msgid "Most wanted"
+msgstr "Most wanted"
+
+msgid "Best Sellers"
+msgstr "Best Sellers"
+
+msgid "The full collection"
+msgstr "The full collection"
+
+msgid "Open shop"
+msgstr "Open shop"
+
+msgid "Brands we carry"
+msgstr "Brands we carry"
+
+# === About page ===
+msgid "Our story"
+msgstr "Our story"
+
+msgid "Premium footwear, with intention."
+msgstr "Premium footwear, with intention."
+
+msgid "TEEBUSINESS was built for people who care about what they wear and how they're treated — authentic silhouettes paired with service that feels personal."
+msgstr "TEEBUSINESS was built for people who care about what they wear and how they're treated — authentic silhouettes paired with service that feels personal."
+
+msgid "Who we are"
+msgstr "Who we are"
+
+msgid "The TEEBUSINESS story"
+msgstr "The TEEBUSINESS story"
+
+msgid "What started as a passion for clean, premium footwear became a destination for a community that values authenticity over hype."
+msgstr "What started as a passion for clean, premium footwear became a destination for a community that values authenticity over hype."
+
+msgid "Every pair we carry is selected for quality, comfort and design — never compromise. We believe great products deserve great service, from browsing to unboxing."
+msgstr "Every pair we carry is selected for quality, comfort and design — never compromise. We believe great products deserve great service, from browsing to unboxing."
+
+msgid "Based in Guinea and shipping with care, we're proud to bring a curated, world-class shopping experience closer to you."
+msgstr "Based in Guinea and shipping with care, we're proud to bring a curated, world-class shopping experience closer to you."
+
+msgid "Our Mission"
+msgstr "Our Mission"
+
+msgid "To make premium footwear accessible — pairing authentic products with honest pricing and standout customer care."
+msgstr "To make premium footwear accessible — pairing authentic products with honest pricing and standout customer care."
+
+msgid "Our Vision"
+msgstr "Our Vision"
+
+msgid "To become the most trusted destination for curated footwear in the region — known for authenticity, quality and a premium experience."
+msgstr "To become the most trusted destination for curated footwear in the region — known for authenticity, quality and a premium experience."
+
+msgid "The difference"
+msgstr "The difference"
+
+msgid "Why choose us"
+msgstr "Why choose us"
+
+msgid "100% Authentic"
+msgstr "100% Authentic"
+
+msgid "Every pair is genuine and carefully sourced — no fakes, ever."
+msgstr "Every pair is genuine and carefully sourced — no fakes, ever."
+
+msgid "Curated Quality"
+msgstr "Curated Quality"
+
+msgid "A tight, considered selection — only pieces we'd wear ourselves."
+msgstr "A tight, considered selection — only pieces we'd wear ourselves."
+
+msgid "Personal Service"
+msgstr "Personal Service"
+
+msgid "Real people, ready to help — before and after your purchase."
+msgstr "Real people, ready to help — before and after your purchase."
+
+msgid "Careful Delivery"
+msgstr "Careful Delivery"
+
+msgid "Securely packed and tracked, so your order arrives in perfect shape."
+msgstr "Securely packed and tracked, so your order arrives in perfect shape."
+
+msgid "Ready to find your pair?"
+msgstr "Ready to find your pair?"
+
+msgid "Browse the collection and discover footwear chosen with care."
+msgstr "Browse the collection and discover footwear chosen with care."
+
+msgid "Shop now"
+msgstr "Shop now"
+
+# === Contact page ===
+msgid "We're here to help"
+msgstr "We're here to help"
+
+msgid "Contact us"
+msgstr "Contact us"
+
+msgid "Questions about sizing, orders or a specific drop? Send us a message and we'll get back to you shortly."
+msgstr "Questions about sizing, orders or a specific drop? Send us a message and we'll get back to you shortly."
+
+msgid "Message sent."
+msgstr "Message sent."
+
+msgid "Thank you for contacting us — our team will get back to you very soon."
+msgstr "Thank you for contacting us — our team will get back to you very soon."
+
+msgid "Name"
+msgstr "Name"
+
+msgid "Email"
+msgstr "Email"
+
+msgid "Phone"
+msgstr "Phone"
+
+msgid "Subject"
+msgstr "Subject"
+
+msgid "Message"
+msgstr "Message"
+
+msgid "Send message"
+msgstr "Send message"
+
+msgid "Reach us directly"
+msgstr "Reach us directly"
+
+msgid "WhatsApp"
+msgstr "WhatsApp"
+
+msgid "Chat with us"
+msgstr "Chat with us"
+
+msgid "Follow us"
+msgstr "Follow us"
+
+msgid "Map coming soon"
+msgstr "Map coming soon"
+
+msgid "Conakry, Guinea"
+msgstr "Conakry, Guinea"
+
+# === FAQ page ===
+msgid "Help center"
+msgstr "Help center"
+
+msgid "Frequently asked questions"
+msgstr "Frequently asked questions"
+
+msgid "Everything you need to know about shopping with TEEBUSINESS."
+msgstr "Everything you need to know about shopping with TEEBUSINESS."
+
+msgid "Still have a question?"
+msgstr "Still have a question?"
+
+msgid "Our team is happy to help with sizing, orders or anything else."
+msgstr "Our team is happy to help with sizing, orders or anything else."
+
+# === Login page ===
+msgid "Sign In"
+msgstr "Sign In"
+
+msgid "Forgot password?"
+msgstr "Forgot password?"
+
+msgid "Create an account"
+msgstr "Create an account"
+
+msgid "Account not verified?"
+msgstr "Account not verified?"
+
+msgid "Receive a new code"
+msgstr "Receive a new code"
+
+msgid "Sign in"
+msgstr "Sign in"
+
+# === Register page ===
+msgid "Sign Up"
+msgstr "Sign Up"
+
+msgid "Already have an account?"
+msgstr "Already have an account?"
+
+# === Dashboard ===
+msgid "My Account"
+msgstr "My Account"
+
+msgid "Sign out"
+msgstr "Sign out"
+
+msgid "Your email is verified and your account is active."
+msgstr "Your email is verified and your account is active."
+
+msgid "Track and review your purchases."
+msgstr "Track and review your purchases."
+
+msgid "Your saved favourites."
+msgstr "Your saved favourites."
+
+msgid "Profile"
+msgstr "Profile"
+
+msgid "Update your personal details."
+msgstr "Update your personal details."
+
+msgid "Continue Shopping"
+msgstr "Continue Shopping"
+
+msgid "Explore the latest arrivals."
+msgstr "Explore the latest arrivals."
+
+msgid "My Cart"
+msgstr "My Cart"
+
+msgid "Review items ready for checkout."
+msgstr "Review items ready for checkout."
+
+msgid "Support"
+msgstr "Support"
+
+msgid "We're here to help."
+msgstr "We're here to help."
+
+# === Profile page ===
+msgid "My account"
+msgstr "My account"
+
+msgid "Profile settings"
+msgstr "Profile settings"
+
+msgid "Update your details anytime. Address fields are optional — complete them whenever you're ready."
+msgstr "Update your details anytime. Address fields are optional — complete them whenever you're ready."
+
+msgid "Personal details"
+msgstr "Personal details"
+
+msgid "First name"
+msgstr "First name"
+
+msgid "Last name"
+msgstr "Last name"
+
+msgid "Delivery address"
+msgstr "Delivery address"
+
+msgid "(optional)"
+msgstr "(optional)"
+
+msgid "Address"
+msgstr "Address"
+
+msgid "City"
+msgstr "City"
+
+msgid "Country"
+msgstr "Country"
+
+msgid "Save changes"
+msgstr "Save changes"
+
+msgid "Change password"
+msgstr "Change password"
+
+msgid "Back"
+msgstr "Back"
+
+# === Orders page ===
+msgid "My orders"
+msgstr "My orders"
+
+msgid "Invoice"
+msgstr "Invoice"
+
+msgid "Details"
+msgstr "Details"
+
+msgid "You have no orders yet."
+msgstr "You have no orders yet."
+
+msgid "Start shopping"
+msgstr "Start shopping"
+
+# === Verify OTP ===
+msgid "Check your email"
+msgstr "Check your email"
+
+msgid "We sent a 6-digit code to"
+msgstr "We sent a 6-digit code to"
+
+msgid "your inbox"
+msgstr "your inbox"
+
+msgid "Verification code"
+msgstr "Verification code"
+
+msgid "Verify & activate"
+msgstr "Verify & activate"
+
+msgid "Didn't get the code?"
+msgstr "Didn't get the code?"
+
+msgid "Resend code"
+msgstr "Resend code"
+
+msgid "The code expires in 10 minutes. Be sure to check your spam folder."
+msgstr "The code expires in 10 minutes. Be sure to check your spam folder."
+
+# === Cart ===
+msgid "Your cart"
+msgstr "Your cart"
+
+msgid "Your cart is currently empty."
+msgstr "Your cart is currently empty."
+
+msgid "Continue shopping"
+msgstr "Continue shopping"
+
+msgid "Size"
+msgstr "Size"
+
+msgid "Update"
+msgstr "Update"
+
+msgid "Order summary"
+msgstr "Order summary"
+
+msgid "Items"
+msgstr "Items"
+
+msgid "Subtotal"
+msgstr "Subtotal"
+
+msgid "Shipping costs"
+msgstr "Shipping costs"
+
+msgid "The rate is applied based on the zone chosen at checkout."
+msgstr "The rate is applied based on the zone chosen at checkout."
+
+msgid "Proceed to checkout"
+msgstr "Proceed to checkout"
+
+# === Catalog ===
+msgid "The collection"
+msgstr "The collection"
+
+msgid "Shop all"
+msgstr "Shop all"
+
+msgid "Curated premium footwear — explore the full TEEBUSINESS lineup."
+msgstr "Curated premium footwear — explore the full TEEBUSINESS lineup."
+
+msgid "All categories"
+msgstr "All categories"
+
+msgid "All brands"
+msgstr "All brands"
+
+msgid "Filter"
+msgstr "Filter"
+
+msgid "No products found."
+msgstr "No products found."
+
+# === Product detail ===
+msgid "Available"
+msgstr "Available"
+
+msgid "Out of stock"
+msgstr "Out of stock"
+
+msgid "Product Description"
+msgstr "Product Description"
+
+msgid "No description available."
+msgstr "No description available."
+
+msgid "Sizes"
+msgstr "Sizes"
+
+msgid "Quantity"
+msgstr "Quantity"
+
+msgid "Add to cart"
+msgstr "Add to cart"
+
+msgid "Reviews"
+msgstr "Reviews"
+
+msgid "No reviews yet. Be the first to share your thoughts on this product."
+msgstr "No reviews yet. Be the first to share your thoughts on this product."
+
+msgid "Share this Product"
+msgstr "Share this Product"
+
+msgid "You may also like"
+msgstr "You may also like"
+
+msgid "Tag:"
+msgstr "Tag:"
+
+msgid "(No reviews yet)"
+msgstr "(No reviews yet)"
+
+# === Product card ===
+msgid "New"
+msgstr "New"
+
+msgid "Select options"
+msgstr "Select options"
+
+# === Pagination ===
+msgid "Previous"
+msgstr "Previous"
+
+msgid "Next"
+msgstr "Next"
+
+# === Newsletter ===
+msgid "Sign Up For Discounts & Updates"
+msgstr "Sign Up For Discounts & Updates"
+
+msgid "Get notified about new arrivals, promotions, restocks and exclusive offers."
+msgstr "Get notified about new arrivals, promotions, restocks and exclusive offers."
+
+msgid "Email or phone number"
+msgstr "Email or phone number"
+
+msgid "Email or Phone Number"
+msgstr "Email or Phone Number"
+
+msgid "Subscribe"
+msgstr "Subscribe"
+
+msgid "Something went wrong. Please try again."
+msgstr "Something went wrong. Please try again."
+
+# === Welcome popup ===
+msgid "Join The Community"
+msgstr "Join The Community"
+
+msgid "Get exclusive access to our next drop."
+msgstr "Get exclusive access to our next drop."
+
+msgid "Full Name"
+msgstr "Full Name"
+
+msgid "Email Address"
+msgstr "Email Address"
+
+msgid "No thanks, I'll just browse"
+msgstr "No thanks, I'll just browse"
+
+# === Page hero / footer ===
+msgid "A cleaner premium shopping experience for curated footwear and streetwear essentials."
+msgstr "A cleaner premium shopping experience for curated footwear and streetwear essentials."

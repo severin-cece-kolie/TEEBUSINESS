@@ -1,10 +1,14 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
 {% block title %}FAQ — TEEBUSINESS{% endblock %}
-{% block meta_desc %}Answers to common questions about shipping, payment, returns, authenticity and order tracking.{% endblock %}
+{% block meta_desc %}{% trans "Answers to common questions about shipping, payment, returns, authenticity and order tracking." %}{% endblock %}
 
 {% block content %}
-{% include 'includes/page_hero.html' with compact=True eyebrow='Help center' title='Frequently asked questions' subtitle='Everything you need to know about shopping with TEEBUSINESS.' %}
+{% trans "Help center" as eyebrow %}
+{% trans "Frequently asked questions" as title %}
+{% trans "Everything you need to know about shopping with TEEBUSINESS." as subtitle %}
+{% include 'includes/page_hero.html' with compact=True eyebrow=eyebrow title=title subtitle=subtitle %}
 <section class="bg-white py-14 md:py-20">
   <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
     <div x-data="{ open: 1 }" class="divide-y divide-luxury-line border-y border-luxury-line">
@@ -23,9 +27,9 @@
     </div>
 
     <div class="mt-12 rounded-2xl border border-luxury-line bg-luxury-grey/40 p-8 text-center">
-      <h2 class="font-barlow text-xl font-black uppercase tracking-tight">Still have a question?</h2>
-      <p class="mx-auto mt-2 max-w-md text-sm leading-6 text-luxury-mid">Our team is happy to help with sizing, orders or anything else.</p>
-      <a href="{% url 'contact' %}" class="mt-6 inline-block rounded-full bg-luxury-black px-8 py-3.5 text-xs font-bold uppercase tracking-widest text-white transition hover:bg-black/90">Contact us</a>
+      <h2 class="font-barlow text-xl font-black uppercase tracking-tight">{% trans "Still have a question?" %}</h2>
+      <p class="mx-auto mt-2 max-w-md text-sm leading-6 text-luxury-mid">{% trans "Our team is happy to help with sizing, orders or anything else." %}</p>
+      <a href="{% url 'contact' %}" class="mt-6 inline-block rounded-full bg-luxury-black px-8 py-3.5 text-xs font-bold uppercase tracking-widest text-white transition hover:bg-black/90">{% trans "Contact us" %}</a>
     </div>
   </div>
 </section>

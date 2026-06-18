@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
-{% load currency_tags %}
+{% load i18n currency_tags %}
 
-{% block title %}Your Cart — TEEBUSINESS{% endblock %}
+{% block title %}{% trans "Your cart" %} — TEEBUSINESS{% endblock %}
 
 {% block content %}
 <section class="bg-white py-10 md:py-16">
   <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-    <h1 class="mb-8 font-barlow text-3xl font-black uppercase tracking-tight md:text-4xl">Your cart</h1>
+    <h1 class="mb-8 font-barlow text-3xl font-black uppercase tracking-tight md:text-4xl">{% trans "Your cart" %}</h1>
 
     {% if messages %}
       {% for message in messages %}
@@ -31,11 +31,11 @@
                 <a href="{% url 'product_detail' group.product.id %}" class="font-barlow text-lg font-bold uppercase tracking-tight hover:text-luxury-mid">{{ group.product.name }}</a>
                 <p class="text-xs uppercase tracking-widest text-luxury-mid">{{ group.product.discounted_price|convert_price:request }} / pair</p>
 
-                <!-- Per-size rows (never merged) -->
+                <!-- Per-size rows -->
                 <div class="mt-3 space-y-2.5">
                   {% for line in group.lines %}
                   <div class="flex flex-wrap items-center gap-3 rounded-xl bg-luxury-grey/40 px-3 py-2.5">
-                    <span class="inline-flex h-7 min-w-[3.5rem] items-center justify-center rounded-md bg-white px-2 text-xs font-bold uppercase tracking-wide">Size {{ line.size }}</span>
+                    <span class="inline-flex h-7 min-w-[3.5rem] items-center justify-center rounded-md bg-white px-2 text-xs font-bold uppercase tracking-wide">{% trans "Size" %} {{ line.size }}</span>
 
                     <form method="post" action="{% url 'update_cart' %}" class="flex items-center rounded-lg border border-luxury-line bg-white">
                       {% csrf_token %}
@@ -43,7 +43,7 @@
                       <input type="number" name="qty" value="{{ line.qty }}" min="1" max="{{ line.available }}"
                              onchange="this.form.submit()"
                              class="h-8 w-14 bg-transparent text-center text-sm outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
-                      <button type="submit" class="border-l border-luxury-line px-2 text-[11px] font-bold uppercase tracking-wide text-luxury-mid hover:text-luxury-black">Update</button>
+                      <button type="submit" class="border-l border-luxury-line px-2 text-[11px] font-bold uppercase tracking-wide text-luxury-mid hover:text-luxury-black">{% trans "Update" %}</button>
                     </form>
 
                     <span class="text-sm font-semibold">{{ line.subtotal|convert_price:request }}</span>
@@ -69,35 +69,35 @@
         </div>
         <a href="{% url 'catalog' %}" class="mt-6 inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-widest text-luxury-mid hover:text-luxury-black">
           <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
-          Continue shopping
+          {% trans "Continue shopping" %}
         </a>
       </div>
 
       <!-- Summary -->
       <aside class="lg:col-span-1">
         <div class="rounded-2xl border border-luxury-line bg-luxury-grey/40 p-6">
-          <h2 class="font-barlow text-lg font-black uppercase tracking-tight">Récapitulatif</h2>
+          <h2 class="font-barlow text-lg font-black uppercase tracking-tight">{% trans "Order summary" %}</h2>
           <div class="mt-4 space-y-2 text-sm">
-            <div class="flex justify-between text-luxury-mid"><span>Articles</span><span>{{ total_qty }}</span></div>
-            <div class="flex justify-between text-luxury-mid"><span>Sous-total</span><span>{{ total_gnf|convert_price:request }}</span></div>
+            <div class="flex justify-between text-luxury-mid"><span>{% trans "Items" %}</span><span>{{ total_qty }}</span></div>
+            <div class="flex justify-between text-luxury-mid"><span>{% trans "Subtotal" %}</span><span>{{ total_gnf|convert_price:request }}</span></div>
           </div>
 
-          <!-- Tarifs de livraison (fixes par zone, choisis au paiement) -->
+          <!-- Shipping -->
           <div class="mt-4 rounded-xl border border-luxury-line bg-white/60 p-3 text-xs">
-            <p class="mb-2 font-bold uppercase tracking-widest text-luxury-mid">Frais de livraison</p>
+            <p class="mb-2 font-bold uppercase tracking-widest text-luxury-mid">{% trans "Shipping costs" %}</p>
             <div class="space-y-1">
               {% for z in shipping_zones %}
               <div class="flex justify-between text-luxury-mid"><span>{{ z.label }}</span><span class="font-semibold text-luxury-black">{{ z.gnf|convert_price:request }}</span></div>
               {% endfor %}
             </div>
-            <p class="mt-2 text-[11px] text-luxury-mid">Le tarif est appliqué selon la zone choisie au paiement.</p>
+            <p class="mt-2 text-[11px] text-luxury-mid">{% trans "The rate is applied based on the zone chosen at checkout." %}</p>
           </div>
 
           <div class="mt-4 flex justify-between border-t border-luxury-line pt-4 text-base font-bold">
-            <span>Sous-total</span><span>{{ total_gnf|convert_price:request }}</span>
+            <span>{% trans "Subtotal" %}</span><span>{{ total_gnf|convert_price:request }}</span>
           </div>
           <a href="{% url 'checkout' %}" class="mt-6 block rounded-xl bg-luxury-black py-3.5 text-center text-sm font-semibold uppercase tracking-[0.15em] text-white transition hover:bg-luxury-black/90">
-            Passer au paiement
+            {% trans "Proceed to checkout" %}
           </a>
         </div>
       </aside>
@@ -105,8 +105,8 @@
 
     {% else %}
     <div class="rounded-2xl border border-luxury-line bg-luxury-grey/40 p-12 text-center">
-      <p class="text-luxury-mid">Your cart is currently empty.</p>
-      <a href="{% url 'catalog' %}" class="mt-5 inline-block rounded-full bg-luxury-black px-7 py-3.5 text-xs font-bold uppercase tracking-widest text-white transition hover:bg-black/90">Continue shopping</a>
+      <p class="text-luxury-mid">{% trans "Your cart is currently empty." %}</p>
+      <a href="{% url 'catalog' %}" class="mt-5 inline-block rounded-full bg-luxury-black px-7 py-3.5 text-xs font-bold uppercase tracking-widest text-white transition hover:bg-black/90">{% trans "Continue shopping" %}</a>
     </div>
     {% endif %}
   </div>

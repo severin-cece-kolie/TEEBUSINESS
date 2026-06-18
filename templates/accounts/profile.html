@@ -1,14 +1,15 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
-{% block title %}Profile Settings — TEEBUSINESS{% endblock %}
+{% block title %}{% trans "Profile settings" %} — TEEBUSINESS{% endblock %}
 
 {% block content %}
 <section class="bg-white py-12 md:py-16">
   <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
     <div class="mb-8">
-      <p class="mb-1 text-[11px] font-bold uppercase tracking-[0.25em] text-luxury-mid">My account</p>
-      <h1 class="font-barlow text-3xl font-black uppercase tracking-tight md:text-4xl">Profile settings</h1>
-      <p class="mt-2 text-sm text-luxury-mid">Update your details anytime. Address fields are optional — complete them whenever you’re ready.</p>
+      <p class="mb-1 text-[11px] font-bold uppercase tracking-[0.25em] text-luxury-mid">{% trans "My account" %}</p>
+      <h1 class="font-barlow text-3xl font-black uppercase tracking-tight md:text-4xl">{% trans "Profile settings" %}</h1>
+      <p class="mt-2 text-sm text-luxury-mid">{% trans "Update your details anytime. Address fields are optional — complete them whenever you're ready." %}</p>
     </div>
 
     {% if messages %}
@@ -21,25 +22,25 @@
       {% csrf_token %}
 
       <div>
-        <h2 class="mb-4 font-barlow text-sm font-bold uppercase tracking-widest">Personal details</h2>
+        <h2 class="mb-4 font-barlow text-sm font-bold uppercase tracking-widest">{% trans "Personal details" %}</h2>
         <div class="grid gap-5 sm:grid-cols-2">
           <div>
-            <label for="{{ form.first_name.id_for_label }}" class="mb-1.5 block text-xs font-semibold uppercase tracking-[0.12em] text-luxury-mid">First name</label>
+            <label for="{{ form.first_name.id_for_label }}" class="mb-1.5 block text-xs font-semibold uppercase tracking-[0.12em] text-luxury-mid">{% trans "First name" %}</label>
             {{ form.first_name }}
             {% if form.first_name.errors %}<p class="mt-1.5 text-xs text-red-600">{{ form.first_name.errors.0 }}</p>{% endif %}
           </div>
           <div>
-            <label for="{{ form.last_name.id_for_label }}" class="mb-1.5 block text-xs font-semibold uppercase tracking-[0.12em] text-luxury-mid">Last name</label>
+            <label for="{{ form.last_name.id_for_label }}" class="mb-1.5 block text-xs font-semibold uppercase tracking-[0.12em] text-luxury-mid">{% trans "Last name" %}</label>
             {{ form.last_name }}
             {% if form.last_name.errors %}<p class="mt-1.5 text-xs text-red-600">{{ form.last_name.errors.0 }}</p>{% endif %}
           </div>
           <div>
-            <label for="{{ form.email.id_for_label }}" class="mb-1.5 block text-xs font-semibold uppercase tracking-[0.12em] text-luxury-mid">Email</label>
+            <label for="{{ form.email.id_for_label }}" class="mb-1.5 block text-xs font-semibold uppercase tracking-[0.12em] text-luxury-mid">{% trans "Email" %}</label>
             {{ form.email }}
             {% if form.email.errors %}<p class="mt-1.5 text-xs text-red-600">{{ form.email.errors.0 }}</p>{% endif %}
           </div>
           <div>
-            <label for="{{ form.phone_number.id_for_label }}" class="mb-1.5 block text-xs font-semibold uppercase tracking-[0.12em] text-luxury-mid">Phone</label>
+            <label for="{{ form.phone_number.id_for_label }}" class="mb-1.5 block text-xs font-semibold uppercase tracking-[0.12em] text-luxury-mid">{% trans "Phone" %}</label>
             {{ form.phone_number }}
             {% if form.phone_number.errors %}<p class="mt-1.5 text-xs text-red-600">{{ form.phone_number.errors.0 }}</p>{% endif %}
           </div>
@@ -47,27 +48,27 @@
       </div>
 
       <div class="border-t border-luxury-line pt-6">
-        <h2 class="mb-4 font-barlow text-sm font-bold uppercase tracking-widest">Delivery address <span class="ml-1 text-[10px] font-medium normal-case tracking-normal text-luxury-mid">(optional)</span></h2>
+        <h2 class="mb-4 font-barlow text-sm font-bold uppercase tracking-widest">{% trans "Delivery address" %} <span class="ml-1 text-[10px] font-medium normal-case tracking-normal text-luxury-mid">{% trans "(optional)" %}</span></h2>
         <div class="grid gap-5 sm:grid-cols-2">
           <div class="sm:col-span-2">
-            <label for="{{ form.address.id_for_label }}" class="mb-1.5 block text-xs font-semibold uppercase tracking-[0.12em] text-luxury-mid">Address</label>
+            <label for="{{ form.address.id_for_label }}" class="mb-1.5 block text-xs font-semibold uppercase tracking-[0.12em] text-luxury-mid">{% trans "Address" %}</label>
             {{ form.address }}
           </div>
           <div>
-            <label for="{{ form.city.id_for_label }}" class="mb-1.5 block text-xs font-semibold uppercase tracking-[0.12em] text-luxury-mid">City</label>
+            <label for="{{ form.city.id_for_label }}" class="mb-1.5 block text-xs font-semibold uppercase tracking-[0.12em] text-luxury-mid">{% trans "City" %}</label>
             {{ form.city }}
           </div>
           <div>
-            <label for="{{ form.country.id_for_label }}" class="mb-1.5 block text-xs font-semibold uppercase tracking-[0.12em] text-luxury-mid">Country</label>
+            <label for="{{ form.country.id_for_label }}" class="mb-1.5 block text-xs font-semibold uppercase tracking-[0.12em] text-luxury-mid">{% trans "Country" %}</label>
             {{ form.country }}
           </div>
         </div>
       </div>
 
       <div class="flex items-center gap-3 pt-2">
-        <button type="submit" class="rounded-xl bg-luxury-black px-8 py-3.5 text-sm font-semibold uppercase tracking-[0.15em] text-white transition hover:bg-luxury-black/90">Save changes</button>
-        <a href="{% url 'change_password' %}" class="text-sm font-semibold uppercase tracking-widest text-luxury-mid hover:text-luxury-black">Change password</a>
-        <a href="{% url 'dashboard' %}" class="text-sm font-semibold uppercase tracking-widest text-luxury-mid hover:text-luxury-black">Back</a>
+        <button type="submit" class="rounded-xl bg-luxury-black px-8 py-3.5 text-sm font-semibold uppercase tracking-[0.15em] text-white transition hover:bg-luxury-black/90">{% trans "Save changes" %}</button>
+        <a href="{% url 'change_password' %}" class="text-sm font-semibold uppercase tracking-widest text-luxury-mid hover:text-luxury-black">{% trans "Change password" %}</a>
+        <a href="{% url 'dashboard' %}" class="text-sm font-semibold uppercase tracking-widest text-luxury-mid hover:text-luxury-black">{% trans "Back" %}</a>
       </div>
     </form>
   </div>

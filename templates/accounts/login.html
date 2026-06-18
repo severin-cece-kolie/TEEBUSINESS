@@ -1,9 +1,10 @@
 {% extends 'base_auth.html' %}
+{% load i18n %}
 
-{% block title %}Connexion — TEEBUSINESS{% endblock %}
+{% block title %}{% trans "Sign In" %} — TEEBUSINESS{% endblock %}
 
 {% block form_panel %}
-<h1 class="mb-7 text-center font-poppins text-3xl font-bold text-auth-red">Sign In</h1>
+<h1 class="mb-7 text-center font-poppins text-3xl font-bold text-auth-red">{% trans "Sign In" %}</h1>
 
 {% if messages %}
   {% for message in messages %}
@@ -30,16 +31,16 @@
     {% if form.password.errors %}<p class="mt-1 px-1 text-xs text-red-700 font-medium">{{ form.password.errors.0 }}</p>{% endif %}
   </div>
 
-  <button type="submit" class="auth-btn">Se connecter</button>
+  <button type="submit" class="auth-btn">{% trans "Sign in" %}</button>
 </form>
 
 <div class="mt-5 flex items-center justify-between text-sm font-medium text-auth-red">
-  <a href="{% url 'password_reset' %}" class="transition hover:text-auth-red-dark">Mot de passe oublié ?</a>
-  <a href="{% url 'register' %}" class="underline underline-offset-2 transition hover:text-auth-red-dark">Créer un compte</a>
+  <a href="{% url 'password_reset' %}" class="transition hover:text-auth-red-dark">{% trans "Forgot password?" %}</a>
+  <a href="{% url 'register' %}" class="underline underline-offset-2 transition hover:text-auth-red-dark">{% trans "Create an account" %}</a>
 </div>
 
 <p class="mt-4 text-center text-xs text-[#6b5a50]">
-  Compte non vérifié ?
-  <a href="{% url 'resend_otp' %}" class="font-semibold text-auth-red underline-offset-2 hover:underline">Recevoir un nouveau code</a>
+  {% trans "Account not verified?" %}
+  <a href="{% url 'resend_otp' %}" class="font-semibold text-auth-red underline-offset-2 hover:underline">{% trans "Receive a new code" %}</a>
 </p>
 {% endblock %}

@@ -1,4 +1,4 @@
-{% load currency_tags %}
+{% load i18n currency_tags %}
 <article class="product-card group flex flex-col">
     <a href="{% url 'product_detail' product.id %}" class="product-card__media relative overflow-hidden rounded-lg bg-luxury-grey">
         {% if product.images.all %}
@@ -20,7 +20,7 @@
         {% endif %}
         <div class="product-card__badges absolute left-2 top-2 hidden flex-wrap gap-1 md:left-3 md:top-3 md:flex md:gap-2">
             {% if product.is_new %}
-            <span class="rounded-full bg-white/95 px-2 py-0.5 text-[8px] font-bold uppercase tracking-widest shadow-sm md:px-3 md:py-1 md:text-[10px]">New</span>
+            <span class="rounded-full bg-white/95 px-2 py-0.5 text-[8px] font-bold uppercase tracking-widest shadow-sm md:px-3 md:py-1 md:text-[10px]">{% trans "New" %}</span>
             {% endif %}
             {% if product.discount_percent %}
             <span class="rounded-full bg-luxury-black px-2 py-0.5 text-[8px] font-bold uppercase tracking-widest text-white md:px-3 md:py-1 md:text-[10px]">-{{ product.discount_percent }}%</span>
@@ -35,6 +35,6 @@
         <p class="product-card__price shrink-0 font-barlow text-sm font-bold md:text-sm">{{ product.discounted_price|convert_price:request }}</p>
     </div>
     <a href="{% url 'product_detail' product.id %}" class="product-card__cta mt-2 inline-flex h-9 items-center justify-center rounded-md bg-luxury-black px-4 text-[10px] font-bold uppercase tracking-widest text-white transition-all hover:bg-black/90 md:mt-3 md:h-10">
-        Select options
+        {% trans "Select options" %}
     </a>
 </article>

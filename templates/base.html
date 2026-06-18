@@ -1,6 +1,6 @@
 {% load static i18n %}
 <!DOCTYPE html>
-<html lang="fr" class="scroll-smooth">
+<html lang="{{ LANGUAGE_CODE }}" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -49,14 +49,14 @@
                 </a>
 
                 <nav class="hidden items-center gap-7 md:flex">
-                    <a href="{% url 'catalog' %}" class="text-[11px] font-bold uppercase tracking-[0.18em] transition-colors hover:text-luxury-mid">Shop</a>
-                    <a href="{% url 'about' %}" class="text-[11px] font-bold uppercase tracking-[0.18em] transition-colors hover:text-luxury-mid">About</a>
-                    <a href="{% url 'contact' %}" class="text-[11px] font-bold uppercase tracking-[0.18em] transition-colors hover:text-luxury-mid">Contact</a>
+                    <a href="{% url 'catalog' %}" class="text-[11px] font-bold uppercase tracking-[0.18em] transition-colors hover:text-luxury-mid">{% trans "Shop" %}</a>
+                    <a href="{% url 'about' %}" class="text-[11px] font-bold uppercase tracking-[0.18em] transition-colors hover:text-luxury-mid">{% trans "About" %}</a>
+                    <a href="{% url 'contact' %}" class="text-[11px] font-bold uppercase tracking-[0.18em] transition-colors hover:text-luxury-mid">{% trans "Contact" %}</a>
                 </nav>
 
                 <form action="{% url 'catalog' %}" method="get" class="ml-auto hidden w-full max-w-sm items-center rounded-full border border-luxury-line bg-luxury-grey/60 px-4 py-2 lg:flex">
                     <svg class="mr-2 h-4 w-4 text-luxury-mid" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35m1.35-5.65a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                    <input name="q" value="{{ request.GET.q }}" placeholder="Search products" class="w-full bg-transparent text-sm outline-none placeholder:text-luxury-mid">
+                    <input name="q" value="{{ request.GET.q }}" placeholder="{% trans 'Search products' %}" class="w-full bg-transparent text-sm outline-none placeholder:text-luxury-mid">
                 </form>
 
                 <form action="{% url 'set_language' %}" method="post" class="ml-1">
@@ -100,18 +100,18 @@
                          role="menu" class="absolute right-0 mt-2 w-52 overflow-hidden rounded-xl border border-luxury-line bg-white shadow-2xl" style="display:none;">
                         {% if request.user.is_authenticated %}
                         <div class="border-b border-luxury-line px-4 py-3">
-                            <p class="text-[10px] uppercase tracking-widest text-luxury-mid">Signed in as</p>
+                            <p class="text-[10px] uppercase tracking-widest text-luxury-mid">{% trans "Signed in as" %}</p>
                             <p class="truncate text-sm font-semibold">{{ request.user.first_name|default:request.user.email }}</p>
                         </div>
-                        <a href="{% url 'profile' %}" role="menuitem" class="block px-4 py-3 text-xs font-bold uppercase tracking-widest hover:bg-luxury-grey">My Profile</a>
-                        <a href="{% url 'orders' %}" role="menuitem" class="block px-4 py-3 text-xs font-bold uppercase tracking-widest hover:bg-luxury-grey">My Orders</a>
-                        <a href="{% url 'wishlist' %}" role="menuitem" class="block px-4 py-3 text-xs font-bold uppercase tracking-widest hover:bg-luxury-grey">Wishlist</a>
-                        <a href="{% url 'dashboard' %}" role="menuitem" class="block px-4 py-3 text-xs font-bold uppercase tracking-widest hover:bg-luxury-grey">Account Settings</a>
-                        <form method="post" action="{% url 'logout' %}" class="border-t border-luxury-line">{% csrf_token %}<button type="submit" role="menuitem" class="w-full px-4 py-3 text-left text-xs font-bold uppercase tracking-widest text-red-600 hover:bg-luxury-grey">Logout</button></form>
+                        <a href="{% url 'profile' %}" role="menuitem" class="block px-4 py-3 text-xs font-bold uppercase tracking-widest hover:bg-luxury-grey">{% trans "My Profile" %}</a>
+                        <a href="{% url 'orders' %}" role="menuitem" class="block px-4 py-3 text-xs font-bold uppercase tracking-widest hover:bg-luxury-grey">{% trans "My Orders" %}</a>
+                        <a href="{% url 'wishlist' %}" role="menuitem" class="block px-4 py-3 text-xs font-bold uppercase tracking-widest hover:bg-luxury-grey">{% trans "Wishlist" %}</a>
+                        <a href="{% url 'dashboard' %}" role="menuitem" class="block px-4 py-3 text-xs font-bold uppercase tracking-widest hover:bg-luxury-grey">{% trans "Account Settings" %}</a>
+                        <form method="post" action="{% url 'logout' %}" class="border-t border-luxury-line">{% csrf_token %}<button type="submit" role="menuitem" class="w-full px-4 py-3 text-left text-xs font-bold uppercase tracking-widest text-red-600 hover:bg-luxury-grey">{% trans "Logout" %}</button></form>
                         {% else %}
-                        <a href="{% url 'login' %}" role="menuitem" class="block px-4 py-3 text-xs font-bold uppercase tracking-widest hover:bg-luxury-grey">Login</a>
-                        <a href="{% url 'register' %}" role="menuitem" class="block px-4 py-3 text-xs font-bold uppercase tracking-widest hover:bg-luxury-grey">Register</a>
-                        <a href="{% url 'wishlist' %}" role="menuitem" class="block border-t border-luxury-line px-4 py-3 text-xs font-bold uppercase tracking-widest hover:bg-luxury-grey">My Wishlist</a>
+                        <a href="{% url 'login' %}" role="menuitem" class="block px-4 py-3 text-xs font-bold uppercase tracking-widest hover:bg-luxury-grey">{% trans "Login" %}</a>
+                        <a href="{% url 'register' %}" role="menuitem" class="block px-4 py-3 text-xs font-bold uppercase tracking-widest hover:bg-luxury-grey">{% trans "Register" %}</a>
+                        <a href="{% url 'wishlist' %}" role="menuitem" class="block border-t border-luxury-line px-4 py-3 text-xs font-bold uppercase tracking-widest hover:bg-luxury-grey">{% trans "My Wishlist" %}</a>
                         {% endif %}
                     </div>
                 </div>
@@ -124,8 +124,8 @@
                     </button>
                     <div x-show="open" x-transition role="menu" class="absolute right-0 mt-2 w-80 max-w-[calc(100vw-1.5rem)] overflow-hidden rounded-xl border border-luxury-line bg-white shadow-2xl" style="display:none;">
                         <div class="flex items-center justify-between border-b border-luxury-line px-4 py-3">
-                            <p class="text-xs font-bold uppercase tracking-widest">Notifications</p>
-                            <button @click="$store.notif.clear()" x-show="$store.notif.items.length" style="display:none;" class="text-[11px] font-semibold text-luxury-mid transition hover:text-luxury-black">Effacer</button>
+                            <p class="text-xs font-bold uppercase tracking-widest">{% trans "Notifications" %}</p>
+                            <button @click="$store.notif.clear()" x-show="$store.notif.items.length" style="display:none;" class="text-[11px] font-semibold text-luxury-mid transition hover:text-luxury-black">{% trans "Clear" %}</button>
                         </div>
                         <div class="max-h-80 overflow-y-auto">
                             <template x-for="n in $store.notif.items" :key="n.id">
@@ -136,9 +136,9 @@
                                     <div class="min-w-0"><p class="text-sm text-luxury-black" x-text="n.text"></p><p class="mt-0.5 text-xs text-luxury-mid" x-text="n.time"></p></div>
                                 </div>
                             </template>
-                            <p x-show="!$store.notif.items.length" class="px-4 py-8 text-center text-sm text-luxury-mid">Aucune notification pour le moment.</p>
+                            <p x-show="!$store.notif.items.length" class="px-4 py-8 text-center text-sm text-luxury-mid">{% trans "No notifications yet." %}</p>
                         </div>
-                        <a href="{% url 'cart' %}" class="block border-t border-luxury-line px-4 py-3 text-center text-xs font-bold uppercase tracking-widest text-luxury-black transition hover:bg-luxury-grey">Voir le panier</a>
+                        <a href="{% url 'cart' %}" class="block border-t border-luxury-line px-4 py-3 text-center text-xs font-bold uppercase tracking-widest text-luxury-black transition hover:bg-luxury-grey">{% trans "View cart" %}</a>
                     </div>
                 </div>
 
@@ -153,15 +153,15 @@
                     </button>
                     <div x-show="open" x-transition role="menu" class="absolute right-0 mt-2 w-52 overflow-hidden rounded-xl border border-luxury-line bg-white shadow-2xl" style="display:none;">
                         {% if request.user.is_authenticated %}
-                        <a href="{% url 'profile' %}" role="menuitem" class="block px-4 py-3 text-xs font-bold uppercase tracking-widest hover:bg-luxury-grey">My Profile</a>
-                        <a href="{% url 'orders' %}" role="menuitem" class="block px-4 py-3 text-xs font-bold uppercase tracking-widest hover:bg-luxury-grey">My Orders</a>
-                        <a href="{% url 'wishlist' %}" role="menuitem" class="block px-4 py-3 text-xs font-bold uppercase tracking-widest hover:bg-luxury-grey">Wishlist</a>
-                        <a href="{% url 'dashboard' %}" role="menuitem" class="block px-4 py-3 text-xs font-bold uppercase tracking-widest hover:bg-luxury-grey">Account Settings</a>
-                        <form method="post" action="{% url 'logout' %}" class="border-t border-luxury-line">{% csrf_token %}<button type="submit" class="w-full px-4 py-3 text-left text-xs font-bold uppercase tracking-widest text-red-600 hover:bg-luxury-grey">Logout</button></form>
+                        <a href="{% url 'profile' %}" role="menuitem" class="block px-4 py-3 text-xs font-bold uppercase tracking-widest hover:bg-luxury-grey">{% trans "My Profile" %}</a>
+                        <a href="{% url 'orders' %}" role="menuitem" class="block px-4 py-3 text-xs font-bold uppercase tracking-widest hover:bg-luxury-grey">{% trans "My Orders" %}</a>
+                        <a href="{% url 'wishlist' %}" role="menuitem" class="block px-4 py-3 text-xs font-bold uppercase tracking-widest hover:bg-luxury-grey">{% trans "Wishlist" %}</a>
+                        <a href="{% url 'dashboard' %}" role="menuitem" class="block px-4 py-3 text-xs font-bold uppercase tracking-widest hover:bg-luxury-grey">{% trans "Account Settings" %}</a>
+                        <form method="post" action="{% url 'logout' %}" class="border-t border-luxury-line">{% csrf_token %}<button type="submit" class="w-full px-4 py-3 text-left text-xs font-bold uppercase tracking-widest text-red-600 hover:bg-luxury-grey">{% trans "Logout" %}</button></form>
                         {% else %}
-                        <a href="{% url 'login' %}" role="menuitem" class="block px-4 py-3 text-xs font-bold uppercase tracking-widest hover:bg-luxury-grey">Login</a>
-                        <a href="{% url 'register' %}" role="menuitem" class="block px-4 py-3 text-xs font-bold uppercase tracking-widest hover:bg-luxury-grey">Register</a>
-                        <a href="{% url 'wishlist' %}" role="menuitem" class="block border-t border-luxury-line px-4 py-3 text-xs font-bold uppercase tracking-widest hover:bg-luxury-grey">My Wishlist</a>
+                        <a href="{% url 'login' %}" role="menuitem" class="block px-4 py-3 text-xs font-bold uppercase tracking-widest hover:bg-luxury-grey">{% trans "Login" %}</a>
+                        <a href="{% url 'register' %}" role="menuitem" class="block px-4 py-3 text-xs font-bold uppercase tracking-widest hover:bg-luxury-grey">{% trans "Register" %}</a>
+                        <a href="{% url 'wishlist' %}" role="menuitem" class="block border-t border-luxury-line px-4 py-3 text-xs font-bold uppercase tracking-widest hover:bg-luxury-grey">{% trans "My Wishlist" %}</a>
                         {% endif %}
                     </div>
                 </div>
@@ -175,16 +175,16 @@
 
         <div x-show="mobileMenuOpen" x-transition class="border-t border-luxury-line bg-white px-4 py-5 md:hidden" style="display:none;">
             <form action="{% url 'catalog' %}" method="get" class="mb-4 flex items-center rounded-full border border-luxury-line bg-luxury-grey/60 px-4 py-3">
-                <input name="q" value="{{ request.GET.q }}" placeholder="Search products" class="w-full bg-transparent text-sm outline-none">
+                <input name="q" value="{{ request.GET.q }}" placeholder="{% trans 'Search products' %}" class="w-full bg-transparent text-sm outline-none">
             </form>
             <div class="grid gap-2">
                 <a href="{% url 'home' %}" class="rounded-lg px-3 py-3 text-sm font-bold uppercase tracking-widest hover:bg-luxury-grey">Home</a>
-                <a href="{% url 'catalog' %}" class="rounded-lg px-3 py-3 text-sm font-bold uppercase tracking-widest hover:bg-luxury-grey">Shop</a>
-                <a href="{% url 'about' %}" class="rounded-lg px-3 py-3 text-sm font-bold uppercase tracking-widest hover:bg-luxury-grey">About</a>
-                <a href="{% url 'contact' %}" class="rounded-lg px-3 py-3 text-sm font-bold uppercase tracking-widest hover:bg-luxury-grey">Contact</a>
+                <a href="{% url 'catalog' %}" class="rounded-lg px-3 py-3 text-sm font-bold uppercase tracking-widest hover:bg-luxury-grey">{% trans "Shop" %}</a>
+                <a href="{% url 'about' %}" class="rounded-lg px-3 py-3 text-sm font-bold uppercase tracking-widest hover:bg-luxury-grey">{% trans "About" %}</a>
+                <a href="{% url 'contact' %}" class="rounded-lg px-3 py-3 text-sm font-bold uppercase tracking-widest hover:bg-luxury-grey">{% trans "Contact" %}</a>
             </div>
             <div class="mt-5 flex items-center justify-between border-t border-luxury-line pt-5">
-                <span class="text-[11px] font-bold uppercase tracking-widest text-luxury-mid">Follow us</span>
+                <span class="text-[11px] font-bold uppercase tracking-widest text-luxury-mid">{% trans "Follow us" %}</span>
                 {% include 'includes/social_links.html' with compact=True %}
             </div>
         </div>
@@ -207,27 +207,27 @@
         <div class="mx-auto mt-8 grid max-w-7xl grid-cols-2 gap-8 px-3 sm:px-6 md:mt-10 md:grid-cols-5 md:gap-10 lg:px-8">
             <div class="col-span-2 md:col-span-1">
                 <img src="{% static 'assets/images/logo.png' %}" alt="TEEBUSINESS" class="mb-4 h-8 w-auto opacity-80 grayscale md:mb-5 md:h-9">
-                <p class="max-w-sm text-xs leading-6 text-luxury-mid md:text-sm md:leading-7">A cleaner premium shopping experience for curated footwear and streetwear essentials.</p>
+                <p class="max-w-sm text-xs leading-6 text-luxury-mid md:text-sm md:leading-7">{% trans "A cleaner premium shopping experience for curated footwear and streetwear essentials." %}</p>
             </div>
             <div>
-                <h4 class="mb-5 font-barlow text-xs font-bold uppercase tracking-widest">Shop</h4>
+                <h4 class="mb-5 font-barlow text-xs font-bold uppercase tracking-widest">{% trans "Shop" %}</h4>
                 <div class="flex flex-col gap-3 text-sm text-luxury-mid">
-                    <a href="{% url 'catalog' %}" class="hover:text-luxury-black">All Products</a>
-                    <a href="{% url 'cart' %}" class="hover:text-luxury-black">Cart</a>
-                    <a href="{% url 'dashboard' %}" class="hover:text-luxury-black">Account</a>
+                    <a href="{% url 'catalog' %}" class="hover:text-luxury-black">{% trans "All Products" %}</a>
+                    <a href="{% url 'cart' %}" class="hover:text-luxury-black">{% trans "Cart" %}</a>
+                    <a href="{% url 'dashboard' %}" class="hover:text-luxury-black">{% trans "Account" %}</a>
                 </div>
             </div>
             <div>
-                <h4 class="mb-5 font-barlow text-xs font-bold uppercase tracking-widest">Information</h4>
+                <h4 class="mb-5 font-barlow text-xs font-bold uppercase tracking-widest">{% trans "Information" %}</h4>
                 <div class="flex flex-col gap-3 text-sm text-luxury-mid">
-                    <a href="{% url 'about' %}" class="hover:text-luxury-black {% if request.resolver_match.url_name == 'about' %}text-luxury-black{% endif %}">About Us</a>
-                    <a href="{% url 'contact' %}" class="hover:text-luxury-black {% if request.resolver_match.url_name == 'contact' %}text-luxury-black{% endif %}">Contact Us</a>
-                    <a href="{% url 'faq' %}" class="hover:text-luxury-black {% if request.resolver_match.url_name == 'faq' %}text-luxury-black{% endif %}">FAQ</a>
-                    <a href="{% url 'privacy' %}" class="hover:text-luxury-black {% if request.resolver_match.url_name == 'privacy' %}text-luxury-black{% endif %}">Privacy Policy</a>
+                    <a href="{% url 'about' %}" class="hover:text-luxury-black {% if request.resolver_match.url_name == 'about' %}text-luxury-black{% endif %}">{% trans "About Us" %}</a>
+                    <a href="{% url 'contact' %}" class="hover:text-luxury-black {% if request.resolver_match.url_name == 'contact' %}text-luxury-black{% endif %}">{% trans "Contact Us" %}</a>
+                    <a href="{% url 'faq' %}" class="hover:text-luxury-black {% if request.resolver_match.url_name == 'faq' %}text-luxury-black{% endif %}">{% trans "FAQ" %}</a>
+                    <a href="{% url 'privacy' %}" class="hover:text-luxury-black {% if request.resolver_match.url_name == 'privacy' %}text-luxury-black{% endif %}">{% trans "Privacy Policy" %}</a>
                 </div>
             </div>
             <div class="col-span-2 md:col-span-1">
-                <h4 class="mb-5 font-barlow text-xs font-bold uppercase tracking-widest">Contact Us</h4>
+                <h4 class="mb-5 font-barlow text-xs font-bold uppercase tracking-widest">{% trans "Contact Us" %}</h4>
                 <div class="flex flex-col gap-3 text-sm text-luxury-mid">
                     <a href="tel:{{ whatsapp_number }}" class="hover:text-luxury-black flex items-center gap-2">
                         <svg class="h-4 w-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
@@ -238,11 +238,11 @@
                         <span>{{ business_email }}</span>
                     </a>
                 </div>
-                <h4 class="mb-3 mt-6 font-barlow text-xs font-bold uppercase tracking-widest">Follow Us</h4>
+                <h4 class="mb-3 mt-6 font-barlow text-xs font-bold uppercase tracking-widest">{% trans "Follow Us" %}</h4>
                 {% include 'includes/social_links.html' %}
             </div>
         </div>
-        <div class="mx-auto mt-10 max-w-7xl border-t border-white px-4 pt-6 text-xs text-luxury-mid sm:px-6 lg:px-8">© 2026 TEEBUSINESS. All rights reserved.</div>
+        <div class="mx-auto mt-10 max-w-7xl border-t border-white px-4 pt-6 text-xs text-luxury-mid sm:px-6 lg:px-8">{% trans "© 2026 TEEBUSINESS. All rights reserved." %}</div>
     </footer>
     
     {% if not request.user.is_authenticated %}{% include 'includes/welcome_popup.html' %}{% endif %}

@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
-{% load currency_tags %}
+{% load i18n currency_tags %}
 
-{% block title %}My Orders — TEEBUSINESS{% endblock %}
+{% block title %}{% trans "My orders" %} — TEEBUSINESS{% endblock %}
 
 {% block content %}
 <section class="bg-white py-12 md:py-16">
   <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-    <h1 class="mb-8 font-barlow text-3xl font-black uppercase tracking-tight md:text-4xl">My orders</h1>
+    <h1 class="mb-8 font-barlow text-3xl font-black uppercase tracking-tight md:text-4xl">{% trans "My orders" %}</h1>
 
     {% if orders %}
     <div class="space-y-4">
@@ -25,22 +25,22 @@
         <div class="divide-y divide-luxury-line">
           {% for item in order.items.all %}
           <div class="flex items-center justify-between px-5 py-2.5 text-sm">
-            <span class="text-luxury-mid">{{ item.product_name }} · Size {{ item.size }} × {{ item.quantity }}</span>
+            <span class="text-luxury-mid">{{ item.product_name }} · {% trans "Size" %} {{ item.size }} × {{ item.quantity }}</span>
             <span class="font-semibold">{{ item.subtotal_gnf|convert_price:request }}</span>
           </div>
           {% endfor %}
         </div>
         <div class="flex justify-end gap-3 px-5 py-3">
-          <a href="{% url 'order_invoice' order.order_number %}" target="_blank" class="text-xs font-bold uppercase tracking-widest text-luxury-mid hover:text-luxury-black">Invoice</a>
-          <a href="{% url 'order_confirmation' order.order_number %}" class="text-xs font-bold uppercase tracking-widest text-luxury-black underline">Details</a>
+          <a href="{% url 'order_invoice' order.order_number %}" target="_blank" class="text-xs font-bold uppercase tracking-widest text-luxury-mid hover:text-luxury-black">{% trans "Invoice" %}</a>
+          <a href="{% url 'order_confirmation' order.order_number %}" class="text-xs font-bold uppercase tracking-widest text-luxury-black underline">{% trans "Details" %}</a>
         </div>
       </div>
       {% endfor %}
     </div>
     {% else %}
     <div class="rounded-2xl border border-luxury-line bg-luxury-grey/40 p-12 text-center">
-      <p class="text-luxury-mid">You have no orders yet.</p>
-      <a href="{% url 'catalog' %}" class="mt-5 inline-block rounded-full bg-luxury-black px-7 py-3.5 text-xs font-bold uppercase tracking-widest text-white transition hover:bg-black/90">Start shopping</a>
+      <p class="text-luxury-mid">{% trans "You have no orders yet." %}</p>
+      <a href="{% url 'catalog' %}" class="mt-5 inline-block rounded-full bg-luxury-black px-7 py-3.5 text-xs font-bold uppercase tracking-widest text-white transition hover:bg-black/90">{% trans "Start shopping" %}</a>
     </div>
     {% endif %}
   </div>

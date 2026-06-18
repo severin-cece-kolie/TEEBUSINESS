@@ -1,31 +1,35 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
 {% block title %}Shop — TEEBUSINESS{% endblock %}
 
 {% block content %}
-{% include 'includes/page_hero.html' with compact=True eyebrow='The collection' title='Shop all' subtitle='Curated premium footwear — explore the full TEEBUSINESS lineup.' %}
+{% trans "The collection" as eyebrow %}
+{% trans "Shop all" as title %}
+{% trans "Curated premium footwear — explore the full TEEBUSINESS lineup." as subtitle %}
+{% include 'includes/page_hero.html' with compact=True eyebrow=eyebrow title=title subtitle=subtitle %}
 
 <section class="bg-white py-10 md:py-14">
   <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
     <!-- Filters -->
     <form method="get" class="mb-8 flex flex-wrap items-center gap-3">
       <select name="category" class="rounded-xl border border-luxury-line bg-white px-4 py-2.5 text-sm outline-none focus:border-luxury-black">
-        <option value="">All categories</option>
+        <option value="">{% trans "All categories" %}</option>
         {% for category in categories %}
         <option value="{{ category.slug }}" {% if selected_category == category.slug %}selected{% endif %}>{{ category.name }}</option>
         {% endfor %}
       </select>
       <select name="brand" class="rounded-xl border border-luxury-line bg-white px-4 py-2.5 text-sm outline-none focus:border-luxury-black">
-        <option value="">All brands</option>
+        <option value="">{% trans "All brands" %}</option>
         {% for brand in brands %}
         <option value="{{ brand.id }}" {% if selected_brand == brand.id|stringformat:"s" %}selected{% endif %}>{{ brand.name }}</option>
         {% endfor %}
       </select>
-      <input type="text" name="q" placeholder="Search products" value="{{ search_q }}"
+      <input type="text" name="q" placeholder="{% trans 'Search products' %}" value="{{ search_q }}"
              class="min-w-[12rem] flex-1 rounded-xl border border-luxury-line bg-white px-4 py-2.5 text-sm outline-none focus:border-luxury-black sm:flex-none">
-      <button type="submit" class="rounded-xl bg-luxury-black px-6 py-2.5 text-xs font-bold uppercase tracking-widest text-white transition hover:bg-black/90">Filter</button>
+      <button type="submit" class="rounded-xl bg-luxury-black px-6 py-2.5 text-xs font-bold uppercase tracking-widest text-white transition hover:bg-black/90">{% trans "Filter" %}</button>
       {% if selected_category or selected_brand or search_q %}
-      <a href="{% url 'catalog' %}" class="text-xs font-semibold uppercase tracking-widest text-luxury-mid hover:text-luxury-black">Clear</a>
+      <a href="{% url 'catalog' %}" class="text-xs font-semibold uppercase tracking-widest text-luxury-mid hover:text-luxury-black">{% trans "Clear" %}</a>
       {% endif %}
     </form>
 
@@ -36,7 +40,7 @@
     {% include 'includes/pagination.html' with page=products page_range=page_range %}
     {% else %}
     <div class="rounded-2xl border border-luxury-line bg-luxury-grey/40 p-12 text-center">
-      <p class="text-luxury-mid">No products found.</p>
+      <p class="text-luxury-mid">{% trans "No products found." %}</p>
     </div>
     {% endif %}
   </div>

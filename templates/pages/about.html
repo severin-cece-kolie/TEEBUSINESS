@@ -1,22 +1,26 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
-{% block title %}About Us — TEEBUSINESS{% endblock %}
-{% block meta_desc %}The story, mission and values behind TEEBUSINESS — curated premium footwear.{% endblock %}
+{% block title %}{% trans "About Us" %} — TEEBUSINESS{% endblock %}
+{% block meta_desc %}{% trans "The story, mission and values behind TEEBUSINESS — curated premium footwear." %}{% endblock %}
 
 {% block content %}
-{% include 'includes/page_hero.html' with eyebrow='Our story' title='Premium footwear, with intention.' subtitle='TEEBUSINESS was built for people who care about what they wear and how they’re treated — authentic silhouettes paired with service that feels personal.' %}
+{% trans "Our story" as eyebrow %}
+{% trans "Premium footwear, with intention." as title %}
+{% trans "TEEBUSINESS was built for people who care about what they wear and how they're treated — authentic silhouettes paired with service that feels personal." as subtitle %}
+{% include 'includes/page_hero.html' with eyebrow=eyebrow title=title subtitle=subtitle %}
 
 <!-- Story -->
 <section class="bg-white py-16 md:py-20">
   <div class="mx-auto grid max-w-7xl gap-12 px-4 sm:px-6 md:grid-cols-2 md:gap-16 lg:px-8">
     <div>
-      <p class="mb-2 text-[11px] font-bold uppercase tracking-[0.25em] text-luxury-mid">Who we are</p>
-      <h2 class="font-barlow text-2xl font-black uppercase tracking-tight md:text-3xl">The TEEBUSINESS story</h2>
+      <p class="mb-2 text-[11px] font-bold uppercase tracking-[0.25em] text-luxury-mid">{% trans "Who we are" %}</p>
+      <h2 class="font-barlow text-2xl font-black uppercase tracking-tight md:text-3xl">{% trans "The TEEBUSINESS story" %}</h2>
     </div>
     <div class="space-y-5 text-[15px] leading-7 text-luxury-mid">
-      <p>What started as a passion for clean, premium footwear became a destination for a community that values authenticity over hype.</p>
-      <p>Every pair we carry is selected for quality, comfort and design — never compromise. We believe great products deserve great service, from browsing to unboxing.</p>
-      <p>Based in Guinea and shipping with care, we’re proud to bring a curated, world-class shopping experience closer to you.</p>
+      <p>{% trans "What started as a passion for clean, premium footwear became a destination for a community that values authenticity over hype." %}</p>
+      <p>{% trans "Every pair we carry is selected for quality, comfort and design — never compromise. We believe great products deserve great service, from browsing to unboxing." %}</p>
+      <p>{% trans "Based in Guinea and shipping with care, we're proud to bring a curated, world-class shopping experience closer to you." %}</p>
     </div>
   </div>
 </section>
@@ -28,15 +32,15 @@
       <div class="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-full bg-luxury-black text-white">
         <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
       </div>
-      <h3 class="font-barlow text-xl font-black uppercase tracking-tight">Our Mission</h3>
-      <p class="mt-3 text-[15px] leading-7 text-luxury-mid">To make premium footwear accessible — pairing authentic products with honest pricing and standout customer care.</p>
+      <h3 class="font-barlow text-xl font-black uppercase tracking-tight">{% trans "Our Mission" %}</h3>
+      <p class="mt-3 text-[15px] leading-7 text-luxury-mid">{% trans "To make premium footwear accessible — pairing authentic products with honest pricing and standout customer care." %}</p>
     </div>
     <div class="rounded-2xl border border-luxury-line bg-white p-8 md:p-10">
       <div class="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-full bg-luxury-black text-white">
         <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M2.46 12C3.73 7.94 7.52 5 12 5s8.27 2.94 9.54 7c-1.27 4.06-5.06 7-9.54 7s-8.27-2.94-9.54-7z"/></svg>
       </div>
-      <h3 class="font-barlow text-xl font-black uppercase tracking-tight">Our Vision</h3>
-      <p class="mt-3 text-[15px] leading-7 text-luxury-mid">To become the most trusted destination for curated footwear in the region — known for authenticity, quality and a premium experience.</p>
+      <h3 class="font-barlow text-xl font-black uppercase tracking-tight">{% trans "Our Vision" %}</h3>
+      <p class="mt-3 text-[15px] leading-7 text-luxury-mid">{% trans "To become the most trusted destination for curated footwear in the region — known for authenticity, quality and a premium experience." %}</p>
     </div>
   </div>
 </section>
@@ -45,37 +49,37 @@
 <section class="bg-white py-16 md:py-20">
   <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
     <div class="mb-10 text-center">
-      <p class="mb-2 text-[11px] font-bold uppercase tracking-[0.25em] text-luxury-mid">The difference</p>
-      <h2 class="font-barlow text-2xl font-black uppercase tracking-tight md:text-3xl">Why choose us</h2>
+      <p class="mb-2 text-[11px] font-bold uppercase tracking-[0.25em] text-luxury-mid">{% trans "The difference" %}</p>
+      <h2 class="font-barlow text-2xl font-black uppercase tracking-tight md:text-3xl">{% trans "Why choose us" %}</h2>
     </div>
     <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
       <div class="text-center">
         <div class="mx-auto mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full bg-luxury-grey">
           <svg class="h-6 w-6 text-luxury-black" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
         </div>
-        <h3 class="font-barlow text-base font-bold uppercase tracking-wide">100% Authentic</h3>
-        <p class="mt-2 text-sm leading-6 text-luxury-mid">Every pair is genuine and carefully sourced — no fakes, ever.</p>
+        <h3 class="font-barlow text-base font-bold uppercase tracking-wide">{% trans "100% Authentic" %}</h3>
+        <p class="mt-2 text-sm leading-6 text-luxury-mid">{% trans "Every pair is genuine and carefully sourced — no fakes, ever." %}</p>
       </div>
       <div class="text-center">
         <div class="mx-auto mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full bg-luxury-grey">
           <svg class="h-6 w-6 text-luxury-black" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M5 13l4 4L19 7"/></svg>
         </div>
-        <h3 class="font-barlow text-base font-bold uppercase tracking-wide">Curated Quality</h3>
-        <p class="mt-2 text-sm leading-6 text-luxury-mid">A tight, considered selection — only pieces we’d wear ourselves.</p>
+        <h3 class="font-barlow text-base font-bold uppercase tracking-wide">{% trans "Curated Quality" %}</h3>
+        <p class="mt-2 text-sm leading-6 text-luxury-mid">{% trans "A tight, considered selection — only pieces we'd wear ourselves." %}</p>
       </div>
       <div class="text-center">
         <div class="mx-auto mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full bg-luxury-grey">
           <svg class="h-6 w-6 text-luxury-black" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
         </div>
-        <h3 class="font-barlow text-base font-bold uppercase tracking-wide">Personal Service</h3>
-        <p class="mt-2 text-sm leading-6 text-luxury-mid">Real people, ready to help — before and after your purchase.</p>
+        <h3 class="font-barlow text-base font-bold uppercase tracking-wide">{% trans "Personal Service" %}</h3>
+        <p class="mt-2 text-sm leading-6 text-luxury-mid">{% trans "Real people, ready to help — before and after your purchase." %}</p>
       </div>
       <div class="text-center">
         <div class="mx-auto mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full bg-luxury-grey">
           <svg class="h-6 w-6 text-luxury-black" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8"/></svg>
         </div>
-        <h3 class="font-barlow text-base font-bold uppercase tracking-wide">Careful Delivery</h3>
-        <p class="mt-2 text-sm leading-6 text-luxury-mid">Securely packed and tracked, so your order arrives in perfect shape.</p>
+        <h3 class="font-barlow text-base font-bold uppercase tracking-wide">{% trans "Careful Delivery" %}</h3>
+        <p class="mt-2 text-sm leading-6 text-luxury-mid">{% trans "Securely packed and tracked, so your order arrives in perfect shape." %}</p>
       </div>
     </div>
   </div>
@@ -84,9 +88,9 @@
 <!-- CTA -->
 <section class="bg-luxury-black py-16 text-center text-white md:py-20">
   <div class="mx-auto max-w-2xl px-4">
-    <h2 class="font-barlow text-2xl font-black uppercase tracking-tight md:text-3xl">Ready to find your pair?</h2>
-    <p class="mx-auto mt-3 max-w-md text-sm leading-6 text-white/70">Browse the collection and discover footwear chosen with care.</p>
-    <a href="{% url 'catalog' %}" class="mt-7 inline-block rounded-full bg-white px-8 py-3.5 text-xs font-bold uppercase tracking-widest text-luxury-black transition hover:bg-white/90">Shop now</a>
+    <h2 class="font-barlow text-2xl font-black uppercase tracking-tight md:text-3xl">{% trans "Ready to find your pair?" %}</h2>
+    <p class="mx-auto mt-3 max-w-md text-sm leading-6 text-white/70">{% trans "Browse the collection and discover footwear chosen with care." %}</p>
+    <a href="{% url 'catalog' %}" class="mt-7 inline-block rounded-full bg-white px-8 py-3.5 text-xs font-bold uppercase tracking-widest text-luxury-black transition hover:bg-white/90">{% trans "Shop now" %}</a>
   </div>
 </section>
 {% endblock %}

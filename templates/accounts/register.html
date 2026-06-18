@@ -1,9 +1,10 @@
 {% extends 'base_auth.html' %}
+{% load i18n %}
 
-{% block title %}Créer un compte — TEEBUSINESS{% endblock %}
+{% block title %}{% trans "Sign Up" %} — TEEBUSINESS{% endblock %}
 
 {% block form_panel %}
-<h1 class="mb-7 text-center font-poppins text-3xl font-bold text-auth-red">Sign Up</h1>
+<h1 class="mb-7 text-center font-poppins text-3xl font-bold text-auth-red">{% trans "Sign Up" %}</h1>
 
 {% if messages %}
   {% for message in messages %}
@@ -45,11 +46,11 @@
     {% if form.password2.errors %}<p class="mt-1 px-1 text-xs text-red-700 font-medium">{{ form.password2.errors.0 }}</p>{% endif %}
   </div>
 
-  <button type="submit" class="auth-btn">Créer un compte</button>
+  <button type="submit" class="auth-btn">{% trans "Sign Up" %}</button>
 </form>
 
 <div class="mt-5 text-center text-sm font-medium text-auth-red">
-  Déjà un compte ?
-  <a href="{% url 'login' %}" class="underline underline-offset-2 transition hover:text-auth-red-dark">Se connecter</a>
+  {% trans "Already have an account?" %}
+  <a href="{% url 'login' %}" class="underline underline-offset-2 transition hover:text-auth-red-dark">{% trans "Sign in" %}</a>
 </div>
 {% endblock %}

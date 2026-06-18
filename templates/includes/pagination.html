@@ -4,6 +4,7 @@
     page_range  — output of paginator.get_elided_page_range (ints + '…')
   Preserves all existing query params (filters) except `page`.
 {% endcomment %}
+{% load i18n %}
 {% if page.paginator.num_pages > 1 %}
 <nav class="mt-10 flex items-center justify-center md:mt-14" aria-label="Pagination">
   <ul class="flex items-center gap-1.5">

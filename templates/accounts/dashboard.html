@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
-{% block title %}My Account — TEEBUSINESS{% endblock %}
+{% block title %}{% trans "My Account" %} — TEEBUSINESS{% endblock %}
 
 {% block content %}
 <section class="bg-luxury-grey/40 py-10 md:py-16">
@@ -9,7 +10,7 @@
     <!-- Greeting -->
     <div class="mb-8 flex flex-col gap-4 md:mb-12 md:flex-row md:items-end md:justify-between">
       <div>
-        <p class="mb-2 text-[11px] font-bold uppercase tracking-[0.3em] text-luxury-mid">My Account</p>
+        <p class="mb-2 text-[11px] font-bold uppercase tracking-[0.3em] text-luxury-mid">{% trans "My Account" %}</p>
         <h1 class="font-barlow text-3xl font-black uppercase tracking-tight md:text-4xl">
           Hello, {{ user.first_name|default:user.username }}
         </h1>
@@ -19,7 +20,7 @@
         {% csrf_token %}
         <button type="submit" class="inline-flex items-center gap-2 rounded-full border border-luxury-line bg-white px-5 py-2.5 text-xs font-bold uppercase tracking-[0.15em] transition hover:bg-luxury-black hover:text-white">
           <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
-          Sign out
+          {% trans "Sign out" %}
         </button>
       </form>
     </div>
@@ -27,7 +28,7 @@
     <!-- Status banner -->
     <div class="mb-8 flex items-center gap-3 rounded-luxury border border-green-200 bg-green-50 px-5 py-4 text-sm text-green-800">
       <svg class="h-5 w-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-      <span>Your email is verified and your account is active.</span>
+      <span>{% trans "Your email is verified and your account is active." %}</span>
     </div>
 
     <!-- Quick actions -->
@@ -36,48 +37,48 @@
         <div class="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-full bg-luxury-grey transition group-hover:bg-luxury-black group-hover:text-white">
           <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M16 11V7a4 4 0 10-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
         </div>
-        <h3 class="font-barlow text-lg font-bold uppercase tracking-wide">My Orders</h3>
-        <p class="mt-1 text-sm text-luxury-mid">Track and review your purchases.</p>
+        <h3 class="font-barlow text-lg font-bold uppercase tracking-wide">{% trans "My Orders" %}</h3>
+        <p class="mt-1 text-sm text-luxury-mid">{% trans "Track and review your purchases." %}</p>
       </a>
 
       <a href="{% url 'wishlist' %}" class="group rounded-luxury border border-luxury-line bg-white p-6 transition hover:-translate-y-0.5 hover:shadow-xl">
         <div class="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-full bg-luxury-grey transition group-hover:bg-luxury-black group-hover:text-white">
           <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
         </div>
-        <h3 class="font-barlow text-lg font-bold uppercase tracking-wide">Wishlist</h3>
-        <p class="mt-1 text-sm text-luxury-mid">Your saved favourites.</p>
+        <h3 class="font-barlow text-lg font-bold uppercase tracking-wide">{% trans "Wishlist" %}</h3>
+        <p class="mt-1 text-sm text-luxury-mid">{% trans "Your saved favourites." %}</p>
       </a>
 
       <a href="{% url 'profile' %}" class="group rounded-luxury border border-luxury-line bg-white p-6 transition hover:-translate-y-0.5 hover:shadow-xl">
         <div class="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-full bg-luxury-grey transition group-hover:bg-luxury-black group-hover:text-white">
           <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
         </div>
-        <h3 class="font-barlow text-lg font-bold uppercase tracking-wide">Profile</h3>
-        <p class="mt-1 text-sm text-luxury-mid">Update your personal details.</p>
+        <h3 class="font-barlow text-lg font-bold uppercase tracking-wide">{% trans "Profile" %}</h3>
+        <p class="mt-1 text-sm text-luxury-mid">{% trans "Update your personal details." %}</p>
       </a>
 
       <a href="{% url 'catalog' %}" class="group rounded-luxury border border-luxury-line bg-white p-6 transition hover:-translate-y-0.5 hover:shadow-xl">
         <div class="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-full bg-luxury-grey transition group-hover:bg-luxury-black group-hover:text-white">
           <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.3 2.3A1 1 0 005.4 17H17M17 17a2 2 0 100 4 2 2 0 000-4zM9 19a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
         </div>
-        <h3 class="font-barlow text-lg font-bold uppercase tracking-wide">Continue Shopping</h3>
-        <p class="mt-1 text-sm text-luxury-mid">Explore the latest arrivals.</p>
+        <h3 class="font-barlow text-lg font-bold uppercase tracking-wide">{% trans "Continue Shopping" %}</h3>
+        <p class="mt-1 text-sm text-luxury-mid">{% trans "Explore the latest arrivals." %}</p>
       </a>
 
       <a href="{% url 'cart' %}" class="group rounded-luxury border border-luxury-line bg-white p-6 transition hover:-translate-y-0.5 hover:shadow-xl">
         <div class="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-full bg-luxury-grey transition group-hover:bg-luxury-black group-hover:text-white">
           <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M16 11V7a4 4 0 10-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
         </div>
-        <h3 class="font-barlow text-lg font-bold uppercase tracking-wide">My Cart</h3>
-        <p class="mt-1 text-sm text-luxury-mid">Review items ready for checkout.</p>
+        <h3 class="font-barlow text-lg font-bold uppercase tracking-wide">{% trans "My Cart" %}</h3>
+        <p class="mt-1 text-sm text-luxury-mid">{% trans "Review items ready for checkout." %}</p>
       </a>
 
       <a href="{% url 'contact' %}" class="group rounded-luxury border border-luxury-line bg-white p-6 transition hover:-translate-y-0.5 hover:shadow-xl">
         <div class="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-full bg-luxury-grey transition group-hover:bg-luxury-black group-hover:text-white">
           <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M18 10c0 3.866-3.582 7-8 7a8.8 8.8 0 01-4-.93L3 17l1.13-3.39A6.8 6.8 0 013 10c0-3.866 3.582-7 8-7s7 3.134 7 7z"/></svg>
         </div>
-        <h3 class="font-barlow text-lg font-bold uppercase tracking-wide">Support</h3>
-        <p class="mt-1 text-sm text-luxury-mid">We’re here to help.</p>
+        <h3 class="font-barlow text-lg font-bold uppercase tracking-wide">{% trans "Support" %}</h3>
+        <p class="mt-1 text-sm text-luxury-mid">{% trans "We're here to help." %}</p>
       </a>
     </div>
   </div>
