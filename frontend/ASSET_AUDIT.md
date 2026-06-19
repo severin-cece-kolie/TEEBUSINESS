@@ -20,8 +20,7 @@ Removed migration-only files:
 ## Active static files
 
 - `static/css/tailwind.css`: loaded by storefront and authentication bases.
-- `static/css/output.css`: loaded after Tailwind by `templates/base.html`.
-- `static/css/premium.css`: loaded after `output.css`; its principal component
+- `static/css/premium.css`: loaded after Tailwind; its principal component
   selectors are used by active storefront, account, cart, checkout, catalog,
   login, and registration templates.
 - `static/assets/images/logo.png`: storefront header/footer, auth, popup,
@@ -52,12 +51,13 @@ They remain tracked because this task avoids speculative deletion. A future
 cleanup may remove them after a manual deployment/browser check confirms there
 are no external consumers.
 
-## `output.css` and `premium.css`
+## Removed `output.css` and retained `premium.css`
 
-`output.css` is still loaded, but its rules are duplicated in
-`frontend/tailwind.css`. It is a strong removal candidate, not an immediate
-deletion: remove its link in a separate visual parity task, rebuild, compare
-storefront/forms, then delete the file if no computed-style difference remains.
+`output.css` contained only `.btn-luxury`, its hover background, and form font
+inheritance. Those exact declarations were already present in
+`frontend/tailwind.css` and in the compiled `static/css/tailwind.css`, so its
+template link and file were removed. `premium.css` continues to add the
+intentional mobile touch-target adjustment for `.btn-luxury`.
 
 `premium.css` is not redundant. It owns active semantic components that are not
 expressed solely through Tailwind utilities. Keep it separate to minimize

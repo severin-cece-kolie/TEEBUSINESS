@@ -65,11 +65,7 @@
   --blur-sm: 4px;
 }
 
-/*
- * Preserve the small custom stylesheet currently shipped as output.css.
- * Keeping this here allows a later removal of that duplicate file without
- * changing the visual contract of .btn-luxury or the form controls.
- */
+/* Shared semantic button and form defaults formerly shipped in output.css. */
 @layer components {
   .btn-luxury {
     display: inline-flex;

@@ -15,10 +15,6 @@ in the active application.
   safelist against the compiled CSS.
 - `static/css/tailwind.css`: generated, minified CSS served by Django. Do not
   edit it manually.
-- `static/css/output.css`: retained compatibility stylesheet for
-  `.btn-luxury` and form font inheritance. It currently duplicates rules also
-  present in the Tailwind source; keep it until a dedicated visual removal
-  check is accepted.
 - `static/css/premium.css`: active hand-authored storefront components for
   heroes, panels, filters, auth layouts, product cards, and product detail.
 
@@ -62,9 +58,8 @@ npm run check:css
 The storefront loads:
 
 1. `static/css/tailwind.css`;
-2. `static/css/output.css`;
-3. `static/css/premium.css`;
-4. template-specific `extra_head` / `extra_css` styles.
+2. `static/css/premium.css`;
+3. template-specific `extra_head` / `extra_css` styles.
 
 Authentication pages load `static/css/tailwind.css`, then their existing
 inline custom styles and optional `extra_css`. Django admin uses Unfold's own

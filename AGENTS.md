@@ -83,7 +83,7 @@ Confirmed project commands:
 - Run `optimize_images --dry-run` first; without it, files under `media/` are replaced.
 - `email_diag RECIPIENT` sends an actual email when a real provider is configured.
 - `seed_production.py` deletes existing catalog data before recreating it; never run it without explicit authorization.
-- Tailwind v4 is compiled locally from `frontend/tailwind.css`: use `npm run dev`, `npm run watch`, or `npm run build`. The canonical output is `static/css/tailwind.css`; run `npm run check:css` to verify Alpine/Django conditional classes. Never hand-edit the generated file. `output.css` and `premium.css` remain separate and load after Tailwind.
+- Tailwind v4 is compiled locally from `frontend/tailwind.css`: use `npm run dev`, `npm run watch`, or `npm run build`. The canonical output is `static/css/tailwind.css`; run `npm run check:css` to verify Alpine/Django conditional classes. Never hand-edit the generated file. `premium.css` remains separate and loads after Tailwind.
 
 ## Coding conventions
 
