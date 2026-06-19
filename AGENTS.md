@@ -23,7 +23,8 @@ No formatter, linter, type checker, CI workflow, or automated deployment script 
 
 ## Repository layout
 
-- `teebusiness_core/`: settings, root URLs, WSGI/ASGI, shared admin PDF export
+- `teebusiness_core/`: settings entry point, root URLs, WSGI/ASGI, shared admin PDF export
+- `teebusiness_core/settings_parts/`: specialized settings grouped by domain; standard Django settings stay in `settings.py`
 - `shop/`: catalog, products, sizes/stock, images, currency display, catalog seeding
 - `cart/`: session cart, checkout, persisted orders/items, invoice views, admin dashboard metrics
 - `accounts/`: custom user, email login, OTP flows, lockout/security logs, profile and password flows
@@ -87,7 +88,7 @@ Confirmed project commands:
 
 ## Coding conventions
 
-- Keep changes inside the owning Django app; shared configuration belongs in `teebusiness_core/settings.py`.
+- Keep changes inside the owning Django app. Standard Django configuration belongs in `teebusiness_core/settings.py`; specialized configuration belongs in the appropriate `teebusiness_core/settings_parts/` module.
 - Views are predominantly function-based. Preserve nearby patterns rather than introducing a new abstraction for a small change.
 - Use named URL routes; this project does not use URL namespaces.
 - Store money authoritatively in GNF. Use `Decimal` for persisted/order calculations and preserve existing rounding behavior.
@@ -144,7 +145,7 @@ Confirmed project commands:
 ## Environment and deployment notes
 
 - `.env` is ignored and may contain secrets. Never print, copy, commit, or place its values in logs, tests, fixtures, or documentation. Keep `.env.example` placeholder-only.
-- `settings.py` loads the repository `.env` explicitly. Local development expects `DEBUG=True`, console email, `SITE_URL=http://localhost:8000`, no SSL redirect, and no proxy SSL header.
+- `settings_parts/base.py` is the only settings module that loads the repository `.env` and defines environment helpers. Local development expects `DEBUG=True`, console email, `SITE_URL=http://localhost:8000`, no SSL redirect, and no proxy SSL header.
 - Django `runserver` serves HTTP only. Open `http://127.0.0.1:8000/`; `https://...` produces `ERR_SSL_PROTOCOL_ERROR`.
 - Production targets PythonAnywhere through WSGI, with `DEBUG=False`, WhiteNoise, HTTPS/proxy settings, trusted origins, secure cookies/HSTS, and Brevo favored because free-tier outbound SMTP may be blocked.
 - Product alerts run synchronously. `communication/tasks.py` is a Celery-shaped stub, not an active queue.
