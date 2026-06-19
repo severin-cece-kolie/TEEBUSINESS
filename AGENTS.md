@@ -102,7 +102,7 @@ Confirmed project commands:
 - The current visual system uses Inter/Barlow, cream/white surfaces, near-black text, `luxury-*` Tailwind tokens, restrained red branding, rounded panels, and responsive utility classes.
 - Reuse `templates/includes/` components such as product cards, heroes, pagination, social links, newsletter, notifications, and WhatsApp UI.
 - Alpine powers menus, modals, checkout interactions, toast notifications, and AJAX add-to-cart. Preserve non-JavaScript form fallbacks where they exist.
-- `static/css/premium.css` contains active custom storefront styles. The older `static/styles/` files may not be loaded by the active base template; verify references before editing them.
+- `static/css/premium.css` contains active custom storefront styles. The audited legacy `static/styles/`, browser currency helper, Tailwind v3 input/config, and unused favicon variants were removed.
 - Check mobile and desktop behavior when changing templates. Preserve keyboard labels, CSRF tokens, semantic form behavior, and the project CSP allow-list.
 
 ## Business rules and sensitive areas

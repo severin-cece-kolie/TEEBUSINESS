@@ -22,6 +22,10 @@ removed after a repository-wide dependency audit.
 The detailed inventory and cleanup decisions are recorded in
 `frontend/ASSET_AUDIT.md`.
 
+Legacy Tailwind v3 inputs/configuration, the unused static design-system CSS,
+the retired browser-side currency helper, and unreferenced favicon variants
+were removed after a repository-wide reference audit.
+
 ## Installation and commands
 
 Install the exact locked dependencies:

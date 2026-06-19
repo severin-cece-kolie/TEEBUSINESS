@@ -30,10 +30,11 @@ Removed migration-only files:
 - `favicon.ico`, `favicon-16x16.png`, `favicon-32x32.png`, and
   `apple-touch-icon.png`: referenced by base templates.
 
-## Retained probable orphans
+## Removed legacy static/config files
 
-The following are not referenced by active Django templates, Python settings,
-or the current Node scripts:
+The following had no references from active templates, includes, emails,
+printable invoices, custom admin templates, Django settings/views, deployment
+helpers, or the current Node scripts and were removed:
 
 - `static/css/input.css`: legacy Tailwind v3 `@tailwind` source;
 - `static/styles/variables.css`, `components.css`, `layout.css`,
@@ -42,14 +43,23 @@ or the current Node scripts:
   the active application handles currency through Django sessions and rendered
   prices;
 - `favicon-48x48.png`, `android-chrome-192x192.png`, and
-  `android-chrome-512x512.png`: valid favicon assets but no manifest or direct
-  reference was found;
-- `tailwind.config.js`: legacy configuration reference; Tailwind v4 consumes
-  theme/source declarations from `frontend/tailwind.css`.
+  `android-chrome-512x512.png`: valid image files, but no web manifest or direct
+  HTML reference existed;
+- `tailwind.config.js`: legacy v3-style configuration not referenced by any
+  command or `@config`; Tailwind v4 consumes theme/source declarations from
+  `frontend/tailwind.css`.
 
-They remain tracked because this task avoids speculative deletion. A future
-cleanup may remove them after a manual deployment/browser check confirms there
-are no external consumers.
+The obsolete `@source "../static/scripts"` entry was removed with the retired
+currency script.
+
+## Retained active assets
+
+- `static/css/tailwind.css`: generated local Tailwind v4 output;
+- `static/css/premium.css`: active semantic storefront/auth components;
+- `favicon.ico`, `favicon-16x16.png`, `favicon-32x32.png`, and
+  `apple-touch-icon.png`: referenced by storefront/auth base templates;
+- `static/assets/images/logo.png` and `background1.jpg`: used across
+  storefront, authentication, admin branding, heroes, and fallbacks.
 
 ## Removed `output.css` and retained `premium.css`
 

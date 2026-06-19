@@ -14,7 +14,6 @@
 @source "../shop/templates";
 @source "../accounts/forms.py";
 @source "../pages/forms.py";
-@source "../static/scripts";
 @source "./safelist.txt";
 
 /*
