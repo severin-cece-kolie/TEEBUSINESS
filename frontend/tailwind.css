@@ -1,0 +1,78 @@
+/*
+ * Canonical Tailwind v4 source for the Django storefront.
+ *
+ * The generated file is intentionally NOT linked from the templates yet.
+ * Tailwind's CDN remains the active utility provider until visual parity has
+ * been checked page-by-page.
+ */
+@import "tailwindcss" source(none);
+
+/* Active project templates. Paths are relative to this source file. */
+@source "../templates";
+@source "../accounts/templates";
+@source "../cart/templates";
+@source "../communication/templates";
+@source "../pages/templates";
+@source "../shop/templates";
+@source "../accounts/forms.py";
+@source "../pages/forms.py";
+@source "../static/scripts";
+@source "./safelist.txt";
+
+/*
+ * Merged tokens from the two active CDN configurations.
+ * Values match templates/base.html and templates/base_auth.html.
+ */
+@theme {
+  --color-luxury-black: #0a0a0a;
+  --color-luxury-grey: #f6f5f2;
+  --color-luxury-mid: #77736c;
+  --color-luxury-line: #e8e4dc;
+  --color-auth-red: #a23b32;
+  --color-auth-red-dark: #8a3029;
+
+  --font-barlow: "Barlow", sans-serif;
+  --font-inter: "Inter", sans-serif;
+  --font-poppins: "Poppins", sans-serif;
+
+  --radius-luxury: 8px;
+}
+
+/*
+ * Preserve the small custom stylesheet currently shipped as output.css.
+ * Keeping this here makes the future CDN cutover possible without changing
+ * the visual contract of .btn-luxury or the form controls.
+ */
+@layer components {
+  .btn-luxury {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    background: #0a0a0a;
+    color: #fff;
+    padding: 0.85rem 1.75rem;
+    font-family: Barlow, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    transition:
+      background-color 160ms ease,
+      color 160ms ease,
+      border-color 160ms ease;
+  }
+
+  .btn-luxury:hover {
+    background: #262626;
+  }
+}
+
+@layer base {
+  select,
+  input,
+  textarea,
+  button {
+    font: inherit;
+  }
+}

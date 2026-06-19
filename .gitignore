@@ -57,6 +57,10 @@ logs/
 .cache/
 *.cache
 
+# Node / frontend tooling
+node_modules/
+npm-debug.log*
+
 # Celery
 celerybeat-schedule
 celerybeat.pid
@@ -74,4 +78,3 @@ ENV/
 
 # PythonAnywhere specific
 .python-anywhere/
-
