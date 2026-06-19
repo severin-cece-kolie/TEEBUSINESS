@@ -2,7 +2,8 @@
 
 TEEBUSINESS remains a server-rendered Django application. Node is used only to
 compile Tailwind CSS v4; there is no React, Vite, SPA, or frontend API workflow
-in the active application.
+in the active application. The unused historical React/Vite `dist/` build was
+removed after a repository-wide dependency audit.
 
 ## Canonical files
 
