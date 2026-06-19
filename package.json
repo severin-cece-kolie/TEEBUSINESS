@@ -7,9 +7,9 @@
     "node": ">=20"
   },
   "scripts": {
-    "dev": "tailwindcss -i ./frontend/tailwind.css -o ./static/css/tailwind.standalone.css",
-    "watch": "tailwindcss -i ./frontend/tailwind.css -o ./static/css/tailwind.standalone.css --watch",
-    "build": "tailwindcss -i ./frontend/tailwind.css -o ./static/css/tailwind.standalone.css --minify",
+    "dev": "tailwindcss -i ./frontend/tailwind.css -o ./static/css/tailwind.css",
+    "watch": "tailwindcss -i ./frontend/tailwind.css -o ./static/css/tailwind.css --watch",
+    "build": "tailwindcss -i ./frontend/tailwind.css -o ./static/css/tailwind.css --minify",
     "check:css": "node ./frontend/check-tailwind-classes.mjs"
   },
   "devDependencies": {

@@ -1,80 +1,94 @@
-# Frontend build
+# Frontend assets
 
-This directory contains the local Tailwind CSS v4 workflow for the
-server-rendered Django application. Tailwind is compiled locally; the
-storefront and authentication templates no longer load the Tailwind CDN.
+TEEBUSINESS remains a server-rendered Django application. Node is used only to
+compile Tailwind CSS v4; there is no React, Vite, SPA, or frontend API workflow
+in the active application.
 
-## Files
+## Canonical files
 
-- `tailwind.css`: canonical Tailwind v4 source, source paths, theme tokens, and
-  the small custom rules currently present in `static/css/output.css`.
-- `safelist.txt`: complete utility names used in Alpine/Django conditional
-  states. Add entries only when a class cannot be detected as a literal string
-  in a scanned source file.
-- `check-tailwind-classes.mjs`: verifies that Alpine/Django conditional classes
-  and the explicit safelist exist in the generated output.
-- `static/css/tailwind.standalone.css`: canonical generated Tailwind v4 output
-  loaded by the storefront and authentication templates.
+- `frontend/tailwind.css`: hand-authored Tailwind v4 source. It contains source
+  discovery paths, theme tokens, v3 parity defaults, and the small
+  `.btn-luxury`/form compatibility rules.
+- `frontend/safelist.txt`: complete classes used in Django or Alpine branches
+  that cannot always be inferred safely from static template scanning.
+- `frontend/check-tailwind-classes.mjs`: verifies the dynamic classes and
+  safelist against the compiled CSS.
+- `static/css/tailwind.css`: generated, minified CSS served by Django. Do not
+  edit it manually.
+- `static/css/output.css`: retained compatibility stylesheet for
+  `.btn-luxury` and form font inheritance. It currently duplicates rules also
+  present in the Tailwind source; keep it until a dedicated visual removal
+  check is accepted.
+- `static/css/premium.css`: active hand-authored storefront components for
+  heroes, panels, filters, auth layouts, product cards, and product detail.
 
-`static/css/output.css` and `static/css/premium.css` remain separate and load
-after Tailwind so their custom rules stay prioritized.
+The detailed inventory and cleanup decisions are recorded in
+`frontend/ASSET_AUDIT.md`.
 
-The source list includes both Django template trees and the Python form modules
-that assign Tailwind classes to Django widgets.
+## Installation and commands
 
-The canonical source preserves the Tailwind v3 colors and the small set of
-Preflight defaults established during visual parity testing.
-
-## Commands
-
-Install dependencies:
+Install the exact locked dependencies:
 
 ```bash
-npm install
+npm ci
 ```
 
-Compile once for local inspection:
+Compile readable CSS once:
 
 ```bash
 npm run dev
 ```
 
-Recompile while editing templates or CSS:
+Watch templates and source files during development:
 
 ```bash
 npm run watch
 ```
 
-Create the minified production CSS:
+Create the minified deployable CSS:
 
 ```bash
 npm run build
 ```
 
-Verify conditional and safelisted classes:
+Verify Django/Alpine conditional classes:
 
 ```bash
 npm run check:css
 ```
 
-Django admin uses Unfold's own templates and assets, so it does not load the
-storefront Tailwind stylesheet.
-
 ## CSS loading order
 
-Storefront:
+The storefront loads:
 
-1. `tailwind.standalone.css`;
-2. `output.css`;
-3. `premium.css`;
-4. template-specific styles from `extra_head` / `extra_css`.
+1. `static/css/tailwind.css`;
+2. `static/css/output.css`;
+3. `static/css/premium.css`;
+4. template-specific `extra_head` / `extra_css` styles.
 
-Authentication:
+Authentication pages load `static/css/tailwind.css`, then their existing
+inline custom styles and optional `extra_css`. Django admin uses Unfold's own
+assets and does not consume the storefront Tailwind CSS.
 
-1. `tailwind.standalone.css`;
-2. existing inline authentication styles;
-3. template-specific styles from `extra_css`.
+## Git and deployment policy
 
-`static/css/tailwind.generated.css` is a retained migration artifact and is no
-longer generated or loaded. It can be removed in a separate cleanup after the
-local Tailwind rollout has remained stable.
+Version these sources:
+
+- `package.json` and `package-lock.json`;
+- everything under `frontend/`;
+- hand-authored files under `static/`;
+- `static/css/tailwind.css`.
+
+Ignore `node_modules/` and `staticfiles/`. The compiled Tailwind file remains
+versioned because no deployment automation currently proves that Node runs
+before Django `collectstatic`. A deployment should therefore use the checked-in
+CSS or explicitly run:
+
+```bash
+npm ci
+npm run build
+.venv/bin/python manage.py collectstatic --noinput
+```
+
+After changing templates, forms, `frontend/tailwind.css`, or the safelist, run
+both `npm run build` and `npm run check:css` and commit the regenerated CSS.

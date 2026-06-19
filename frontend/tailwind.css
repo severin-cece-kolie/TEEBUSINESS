@@ -67,8 +67,8 @@
 
 /*
  * Preserve the small custom stylesheet currently shipped as output.css.
- * Keeping this here makes the future CDN cutover possible without changing
- * the visual contract of .btn-luxury or the form controls.
+ * Keeping this here allows a later removal of that duplicate file without
+ * changing the visual contract of .btn-luxury or the form controls.
  */
 @layer components {
   .btn-luxury {

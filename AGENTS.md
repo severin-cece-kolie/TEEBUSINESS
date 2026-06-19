@@ -11,7 +11,7 @@ There is no project README. Treat this file and the code as the source of truth;
 - Python 3 / Django 5.2 (`requirements.txt` pins Django `<6.0`)
 - SQLite with a custom UUID-based `accounts.User`
 - Django templates, Tailwind utility classes, small amounts of custom CSS, and Alpine.js
-- Tailwind and Alpine are loaded from CDNs in the base templates; `static/css/output.css` is also checked in
+- Tailwind v4 is compiled locally; Alpine remains loaded from jsDelivr in the storefront base template
 - WhiteNoise for production static files
 - Django Unfold and django-import-export for admin UX and CSV/XLSX/JSON exports
 - ReportLab for admin PDF exports; printable order invoices are HTML
@@ -83,7 +83,7 @@ Confirmed project commands:
 - Run `optimize_images --dry-run` first; without it, files under `media/` are replaced.
 - `email_diag RECIPIENT` sends an actual email when a real provider is configured.
 - `seed_production.py` deletes existing catalog data before recreating it; never run it without explicit authorization.
-- Tailwind v4 is compiled locally from `frontend/tailwind.css`: use `npm run dev`, `npm run watch`, or `npm run build`. The canonical output is `static/css/tailwind.standalone.css`; run `npm run check:css` to verify Alpine/Django conditional classes. The storefront no longer loads Tailwind CDN. `output.css` and `premium.css` remain separate and load after Tailwind.
+- Tailwind v4 is compiled locally from `frontend/tailwind.css`: use `npm run dev`, `npm run watch`, or `npm run build`. The canonical output is `static/css/tailwind.css`; run `npm run check:css` to verify Alpine/Django conditional classes. Never hand-edit the generated file. `output.css` and `premium.css` remain separate and load after Tailwind.
 
 ## Coding conventions
 
@@ -169,5 +169,5 @@ Confirmed project commands:
 - Do not modify `.env`, databases, uploaded media, generated assets, or production-facing data without explicit task scope.
 - Do not run destructive seeds, real email/SMS sends, bulk admin operations, or image rewrites as validation.
 - Add tests for changed business behavior where practical; never describe the empty current suite as meaningful coverage.
-- Call out uncertain or unverified behavior explicitly, especially around deployment, the historical `dist/` bundle, and the future CDN cutover.
+- Call out uncertain or unverified behavior explicitly, especially around deployment and the historical `dist/` bundle.
 - Before finishing, report exactly what was changed, what was validated, and any checks that could not be performed.

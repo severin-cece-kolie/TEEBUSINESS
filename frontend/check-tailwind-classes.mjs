@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 const root = path.resolve(import.meta.dirname, "..");
-const cssPath = path.join(root, "static", "css", "tailwind.standalone.css");
+const cssPath = path.join(root, "static", "css", "tailwind.css");
 const safelistPath = path.join(root, "frontend", "safelist.txt");
 const templateRoots = [
   path.join(root, "templates"),
