@@ -1,9 +1,8 @@
 /*
  * Canonical Tailwind v4 source for the Django storefront.
  *
- * The generated file is intentionally NOT linked from the templates yet.
- * Tailwind's CDN remains the active utility provider until visual parity has
- * been checked page-by-page.
+ * The build emits a coexistence preview and a native standalone candidate.
+ * The CDN remains active by default until standalone parity is accepted.
  */
 @import "tailwindcss" source(none);
 
@@ -24,6 +23,33 @@
  * Values match templates/base.html and templates/base_auth.html.
  */
 @theme {
+  /*
+   * Preserve the Tailwind v3 palette used by the current CDN. Tailwind v4
+   * otherwise substitutes newer OKLCH values for these utility names.
+   */
+  --color-red-50: #fef2f2;
+  --color-red-200: #fecaca;
+  --color-red-500: #ef4444;
+  --color-red-600: #dc2626;
+  --color-red-700: #b91c1c;
+  --color-red-800: #991b1b;
+  --color-orange-50: #fff7ed;
+  --color-orange-500: #f97316;
+  --color-orange-700: #c2410c;
+  --color-amber-400: #fbbf24;
+  --color-green-50: #f0fdf4;
+  --color-green-100: #dcfce7;
+  --color-green-200: #bbf7d0;
+  --color-green-600: #16a34a;
+  --color-green-700: #15803d;
+  --color-green-800: #166534;
+  --color-gray-50: #f9fafb;
+  --color-gray-200: #e5e7eb;
+  --color-gray-400: #9ca3af;
+  --color-gray-500: #6b7280;
+  --color-gray-600: #4b5563;
+  --color-gray-800: #1f2937;
+
   --color-luxury-black: #0a0a0a;
   --color-luxury-grey: #f6f5f2;
   --color-luxury-mid: #77736c;
@@ -35,7 +61,9 @@
   --font-inter: "Inter", sans-serif;
   --font-poppins: "Poppins", sans-serif;
 
+  --radius-sm: 0.125rem;
   --radius-luxury: 8px;
+  --blur-sm: 4px;
 }
 
 /*
@@ -69,10 +97,46 @@
 }
 
 @layer base {
+  /*
+   * Tailwind v4 Preflight intentionally changed these defaults. Keep the v3
+   * contract during the migration so bare borders and form controls do not
+   * change appearance when the CDN is disabled.
+   */
+  *,
+  ::before,
+  ::after,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: var(--color-gray-400);
+  }
+
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+
   select,
   input,
   textarea,
   button {
     font: inherit;
+  }
+}
+
+@layer utilities {
+  /* Tailwind v4 shifted the shadow scale; retain v3's `shadow-sm`. */
+  .shadow-sm {
+    --tw-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    box-shadow:
+      var(--tw-inset-shadow),
+      var(--tw-inset-ring-shadow),
+      var(--tw-ring-offset-shadow),
+      var(--tw-ring-shadow),
+      var(--tw-shadow);
   }
 }

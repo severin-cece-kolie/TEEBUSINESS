@@ -150,6 +150,8 @@ MIDDLEWARE = [
     # SessionMiddleware and before CommonMiddleware.
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
+    # DEBUG-only switch between the current CDN stack and standalone Tailwind v4.
+    'teebusiness_core.middleware.TailwindPreviewModeMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',

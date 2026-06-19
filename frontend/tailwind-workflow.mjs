@@ -5,7 +5,18 @@ import path from "node:path";
 
 const root = path.resolve(import.meta.dirname, "..");
 const input = path.join(root, "frontend", "tailwind.css");
-const output = path.join(root, "static", "css", "tailwind.generated.css");
+const compatibilityOutput = path.join(
+  root,
+  "static",
+  "css",
+  "tailwind.generated.css",
+);
+const standaloneOutput = path.join(
+  root,
+  "static",
+  "css",
+  "tailwind.standalone.css",
+);
 const rawOutput = path.join(os.tmpdir(), `teebusiness-tailwind-${process.pid}.css`);
 const cli = path.join(
   root,
@@ -19,7 +30,7 @@ const minify = process.argv.includes("--minify");
 const propertyPattern = /@property\s+--[\w-]+\s*\{[^{}]*\}/g;
 const individualTransformPattern = /\b(?:translate|scale|rotate)\s*:[^;{}]+;?/g;
 
-function writeCompatibilityPreview() {
+function writeBuildOutputs() {
   if (!fs.existsSync(rawOutput)) return;
 
   const raw = fs.readFileSync(rawOutput, "utf8");
@@ -42,9 +53,23 @@ function writeCompatibilityPreview() {
         "",
       ].join("\n");
 
-  fs.writeFileSync(output, `${banner}${compatible}`);
+  const standaloneBanner = minify
+    ? "/*! Native standalone Tailwind v4 build; generated file. */"
+    : [
+        "/*",
+        " * Native standalone Tailwind v4 build.",
+        " * Generated from frontend/tailwind.css without coexistence filtering.",
+        " */",
+        "",
+      ].join("\n");
+
+  fs.writeFileSync(compatibilityOutput, `${banner}${compatible}`);
+  fs.writeFileSync(standaloneOutput, `${standaloneBanner}${raw}`);
   console.log(
-    `Prepared ${path.relative(root, output)} (${registrations.length} @property registrations and ${individualTransforms.length} individual transforms removed for CDN compatibility).`,
+    `Prepared ${path.relative(root, compatibilityOutput)} (${registrations.length} @property registrations and ${individualTransforms.length} individual transforms removed for CDN compatibility).`,
+  );
+  console.log(
+    `Prepared ${path.relative(root, standaloneOutput)} (native Tailwind v4 output).`,
   );
 }
 
@@ -68,7 +93,7 @@ if (watch) {
     const modified = fs.statSync(rawOutput).mtimeMs;
     if (modified !== lastModified) {
       lastModified = modified;
-      writeCompatibilityPreview();
+      writeBuildOutputs();
     }
   }, 150);
 
@@ -87,7 +112,7 @@ if (watch) {
   });
 } else {
   child.on("exit", (code) => {
-    if (code === 0) writeCompatibilityPreview();
+    if (code === 0) writeBuildOutputs();
     cleanup();
     process.exit(code ?? 1);
   });

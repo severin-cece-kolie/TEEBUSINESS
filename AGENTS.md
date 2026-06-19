@@ -83,7 +83,7 @@ Confirmed project commands:
 - Run `optimize_images --dry-run` first; without it, files under `media/` are replaced.
 - `email_diag RECIPIENT` sends an actual email when a real provider is configured.
 - `seed_production.py` deletes existing catalog data before recreating it; never run it without explicit authorization.
-- Tailwind v4 has a parallel workflow under `frontend/`: use `npm run dev`, `npm run watch`, or `npm run build`. Its output is `static/css/tailwind.generated.css`, loaded before the CDN. While CDN v3 and local v4 coexist, the workflow intentionally strips generated CSS `@property` registrations and individual transform declarations to preserve legacy gradients/transforms; remove that compatibility step together with the CDN, not earlier.
+- Tailwind v4 has a parallel workflow under `frontend/`: use `npm run dev`, `npm run watch`, or `npm run build`. It emits `static/css/tailwind.generated.css` for CDN coexistence and native `static/css/tailwind.standalone.css`. With `DEBUG=True`, switch using `/?tailwind=current`, `/?tailwind=standalone`, or `/?tailwind=reset`; current/CDN remains the default. The coexistence output intentionally strips generated CSS `@property` registrations and individual transform declarations; the standalone output does not.
 
 ## Coding conventions
 

@@ -1,6 +1,6 @@
 {% load static i18n %}
 <!DOCTYPE html>
-<html lang="{{ LANGUAGE_CODE }}" class="scroll-smooth">
+<html lang="{{ LANGUAGE_CODE }}" class="scroll-smooth" data-tailwind-mode="{{ request.tailwind_mode }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,9 +14,15 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Barlow:wght@700;800;900&display=swap" rel="stylesheet">
-    {# Tailwind v4 parity candidate. The CDN below remains authoritative for now. #}
+    {% if request.tailwind_mode == 'standalone' %}
+    {# Native Tailwind v4 test mode: no CDN and no coexistence post-processing. #}
+    <link rel="stylesheet" href="{% static 'css/tailwind.standalone.css' %}">
+    {% else %}
+    {# Default reversible mode: CDN plus the coexistence-compatible v4 candidate. #}
     <link rel="stylesheet" href="{% static 'css/tailwind.generated.css' %}">
+    {% endif %}
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    {% if request.tailwind_mode != 'standalone' %}
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       // Compatibility config while the CDN remains active.
@@ -39,6 +45,7 @@
         }
       }
     </script>
+    {% endif %}
     <link rel="stylesheet" href="{% static 'css/output.css' %}">
     <link rel="stylesheet" href="{% static 'css/premium.css' %}">
     {% block extra_head %}{% endblock %}

@@ -12,9 +12,14 @@ separate frontend application.
   states. Add entries only when a class cannot be detected as a literal string
   in a scanned source file.
 - `tailwind-workflow.mjs`: runs the official CLI and prepares the temporary
-  CDN-compatible preview described below.
+  CDN-compatible preview and the native standalone build described below.
+- `check-tailwind-classes.mjs`: verifies that Alpine/Django conditional classes
+  and the explicit safelist exist in the standalone output.
 - `static/css/tailwind.generated.css`: generated output. It is kept separate
   from `output.css` and is loaded before the Tailwind CDN during parity checks.
+- `static/css/tailwind.standalone.css`: native Tailwind v4 output with no
+  coexistence filtering. It is loaded only in the explicit standalone test
+  mode.
 
 `static/css/premium.css`, the Tailwind CDN scripts, and their inline
 compatibility configurations remain active for now.
@@ -38,6 +43,23 @@ preview. The CDN remains authoritative for gradients and transforms; the other
 utilities and theme remain v4. Remove this post-processing step when the CDN is
 removed so the final standalone v4 build keeps Tailwind's native output.
 
+The standalone output is written from the same raw CLI build before that
+filtering. Its source also preserves the Tailwind v3 colors and the few
+Preflight defaults used by the current interface.
+
+## Switching modes locally
+
+The current CDN mode remains the default. The switch is enabled only when
+Django `DEBUG=True` and is persisted in an HTTP-only cookie for eight hours.
+
+- current CDN stack: `/?tailwind=current`
+- standalone Tailwind v4: `/?tailwind=standalone`
+- clear the preview cookie: `/?tailwind=reset`
+
+After opening one of these URLs, normal navigation stays in the selected mode.
+The `<html>` element exposes `data-tailwind-mode="current"` or
+`data-tailwind-mode="standalone"` for inspection.
+
 ## Commands
 
 Install dependencies:
@@ -58,12 +80,18 @@ Recompile while editing templates or CSS:
 npm run watch
 ```
 
-Create the minified production candidate:
+Create both minified outputs:
 
 ```bash
 npm run build
 ```
 
-After every build, keep using the CDN until desktop/mobile visual comparison
-has confirmed parity for the storefront, authentication pages, cart/checkout,
-customer account, and admin boundaries.
+Verify conditional and safelisted classes:
+
+```bash
+npm run check:css
+```
+
+The standalone mode does not affect Django admin, which uses Unfold's own base
+templates and assets. Keep the CDN as the default until the manual
+desktop/mobile comparison in `STANDALONE_VALIDATION.md` has been completed.
