@@ -1,0 +1,122 @@
+# Frontend asset audit
+
+Audit completed after the Tailwind v4 local migration.
+
+## Final Tailwind migration state
+
+The active Tailwind CDN and temporary current/standalone switch are gone.
+`frontend/tailwind.css` is the only Tailwind source and
+`static/css/tailwind.css` is its generated deployable output.
+
+Removed migration-only files:
+
+- `static/css/tailwind.generated.css`: filtered CDN-coexistence build;
+- `static/css/tailwind.standalone.css`: temporary candidate name, replaced by
+  `static/css/tailwind.css`;
+- `frontend/VISUAL_VALIDATION.md` and
+  `frontend/STANDALONE_VALIDATION.md`: temporary validation reports whose
+  lasting conclusions are consolidated here and in `frontend/README.md`.
+
+## Active static files
+
+- `static/css/tailwind.css`: loaded by storefront and authentication bases.
+- `static/css/premium.css`: loaded after Tailwind; its principal component
+  selectors are used by active storefront, account, cart, checkout, catalog,
+  login, and registration templates.
+- `static/assets/images/logo.png`: storefront header/footer, auth, popup,
+  WhatsApp UI, and Django Unfold admin logo/icon.
+- `static/assets/images/background1.jpg`: home/page heroes, auth background,
+  and product-image fallback.
+- `favicon.ico`, `favicon-16x16.png`, `favicon-32x32.png`, and
+  `apple-touch-icon.png`: referenced by base templates.
+
+## Removed legacy static/config files
+
+The following had no references from active templates, includes, emails,
+printable invoices, custom admin templates, Django settings/views, deployment
+helpers, or the current Node scripts and were removed:
+
+- `static/css/input.css`: legacy Tailwind v3 `@tailwind` source;
+- `static/styles/variables.css`, `components.css`, `layout.css`,
+  `responsive.css`, and `animations.css`: an older non-Tailwind design system;
+- `static/scripts/currency.js`: old DOM/localStorage currency implementation;
+  the active application handles currency through Django sessions and rendered
+  prices;
+- `favicon-48x48.png`, `android-chrome-192x192.png`, and
+  `android-chrome-512x512.png`: valid image files, but no web manifest or direct
+  HTML reference existed;
+- `tailwind.config.js`: legacy v3-style configuration not referenced by any
+  command or `@config`; Tailwind v4 consumes theme/source declarations from
+  `frontend/tailwind.css`.
+
+The obsolete `@source "../static/scripts"` entry was removed with the retired
+currency script.
+
+## Retained active assets
+
+- `static/css/tailwind.css`: generated local Tailwind v4 output;
+- `static/css/premium.css`: active semantic storefront/auth components;
+- `favicon.ico`, `favicon-16x16.png`, `favicon-32x32.png`, and
+  `apple-touch-icon.png`: referenced by storefront/auth base templates;
+- `static/assets/images/logo.png` and `background1.jpg`: used across
+  storefront, authentication, admin branding, heroes, and fallbacks.
+
+## Removed `output.css` and retained `premium.css`
+
+`output.css` contained only `.btn-luxury`, its hover background, and form font
+inheritance. Those exact declarations were already present in
+`frontend/tailwind.css` and in the compiled `static/css/tailwind.css`, so its
+template link and file were removed. `premium.css` continues to add the
+intentional mobile touch-target adjustment for `.btn-luxury`.
+
+`premium.css` is not redundant. It owns active semantic components that are not
+expressed solely through Tailwind utilities. Keep it separate to minimize
+visual risk.
+
+## Removed historical `dist/` bundle
+
+The removed `dist/` directory was a complete Vite-built React 18 single-page
+application, independent from Django:
+
+- `dist/index.html`: SPA entry point with `<div id="root">`; references only
+  `/assets/index-S9rk_h4Q.js`, `/assets/index-BQ4kSp1B.css`, and an old
+  `/scripts/currency.js` path.
+- `assets/index-S9rk_h4Q.js`: main minified runtime containing React 18,
+  React Router 6, Lucide icons, shared layout, and lazy routes.
+- `assets/index-BQ4kSp1B.css`: compiled SPA reset, theme variables, layout,
+  cards, auth, animations, and responsive styles.
+- `assets/About-*`, `Blog-*`, `Cart-*`, `Checkout-*`, `Contact-*`,
+  `Dashboard-*`, `FAQ-*`, `Home-*`, `Login-*`, `NotFound404-*`,
+  `ProductDetails-*`, `Register-*`, `Shop-*`, and `Wishlist-*`: lazy route
+  chunks imported by the main SPA bundle.
+- `assets/background1-*jpg`: Vite-hashed 5184×3456 hero image used by the SPA
+  CSS. It differs from Django's optimized `static/assets/images/background1.jpg`.
+
+The final pre-removal search found no Django template, view, setting, URL,
+static configuration, import, deployment command, or current package manifest
+that consumed the directory. No matching React/Vite source tree or rebuild
+command existed. Some SPA component strings also pointed to
+`/assets/images/...`, while the bundle only contained the hashed background,
+indicating that the historical build was not fully self-contained.
+
+Git detail: `.gitignore` already contains the generic Python `dist/` rule, but
+all 18 files (about 6.8 MB) were historically tracked from the initial commit.
+They were deleted together in a dedicated reviewed cleanup.
+
+The deletion is reversible through Git history. Django's static source remains
+`static/`, collected into `staticfiles/`; neither path involved `dist/`.
+
+## Repository policy
+
+- `frontend/`: version hand-authored source, safelist, checker, and docs.
+- `static/`: version hand-authored assets and the compiled Tailwind file;
+  never edit generated `static/css/tailwind.css` manually.
+- `staticfiles/`: generated by `collectstatic`, ignored, never edited.
+- `node_modules/`: generated by npm, ignored.
+- `dist/`: removed historical React/Vite build; the existing ignore rule
+  prevents accidental reintroduction of generated distributions.
+
+Other already tracked files that match ignore policy include `db.sqlite3`,
+`logs/django.log`, and `media/`. This audit does not alter their tracking
+because they may contain local/business data and require separate
+repository-policy decisions.

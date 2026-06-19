@@ -1,9 +1,0 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-@layer components {
-  .btn-luxury {
-    @apply px-8 py-3 bg-luxury-black text-white rounded-full font-barlow text-sm font-bold uppercase tracking-widest transition-all hover:bg-opacity-90;
-  }
-}

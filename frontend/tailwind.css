@@ -1,0 +1,137 @@
+/*
+ * Canonical Tailwind v4 source for the Django storefront.
+ *
+ * The generated static/css/tailwind.css file is the storefront's canonical
+ * utility CSS.
+ */
+@import "tailwindcss" source(none);
+
+/* Active project templates. Paths are relative to this source file. */
+@source "../templates";
+@source "../accounts/templates";
+@source "../cart/templates";
+@source "../communication/templates";
+@source "../pages/templates";
+@source "../shop/templates";
+@source "../accounts/forms.py";
+@source "../pages/forms.py";
+@source "./safelist.txt";
+
+/*
+ * Compatibility tokens retained from the former CDN configurations so the
+ * local Tailwind v4 migration preserves the accepted visual palette.
+ */
+@theme {
+  /*
+   * Preserve the Tailwind v3 palette used by the current CDN. Tailwind v4
+   * otherwise substitutes newer OKLCH values for these utility names.
+   */
+  --color-red-50: #fef2f2;
+  --color-red-200: #fecaca;
+  --color-red-500: #ef4444;
+  --color-red-600: #dc2626;
+  --color-red-700: #b91c1c;
+  --color-red-800: #991b1b;
+  --color-orange-50: #fff7ed;
+  --color-orange-500: #f97316;
+  --color-orange-700: #c2410c;
+  --color-amber-400: #fbbf24;
+  --color-green-50: #f0fdf4;
+  --color-green-100: #dcfce7;
+  --color-green-200: #bbf7d0;
+  --color-green-600: #16a34a;
+  --color-green-700: #15803d;
+  --color-green-800: #166534;
+  --color-gray-50: #f9fafb;
+  --color-gray-200: #e5e7eb;
+  --color-gray-400: #9ca3af;
+  --color-gray-500: #6b7280;
+  --color-gray-600: #4b5563;
+  --color-gray-800: #1f2937;
+
+  --color-luxury-black: #0a0a0a;
+  --color-luxury-grey: #f6f5f2;
+  --color-luxury-mid: #77736c;
+  --color-luxury-line: #e8e4dc;
+  --color-auth-red: #a23b32;
+  --color-auth-red-dark: #8a3029;
+
+  --font-barlow: "Barlow", sans-serif;
+  --font-inter: "Inter", sans-serif;
+  --font-poppins: "Poppins", sans-serif;
+
+  --radius-sm: 0.125rem;
+  --radius-luxury: 8px;
+  --blur-sm: 4px;
+}
+
+/* Shared semantic button and form defaults formerly shipped in output.css. */
+@layer components {
+  .btn-luxury {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    background: #0a0a0a;
+    color: #fff;
+    padding: 0.85rem 1.75rem;
+    font-family: Barlow, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    transition:
+      background-color 160ms ease,
+      color 160ms ease,
+      border-color 160ms ease;
+  }
+
+  .btn-luxury:hover {
+    background: #262626;
+  }
+}
+
+@layer base {
+  /*
+   * Tailwind v4 Preflight intentionally changed these defaults. Keep the v3
+   * contract during the migration so bare borders and form controls do not
+   * change appearance when the CDN is disabled.
+   */
+  *,
+  ::before,
+  ::after,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: var(--color-gray-400);
+  }
+
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+
+  select,
+  input,
+  textarea,
+  button {
+    font: inherit;
+  }
+}
+
+@layer utilities {
+  /* Tailwind v4 shifted the shadow scale; retain v3's `shadow-sm`. */
+  .shadow-sm {
+    --tw-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    box-shadow:
+      var(--tw-inset-shadow),
+      var(--tw-inset-ring-shadow),
+      var(--tw-ring-offset-shadow),
+      var(--tw-ring-shadow),
+      var(--tw-shadow);
+  }
+}

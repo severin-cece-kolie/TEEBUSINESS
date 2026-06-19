@@ -1,0 +1,28 @@
+# Conditional classes used by Alpine or Django template branches.
+# Keep complete class names here; Tailwind does not understand concatenated fragments.
+
+rotate-45
+rotate-180
+flex-none
+
+border-luxury-black
+border-luxury-line
+border-transparent
+hover:border-luxury-black
+
+bg-luxury-black
+bg-luxury-grey
+bg-luxury-grey/40
+bg-green-50
+bg-green-600
+bg-red-50
+bg-white/60
+
+text-luxury-black
+text-luxury-mid
+text-green-600
+text-green-700
+text-red-500
+text-red-600
+text-red-700
+text-white

@@ -403,14 +403,14 @@ if not DEBUG:
 # Content-Security-Policy. NOTE: Django 5.2 has no native CSP setting
 # (SECURE_CSP arrives in 6.0), so this is emitted by SecurityHeadersMiddleware.
 # 'unsafe-inline' is required because the UI uses inline scripts/styles
-# (Alpine, Tailwind CDN, chart init). 'unsafe-eval' is required because
+# (Alpine directives, auth styles, chart init). 'unsafe-eval' is required because
 # Alpine.js' default build evaluates directive expressions via new Function();
 # without it every Alpine component (popups, dropdowns, this widget) is inert.
 # It still restricts external origins.
 CONTENT_SECURITY_POLICY = (
     "default-src 'self'; "
-    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdn.tailwindcss.com; "
-    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.tailwindcss.com; "
+    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net; "
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
     "font-src 'self' https://fonts.gstatic.com data:; "
     "img-src 'self' data: blob: https:; "
     "connect-src 'self'; "
