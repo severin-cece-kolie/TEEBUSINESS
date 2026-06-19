@@ -69,6 +69,7 @@ htmlcov/
 # Virtual Environment
 venv/
 env/
+.venv/
 ENV/
 
 # PythonAnywhere specific

@@ -26,14 +26,21 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # load_dotenv() (which searches from the CWD) finds nothing — SECRET_KEY and every
 # other variable go missing and Django refuses to start. BASE_DIR is derived from
 # __file__, so this resolves correctly no matter where the process is launched.
-load_dotenv(BASE_DIR / '.env')
+# This project deliberately uses its root .env as the active configuration.
+# override=True prevents generic IDE/shell variables (for example DEBUG=release)
+# from silently replacing the explicit Django values defined in that file.
+load_dotenv(BASE_DIR / '.env', override=True)
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY', "odsa&9q%#ic#7q6kwumdl2o=v9(wy1f96ij%6vi2&%)vbouc@s")
+# The fallback is intentionally suitable for local development only.
+# Production is refused below when SECRET_KEY is absent from the environment.
+SECRET_KEY = os.environ.get(
+    'SECRET_KEY',
+    'django-insecure-local-development-only',
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # (Set DEBUG=True only for local development.)
@@ -359,14 +366,18 @@ CSRF_COOKIE_SAMESITE = 'Lax'
 X_FRAME_OPTIONS = 'DENY'
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
-SECURE_SSL_REDIRECT = os.environ.get('SECURE_SSL_REDIRECT', 'False') == 'True'
+# Never force HTTPS while using Django's local HTTP development server.
+SECURE_SSL_REDIRECT = (
+    not DEBUG
+    and os.environ.get('SECURE_SSL_REDIRECT', 'False') == 'True'
+)
 
 # ===== PROXY / CLOUDFLARE COMPATIBILITY =====
 # Cloudflare (and most reverse proxies) terminate TLS and forward the original
 # scheme in X-Forwarded-Proto. This lets request.is_secure() report correctly so
 # secure cookies and HTTPS-only behaviour work behind the proxy.
 # Safe to enable only when the app always sits behind a trusted proxy in prod.
-if os.environ.get('USE_PROXY_SSL_HEADER', 'False') == 'True':
+if not DEBUG and os.environ.get('USE_PROXY_SSL_HEADER', 'False') == 'True':
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Domains allowed to submit cross-origin POST/CSRF (your production hostnames).
