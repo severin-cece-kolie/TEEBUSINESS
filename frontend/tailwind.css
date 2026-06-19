@@ -1,7 +1,8 @@
 /*
  * Canonical Tailwind v4 source for the Django storefront.
  *
- * The generated standalone file is the storefront's canonical utility CSS.
+ * The generated static/css/tailwind.css file is the storefront's canonical
+ * utility CSS.
  */
 @import "tailwindcss" source(none);
 
@@ -17,8 +18,8 @@
 @source "./safelist.txt";
 
 /*
- * Merged tokens from the two active CDN configurations.
- * Values match templates/base.html and templates/base_auth.html.
+ * Compatibility tokens retained from the former CDN configurations so the
+ * local Tailwind v4 migration preserves the accepted visual palette.
  */
 @theme {
   /*
