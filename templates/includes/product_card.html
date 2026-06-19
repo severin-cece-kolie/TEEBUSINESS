@@ -34,7 +34,7 @@
         </div>
         <p class="product-card__price shrink-0 font-barlow text-sm font-bold md:text-sm">{{ product.discounted_price|convert_price:request }}</p>
     </div>
-    <a href="{% url 'product_detail' product.id %}" class="product-card__cta mt-2 inline-flex h-9 items-center justify-center rounded-md bg-luxury-black px-4 text-[10px] font-bold uppercase tracking-widest text-white transition-all hover:bg-black/90 md:mt-3 md:h-10">
-        {% trans "Select options" %}
+    <a href="{% url 'product_detail' product.id %}" class="product-card__cta mt-2 flex h-9 w-full items-center justify-center whitespace-nowrap rounded-md bg-luxury-black px-3 text-[10px] font-bold uppercase tracking-wide text-white transition-all hover:bg-black/90 md:mt-3 md:h-10 md:text-[11px] md:tracking-widest">
+        {% trans "View product" %}
     </a>
 </article>

@@ -21,10 +21,10 @@
     {% block extra_head %}{% endblock %}
     {% block extra_css %}{% endblock %}
 </head>
-<body class="bg-luxury-grey font-inter text-luxury-black antialiased">
+<body class="overflow-x-clip bg-luxury-grey font-inter text-luxury-black antialiased">
     <header x-data="{ mobileMenuOpen: false, currencyOpen: false, accountOpen: false, cartCount: {{ cart_count|default:0 }} }" @cart-count.window="cartCount = $event.detail" class="sticky top-0 z-50 border-b border-luxury-line bg-white/95 backdrop-blur-xl">
         <div class="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8">
-            <div class="flex h-14 items-center gap-2 md:h-18 md:gap-4">
+            <div class="flex h-14 items-center gap-1.5 md:h-18 md:gap-4">
                 <a href="{% url 'home' %}" class="flex shrink-0 items-center" aria-label="TEEBUSINESS home">
                     <img class="h-8 w-8 object-contain md:h-9 md:w-auto" src="{% static 'assets/images/logo.png' %}" alt="TEEBUSINESS">
                 </a>
@@ -40,7 +40,7 @@
                     <input name="q" value="{{ request.GET.q }}" placeholder="{% trans 'Search products' %}" class="w-full bg-transparent text-sm outline-none placeholder:text-luxury-mid">
                 </form>
 
-                <form action="{% url 'set_language' %}" method="post" class="ml-1">
+                <form action="{% url 'set_language' %}" method="post" class="hidden md:block md:ml-auto lg:ml-1">
                     {% csrf_token %}
                     <input type="hidden" name="next" value="{{ request.get_full_path }}">
                     {% get_current_language as LANGUAGE_CODE %}
@@ -51,7 +51,7 @@
                     </select>
                 </form>
 
-                <div class="relative ml-1">
+                <div class="relative ml-1 hidden md:block">
                     <button type="button" @click="currencyOpen = !currencyOpen" @click.away="currencyOpen = false" class="flex min-w-[96px] items-center justify-center gap-2 rounded-full border border-luxury-line px-3 py-2 text-[10px] font-bold uppercase tracking-[0.14em] transition-colors hover:bg-luxury-grey md:min-w-[112px] md:text-[11px] md:tracking-widest">
                         <span>{{ current_currency_icon }}</span>
                         <span>{{ current_currency }}</span>
@@ -97,8 +97,8 @@
                     </div>
                 </div>
 
-                <!-- Notifications bell -->
-                <div class="relative ml-auto md:ml-0" x-data="{ open: false }" @click.away="open = false" @keydown.escape="open = false">
+                <!-- Notifications bell (desktop only — kept off the cramped mobile bar) -->
+                <div class="relative hidden md:block md:ml-0" x-data="{ open: false }" @click.away="open = false" @keydown.escape="open = false">
                     <button type="button" @click="open = !open; if (open) $store.notif.markAllRead()" :aria-expanded="open" class="relative rounded-full p-2 transition-colors hover:bg-luxury-grey" aria-label="Notifications">
                         <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.4-1.4A2 2 0 0118 14.2V11a6 6 0 10-12 0v3.2c0 .5-.2 1-.6 1.4L4 17h5m6 0a3 3 0 11-6 0"/></svg>
                         <span x-show="$store.notif.unread > 0" x-text="$store.notif.unread > 9 ? '9+' : $store.notif.unread" style="display:none;" class="absolute -right-0.5 -top-0.5 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-red-600 px-1 text-[10px] font-bold leading-none text-white"></span>
@@ -121,6 +121,26 @@
                         </div>
                         <a href="{% url 'cart' %}" class="block border-t border-luxury-line px-4 py-3 text-center text-xs font-bold uppercase tracking-widest text-luxury-black transition hover:bg-luxury-grey">{% trans "View cart" %}</a>
                     </div>
+                </div>
+
+                <!-- Mobile language + currency (compact, always visible on the bar) -->
+                <div class="ml-auto flex items-center gap-1.5 md:hidden">
+                    {% get_current_language as LANGUAGE_CODE %}
+                    <form action="{% url 'set_language' %}" method="post" class="flex">
+                        {% csrf_token %}
+                        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                        <select name="language" onchange="this.form.submit()" aria-label="Langue"
+                                class="cursor-pointer rounded-full border border-luxury-line bg-white px-2 py-1.5 text-[11px] font-bold uppercase outline-none">
+                            <option value="fr" {% if LANGUAGE_CODE == 'fr' %}selected{% endif %}>FR</option>
+                            <option value="en" {% if LANGUAGE_CODE == 'en' %}selected{% endif %}>EN</option>
+                        </select>
+                    </form>
+                    <select onchange="if(this.value){window.location.href=this.value;}" aria-label="Devise"
+                            class="cursor-pointer rounded-full border border-luxury-line bg-white px-2 py-1.5 text-[11px] font-bold uppercase outline-none">
+                        {% for code, option in available_currencies.items %}
+                        <option value="{% url 'set_currency' %}?currency={{ code }}&next={{ request.get_full_path|urlencode }}" {% if current_currency == code %}selected{% endif %}>{{ option.symbol }}</option>
+                        {% endfor %}
+                    </select>
                 </div>
 
                 <a href="{% url 'cart' %}" class="relative rounded-full p-2 transition-colors hover:bg-luxury-grey" aria-label="Cart">
@@ -154,16 +174,18 @@
             </div>
         </div>
 
-        <div x-show="mobileMenuOpen" x-transition class="border-t border-luxury-line bg-white px-4 py-5 md:hidden" style="display:none;">
+        <div x-show="mobileMenuOpen" x-transition class="max-h-[calc(100vh-3.5rem)] overflow-y-auto border-t border-luxury-line bg-white px-4 py-5 md:hidden" style="display:none;">
             <form action="{% url 'catalog' %}" method="get" class="mb-4 flex items-center rounded-full border border-luxury-line bg-luxury-grey/60 px-4 py-3">
                 <input name="q" value="{{ request.GET.q }}" placeholder="{% trans 'Search products' %}" class="w-full bg-transparent text-sm outline-none">
             </form>
-            <div class="grid gap-2">
-                <a href="{% url 'home' %}" class="rounded-lg px-3 py-3 text-sm font-bold uppercase tracking-widest hover:bg-luxury-grey">Home</a>
-                <a href="{% url 'catalog' %}" class="rounded-lg px-3 py-3 text-sm font-bold uppercase tracking-widest hover:bg-luxury-grey">{% trans "Shop" %}</a>
-                <a href="{% url 'about' %}" class="rounded-lg px-3 py-3 text-sm font-bold uppercase tracking-widest hover:bg-luxury-grey">{% trans "About" %}</a>
-                <a href="{% url 'contact' %}" class="rounded-lg px-3 py-3 text-sm font-bold uppercase tracking-widest hover:bg-luxury-grey">{% trans "Contact" %}</a>
+            <div class="grid gap-1.5">
+                <a href="{% url 'home' %}" class="rounded-lg px-3 py-3.5 text-sm font-bold uppercase tracking-widest hover:bg-luxury-grey">{% trans "Home" %}</a>
+                <a href="{% url 'catalog' %}" class="rounded-lg px-3 py-3.5 text-sm font-bold uppercase tracking-widest hover:bg-luxury-grey">{% trans "Shop" %}</a>
+                <a href="{% url 'about' %}" class="rounded-lg px-3 py-3.5 text-sm font-bold uppercase tracking-widest hover:bg-luxury-grey">{% trans "About" %}</a>
+                <a href="{% url 'contact' %}" class="rounded-lg px-3 py-3.5 text-sm font-bold uppercase tracking-widest hover:bg-luxury-grey">{% trans "Contact" %}</a>
+                <a href="{% url 'faq' %}" class="rounded-lg px-3 py-3.5 text-sm font-bold uppercase tracking-widest hover:bg-luxury-grey">{% trans "FAQ" %}</a>
             </div>
+
             <div class="mt-5 flex items-center justify-between border-t border-luxury-line pt-5">
                 <span class="text-[11px] font-bold uppercase tracking-widest text-luxury-mid">{% trans "Follow us" %}</span>
                 {% include 'includes/social_links.html' with compact=True %}

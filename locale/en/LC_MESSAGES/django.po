@@ -2,9 +2,9 @@
 # Copyright (C) 2026 TEEBUSINESS
 msgid ""
 msgstr ""
+"Language: en\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: en\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 # === Navigation ===
@@ -99,8 +99,12 @@ msgstr "New Season · 2026"
 msgid "Curated footwear, elevated service."
 msgstr "Curated footwear, elevated service."
 
-msgid "Discover premium silhouettes and limited releases — handpicked for the TEEBUSINESS community."
-msgstr "Discover premium silhouettes and limited releases — handpicked for the TEEBUSINESS community."
+msgid ""
+"Discover premium silhouettes and limited releases — handpicked for the "
+"TEEBUSINESS community."
+msgstr ""
+"Discover premium silhouettes and limited releases — handpicked for the "
+"TEEBUSINESS community."
 
 msgid "Shop the collection"
 msgstr "Shop the collection"
@@ -136,8 +140,14 @@ msgstr "Our story"
 msgid "Premium footwear, with intention."
 msgstr "Premium footwear, with intention."
 
-msgid "TEEBUSINESS was built for people who care about what they wear and how they're treated — authentic silhouettes paired with service that feels personal."
-msgstr "TEEBUSINESS was built for people who care about what they wear and how they're treated — authentic silhouettes paired with service that feels personal."
+msgid ""
+"TEEBUSINESS was built for people who care about what they wear and how "
+"they're treated — authentic silhouettes paired with service that feels "
+"personal."
+msgstr ""
+"TEEBUSINESS was built for people who care about what they wear and how "
+"they're treated — authentic silhouettes paired with service that feels "
+"personal."
 
 msgid "Who we are"
 msgstr "Who we are"
@@ -145,26 +155,48 @@ msgstr "Who we are"
 msgid "The TEEBUSINESS story"
 msgstr "The TEEBUSINESS story"
 
-msgid "What started as a passion for clean, premium footwear became a destination for a community that values authenticity over hype."
-msgstr "What started as a passion for clean, premium footwear became a destination for a community that values authenticity over hype."
+msgid ""
+"What started as a passion for clean, premium footwear became a destination "
+"for a community that values authenticity over hype."
+msgstr ""
+"What started as a passion for clean, premium footwear became a destination "
+"for a community that values authenticity over hype."
 
-msgid "Every pair we carry is selected for quality, comfort and design — never compromise. We believe great products deserve great service, from browsing to unboxing."
-msgstr "Every pair we carry is selected for quality, comfort and design — never compromise. We believe great products deserve great service, from browsing to unboxing."
+msgid ""
+"Every pair we carry is selected for quality, comfort and design — never "
+"compromise. We believe great products deserve great service, from browsing "
+"to unboxing."
+msgstr ""
+"Every pair we carry is selected for quality, comfort and design — never "
+"compromise. We believe great products deserve great service, from browsing "
+"to unboxing."
 
-msgid "Based in Guinea and shipping with care, we're proud to bring a curated, world-class shopping experience closer to you."
-msgstr "Based in Guinea and shipping with care, we're proud to bring a curated, world-class shopping experience closer to you."
+msgid ""
+"Based in Guinea and shipping with care, we're proud to bring a curated, "
+"world-class shopping experience closer to you."
+msgstr ""
+"Based in Guinea and shipping with care, we're proud to bring a curated, "
+"world-class shopping experience closer to you."
 
 msgid "Our Mission"
 msgstr "Our Mission"
 
-msgid "To make premium footwear accessible — pairing authentic products with honest pricing and standout customer care."
-msgstr "To make premium footwear accessible — pairing authentic products with honest pricing and standout customer care."
+msgid ""
+"To make premium footwear accessible — pairing authentic products with honest"
+" pricing and standout customer care."
+msgstr ""
+"To make premium footwear accessible — pairing authentic products with honest"
+" pricing and standout customer care."
 
 msgid "Our Vision"
 msgstr "Our Vision"
 
-msgid "To become the most trusted destination for curated footwear in the region — known for authenticity, quality and a premium experience."
-msgstr "To become the most trusted destination for curated footwear in the region — known for authenticity, quality and a premium experience."
+msgid ""
+"To become the most trusted destination for curated footwear in the region — "
+"known for authenticity, quality and a premium experience."
+msgstr ""
+"To become the most trusted destination for curated footwear in the region — "
+"known for authenticity, quality and a premium experience."
 
 msgid "The difference"
 msgstr "The difference"
@@ -212,14 +244,19 @@ msgstr "We're here to help"
 msgid "Contact us"
 msgstr "Contact us"
 
-msgid "Questions about sizing, orders or a specific drop? Send us a message and we'll get back to you shortly."
-msgstr "Questions about sizing, orders or a specific drop? Send us a message and we'll get back to you shortly."
+msgid ""
+"Questions about sizing, orders or a specific drop? Send us a message and "
+"we'll get back to you shortly."
+msgstr ""
+"Questions about sizing, orders or a specific drop? Send us a message and "
+"we'll get back to you shortly."
 
 msgid "Message sent."
 msgstr "Message sent."
 
 msgid "Thank you for contacting us — our team will get back to you very soon."
-msgstr "Thank you for contacting us — our team will get back to you very soon."
+msgstr ""
+"Thank you for contacting us — our team will get back to you very soon."
 
 msgid "Name"
 msgstr "Name"
@@ -346,8 +383,12 @@ msgstr "My account"
 msgid "Profile settings"
 msgstr "Profile settings"
 
-msgid "Update your details anytime. Address fields are optional — complete them whenever you're ready."
-msgstr "Update your details anytime. Address fields are optional — complete them whenever you're ready."
+msgid ""
+"Update your details anytime. Address fields are optional — complete them "
+"whenever you're ready."
+msgstr ""
+"Update your details anytime. Address fields are optional — complete them "
+"whenever you're ready."
 
 msgid "Personal details"
 msgstr "Personal details"
@@ -537,8 +578,10 @@ msgstr "Next"
 msgid "Sign Up For Discounts & Updates"
 msgstr "Sign Up For Discounts & Updates"
 
-msgid "Get notified about new arrivals, promotions, restocks and exclusive offers."
-msgstr "Get notified about new arrivals, promotions, restocks and exclusive offers."
+msgid ""
+"Get notified about new arrivals, promotions, restocks and exclusive offers."
+msgstr ""
+"Get notified about new arrivals, promotions, restocks and exclusive offers."
 
 msgid "Email or phone number"
 msgstr "Email or phone number"
@@ -569,5 +612,492 @@ msgid "No thanks, I'll just browse"
 msgstr "No thanks, I'll just browse"
 
 # === Page hero / footer ===
-msgid "A cleaner premium shopping experience for curated footwear and streetwear essentials."
-msgstr "A cleaner premium shopping experience for curated footwear and streetwear essentials."
+msgid ""
+"A cleaner premium shopping experience for curated footwear and streetwear "
+"essentials."
+msgstr ""
+"A cleaner premium shopping experience for curated footwear and streetwear "
+"essentials."
+
+msgid "Verify Email"
+msgstr "Verify Email"
+
+msgid "One last step"
+msgstr "One last step"
+
+msgid "Verify your email."
+msgstr "Verify your email."
+
+msgid ""
+"We sent a 6-digit code to keep your account secure. Enter it to activate "
+"your membership."
+msgstr ""
+"We sent a 6-digit code to keep your account secure. Enter it to activate "
+"your membership."
+
+msgid "We sent a 6-digit code to:"
+msgstr "We sent a 6-digit code to:"
+
+msgid "We sent a 6-digit code to your inbox."
+msgstr "We sent a 6-digit code to your inbox."
+
+msgid "Didn’t get the code?"
+msgstr "Didn’t get the code?"
+
+msgid "No code?"
+msgstr "No code?"
+
+msgid "Send a fresh code."
+msgstr "Send a fresh code."
+
+msgid ""
+"Enter your email and we’ll send you a new 6-digit verification code right "
+"away."
+msgstr ""
+"Enter your email and we’ll send you a new 6-digit verification code right "
+"away."
+
+msgid "Enter your email to receive a new verification code."
+msgstr "Enter your email to receive a new verification code."
+
+msgid "Send new code"
+msgstr "Send new code"
+
+msgid "Back to sign in"
+msgstr "Back to sign in"
+
+msgid "Order Confirmed"
+msgstr "Order Confirmed"
+
+msgid "Order confirmed"
+msgstr "Order confirmed"
+
+msgid ""
+"Thank you, %(name)s! Your order has been received. Our team will contact you"
+" to arrange delivery and payment."
+msgstr ""
+"Thank you, %(name)s! Your order has been received. Our team will contact you"
+" to arrange delivery and payment."
+
+msgid "Order"
+msgstr "Order"
+
+msgid "Shipping"
+msgstr "Shipping"
+
+msgid "Taxes"
+msgstr "Taxes"
+
+msgid "Total"
+msgstr "Total"
+
+msgid "View / print invoice"
+msgstr "View / print invoice"
+
+msgid "Forgot Password"
+msgstr "Forgot Password"
+
+msgid "Account recovery"
+msgstr "Account recovery"
+
+msgid "Reset your password."
+msgstr "Reset your password."
+
+msgid ""
+"It happens. Enter your email and we’ll send you a secure link to set a new "
+"password."
+msgstr ""
+"It happens. Enter your email and we’ll send you a secure link to set a new "
+"password."
+
+msgid "Forgot password"
+msgstr "Forgot password"
+
+msgid "Enter your email and we’ll send you a reset link."
+msgstr "Enter your email and we’ll send you a reset link."
+
+msgid "Send reset link"
+msgstr "Send reset link"
+
+msgid "Check Your Email"
+msgstr "Check Your Email"
+
+msgid "On its way"
+msgstr "On its way"
+
+msgid "Check your inbox."
+msgstr "Check your inbox."
+
+msgid ""
+"If an account exists for that email, a secure reset link is already heading "
+"your way."
+msgstr ""
+"If an account exists for that email, a secure reset link is already heading "
+"your way."
+
+msgid "Email sent"
+msgstr "Email sent"
+
+msgid ""
+"If an account exists for that address, you’ll receive an email with a link "
+"to reset your password. The link expires in 24 hours."
+msgstr ""
+"If an account exists for that address, you’ll receive an email with a link "
+"to reset your password. The link expires in 24 hours."
+
+msgid "Password Updated"
+msgstr "Password Updated"
+
+msgid "All set"
+msgstr "All set"
+
+msgid "Password updated."
+msgstr "Password updated."
+
+msgid ""
+"Your password has been changed. You can now sign in with your new "
+"credentials."
+msgstr ""
+"Your password has been changed. You can now sign in with your new "
+"credentials."
+
+msgid "You’re all set"
+msgstr "You’re all set"
+
+msgid ""
+"Your password has been updated successfully. Sign in to continue shopping."
+msgstr ""
+"Your password has been updated successfully. Sign in to continue shopping."
+
+msgid "Set New Password"
+msgstr "Set New Password"
+
+msgid "Almost done"
+msgstr "Almost done"
+
+msgid "Set a new password."
+msgstr "Set a new password."
+
+msgid "Choose a strong password to keep your TEEBUSINESS account secure."
+msgstr "Choose a strong password to keep your TEEBUSINESS account secure."
+
+msgid "New password"
+msgstr "New password"
+
+msgid "Create a new password for your account."
+msgstr "Create a new password for your account."
+
+msgid "Confirm new password"
+msgstr "Confirm new password"
+
+msgid "Show password"
+msgstr "Show password"
+
+msgid "Save new password"
+msgstr "Save new password"
+
+msgid "This reset link is invalid or has expired."
+msgstr "This reset link is invalid or has expired."
+
+msgid "Request a new link"
+msgstr "Request a new link"
+
+msgid "Change Password"
+msgstr "Change Password"
+
+msgid "Update password"
+msgstr "Update password"
+
+msgid "Cancel"
+msgstr "Cancel"
+
+msgid "Your wishlist is empty."
+msgstr "Your wishlist is empty."
+
+msgid "Browse Products"
+msgstr "Browse Products"
+
+msgid "Print invoice"
+msgstr "Print invoice"
+
+msgid "Premium footwear"
+msgstr "Premium footwear"
+
+msgid "INVOICE"
+msgstr "INVOICE"
+
+msgid "Billed to"
+msgstr "Billed to"
+
+msgid "Shipping to"
+msgstr "Shipping to"
+
+msgid "Payment"
+msgstr "Payment"
+
+msgid "Product"
+msgstr "Product"
+
+msgid "Qty"
+msgstr "Qty"
+
+msgid "Unit price"
+msgstr "Unit price"
+
+msgid "Thank you for shopping with TEEBUSINESS."
+msgstr "Thank you for shopping with TEEBUSINESS."
+
+msgid "Our Blog"
+msgstr "Our Blog"
+
+msgid ""
+"Stay updated with the latest fashion trends, style tips, and company news."
+msgstr ""
+"Stay updated with the latest fashion trends, style tips, and company news."
+
+msgid "Coming soon! Our blog is under construction."
+msgstr "Coming soon! Our blog is under construction."
+
+msgid "Terms & Conditions"
+msgstr "Terms & Conditions"
+
+msgid ""
+"Welcome to TEEBUSINESS. By using our website, you agree to comply with and "
+"be bound by the following terms and conditions."
+msgstr ""
+"Welcome to TEEBUSINESS. By using our website, you agree to comply with and "
+"be bound by the following terms and conditions."
+
+msgid "1. Use of Website"
+msgstr "1. Use of Website"
+
+msgid ""
+"You agree to use our website for lawful purposes only and in accordance with"
+" these Terms."
+msgstr ""
+"You agree to use our website for lawful purposes only and in accordance with"
+" these Terms."
+
+msgid "2. Products & Services"
+msgstr "2. Products & Services"
+
+msgid ""
+"All products are subject to availability. We reserve the right to "
+"discontinue products without notice."
+msgstr ""
+"All products are subject to availability. We reserve the right to "
+"discontinue products without notice."
+
+msgid "3. Pricing"
+msgstr "3. Pricing"
+
+msgid ""
+"Prices are subject to change without notice. We reserve the right to modify "
+"prices at any time."
+msgstr ""
+"Prices are subject to change without notice. We reserve the right to modify "
+"prices at any time."
+
+msgid "How TEEBUSINESS collects, uses and protects your personal data."
+msgstr "How TEEBUSINESS collects, uses and protects your personal data."
+
+msgid "Your privacy matters"
+msgstr "Your privacy matters"
+
+msgid "Last updated:"
+msgstr "Last updated:"
+
+msgid ""
+"At TEEBUSINESS, we respect your privacy and are committed to protecting your"
+" personal data. This policy explains what we collect, why, and the rights "
+"you have over your information."
+msgstr ""
+"At TEEBUSINESS, we respect your privacy and are committed to protecting your"
+" personal data. This policy explains what we collect, why, and the rights "
+"you have over your information."
+
+msgid "1. Information we collect"
+msgstr "1. Information we collect"
+
+msgid ""
+"We collect information you provide directly — such as your name, email, "
+"phone number and delivery address when you create an account, subscribe to "
+"our newsletter, place an order or contact us. We also collect limited "
+"technical data (such as your IP address and browser type) to keep your "
+"account secure and improve our service."
+msgstr ""
+"We collect information you provide directly — such as your name, email, "
+"phone number and delivery address when you create an account, subscribe to "
+"our newsletter, place an order or contact us. We also collect limited "
+"technical data (such as your IP address and browser type) to keep your "
+"account secure and improve our service."
+
+msgid "2. How we use your data"
+msgstr "2. How we use your data"
+
+msgid ""
+"Your data is used to process and deliver orders, provide customer support, "
+"send verification and security notifications, and — only with your consent —"
+" share news about new arrivals, restocks and promotions. We never sell your "
+"personal data."
+msgstr ""
+"Your data is used to process and deliver orders, provide customer support, "
+"send verification and security notifications, and — only with your consent —"
+" share news about new arrivals, restocks and promotions. We never sell your "
+"personal data."
+
+msgid "3. Legal basis (GDPR)"
+msgstr "3. Legal basis (GDPR)"
+
+msgid ""
+"We process your data on the basis of contract (to fulfil your orders), "
+"legitimate interest (to secure and improve our service), and consent (for "
+"marketing emails, which you can withdraw at any time)."
+msgstr ""
+"We process your data on the basis of contract (to fulfil your orders), "
+"legitimate interest (to secure and improve our service), and consent (for "
+"marketing emails, which you can withdraw at any time)."
+
+msgid "4. Cookies"
+msgstr "4. Cookies"
+
+msgid ""
+"We use essential cookies to keep you signed in, remember your cart and "
+"protect against fraud (CSRF). Optional analytics cookies help us understand "
+"how the store is used. You can control cookies through your browser "
+"settings; disabling essential cookies may affect core functionality."
+msgstr ""
+"We use essential cookies to keep you signed in, remember your cart and "
+"protect against fraud (CSRF). Optional analytics cookies help us understand "
+"how the store is used. You can control cookies through your browser "
+"settings; disabling essential cookies may affect core functionality."
+
+msgid "5. Data security"
+msgstr "5. Data security"
+
+msgid ""
+"We apply strong technical safeguards: encrypted password storage, secure "
+"sessions, CSRF and clickjacking protection, account-lockout against brute-"
+"force attacks, and HTTPS in production. Access to personal data is "
+"restricted to authorised staff only."
+msgstr ""
+"We apply strong technical safeguards: encrypted password storage, secure "
+"sessions, CSRF and clickjacking protection, account-lockout against brute-"
+"force attacks, and HTTPS in production. Access to personal data is "
+"restricted to authorised staff only."
+
+msgid "6. Your rights"
+msgstr "6. Your rights"
+
+msgid ""
+"You have the right to access, correct, export or delete your personal data, "
+"and to unsubscribe from marketing at any time. To exercise any of these "
+"rights, contact us using the details below."
+msgstr ""
+"You have the right to access, correct, export or delete your personal data, "
+"and to unsubscribe from marketing at any time. To exercise any of these "
+"rights, contact us using the details below."
+
+msgid "7. Data retention"
+msgstr "7. Data retention"
+
+msgid ""
+"We keep your data only as long as necessary to provide our services and meet"
+" legal obligations. When it is no longer needed, it is securely deleted or "
+"anonymised."
+msgstr ""
+"We keep your data only as long as necessary to provide our services and meet"
+" legal obligations. When it is no longer needed, it is securely deleted or "
+"anonymised."
+
+msgid "8. Terms of use"
+msgstr "8. Terms of use"
+
+msgid ""
+"By using this website you agree to use it lawfully and not to misuse our "
+"services or content."
+msgstr ""
+"By using this website you agree to use it lawfully and not to misuse our "
+"services or content."
+
+msgid "See our full Terms & Conditions"
+msgstr "See our full Terms & Conditions"
+
+msgid "Questions about this policy or your data? Reach us at"
+msgstr "Questions about this policy or your data? Reach us at"
+
+msgid "or through our"
+msgstr "or through our"
+
+msgid "contact page"
+msgstr "contact page"
+
+msgid "How long does shipping take?"
+msgstr "How long does shipping take?"
+
+msgid ""
+"Orders within Conakry are typically delivered within 1–2 business days. "
+"Deliveries elsewhere in Guinea take 2–5 business days. You’ll receive "
+"tracking details once your order ships."
+msgstr ""
+"Orders within Conakry are typically delivered within 1–2 business days. "
+"Deliveries elsewhere in Guinea take 2–5 business days. You’ll receive "
+"tracking details once your order ships."
+
+msgid "What payment methods do you accept?"
+msgstr "What payment methods do you accept?"
+
+msgid ""
+"We accept Orange Money, MTN Mobile Money, cash on delivery (where available)"
+" and bank transfer. All payment details are handled securely."
+msgstr ""
+"We accept Orange Money, MTN Mobile Money, cash on delivery (where available)"
+" and bank transfer. All payment details are handled securely."
+
+msgid "What is your return & refund policy?"
+msgstr "What is your return & refund policy?"
+
+msgid ""
+"You can return unworn items in their original packaging within 7 days of "
+"delivery. Once we receive and inspect the item, your refund or exchange is "
+"processed promptly."
+msgstr ""
+"You can return unworn items in their original packaging within 7 days of "
+"delivery. Once we receive and inspect the item, your refund or exchange is "
+"processed promptly."
+
+msgid "Are your products authentic?"
+msgstr "Are your products authentic?"
+
+msgid ""
+"Yes — 100%. Every pair we sell is genuine and carefully sourced. We never "
+"sell replicas."
+msgstr ""
+"Yes — 100%. Every pair we sell is genuine and carefully sourced. We never "
+"sell replicas."
+
+msgid "How do I track my order?"
+msgstr "How do I track my order?"
+
+msgid ""
+"After your order ships, we send you a tracking reference by email or "
+"WhatsApp. You can also reach our team any time for an update."
+msgstr ""
+"After your order ships, we send you a tracking reference by email or "
+"WhatsApp. You can also reach our team any time for an update."
+
+msgid "How do I choose the right size?"
+msgstr "How do I choose the right size?"
+
+msgid ""
+"Each product page lists available sizes (EU 38–48). If you’re between sizes "
+"or unsure, message us and we’ll help you find the best fit."
+msgstr ""
+"Each product page lists available sizes (EU 38–48). If you’re between sizes "
+"or unsure, message us and we’ll help you find the best fit."
+
+msgid "Current password"
+msgstr "Current password"
+
+msgid "No thanks, I’ll just browse"
+msgstr "No thanks, I’ll just browse"

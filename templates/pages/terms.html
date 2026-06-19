@@ -1,26 +1,27 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
-{% block title %}Terms & Conditions - TEEBUSINESS{% endblock %}
+{% block title %}{% trans "Terms & Conditions" %} - TEEBUSINESS{% endblock %}
 
 {% block content %}
 <section class="py-16 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 class="text-4xl font-bold text-center mb-8">Terms & Conditions</h1>
+        <h1 class="text-4xl font-bold text-center mb-8">{% trans "Terms & Conditions" %}</h1>
         <div class="max-w-3xl mx-auto prose">
             <p class="text-gray-600 mb-4">
-                Welcome to TEEBUSINESS. By using our website, you agree to comply with and be bound by the following terms and conditions.
+                {% trans "Welcome to TEEBUSINESS. By using our website, you agree to comply with and be bound by the following terms and conditions." %}
             </p>
-            <h2 class="text-2xl font-semibold mt-6 mb-4">1. Use of Website</h2>
+            <h2 class="text-2xl font-semibold mt-6 mb-4">{% trans "1. Use of Website" %}</h2>
             <p class="text-gray-600 mb-4">
-                You agree to use our website for lawful purposes only and in accordance with these Terms.
+                {% trans "You agree to use our website for lawful purposes only and in accordance with these Terms." %}
             </p>
-            <h2 class="text-2xl font-semibold mt-6 mb-4">2. Products & Services</h2>
+            <h2 class="text-2xl font-semibold mt-6 mb-4">{% trans "2. Products & Services" %}</h2>
             <p class="text-gray-600 mb-4">
-                All products are subject to availability. We reserve the right to discontinue products without notice.
+                {% trans "All products are subject to availability. We reserve the right to discontinue products without notice." %}
             </p>
-            <h2 class="text-2xl font-semibold mt-6 mb-4">3. Pricing</h2>
+            <h2 class="text-2xl font-semibold mt-6 mb-4">{% trans "3. Pricing" %}</h2>
             <p class="text-gray-600 mb-4">
-                Prices are subject to change without notice. We reserve the right to modify prices at any time.
+                {% trans "Prices are subject to change without notice. We reserve the right to modify prices at any time." %}
             </p>
         </div>
     </div>

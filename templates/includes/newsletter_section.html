@@ -1,21 +1,22 @@
 {# Compact footer newsletter — rendered once, inside the site footer. #}
+{% load i18n %}
 <div class="border-b border-luxury-line/70 pb-8 md:pb-10">
   <div class="mx-auto grid max-w-7xl gap-6 px-3 sm:px-6 md:grid-cols-2 md:items-center md:gap-10 lg:px-8">
     <div>
-      <h3 class="font-barlow text-lg font-black uppercase tracking-[0.18em] text-luxury-black md:text-xl">Sign Up For Discounts &amp; Updates</h3>
-      <p class="mt-2 max-w-md text-sm leading-6 text-luxury-mid">Get notified about new arrivals, promotions, restocks and exclusive offers.</p>
+      <h3 class="font-barlow text-lg font-black uppercase tracking-[0.18em] text-luxury-black md:text-xl">{% trans "Sign Up For Discounts & Updates" %}</h3>
+      <p class="mt-2 max-w-md text-sm leading-6 text-luxury-mid">{% trans "Get notified about new arrivals, promotions, restocks and exclusive offers." %}</p>
     </div>
 
     <form x-data="newsletterForm()" @submit.prevent="submit" class="w-full">
       {% csrf_token %}
       <div class="flex flex-col gap-3 sm:flex-row sm:gap-0">
-        <label for="footer-newsletter" class="sr-only">Email or phone number</label>
+        <label for="footer-newsletter" class="sr-only">{% trans "Email or phone number" %}</label>
         <input
           id="footer-newsletter"
           type="text"
           x-model="contactValue"
           name="contact"
-          placeholder="Email or Phone Number"
+          placeholder="{% trans 'Email or Phone Number' %}"
           class="w-full rounded-full border border-luxury-line bg-white px-5 py-3.5 text-sm outline-none transition-colors focus:border-luxury-black sm:rounded-r-none"
           required
         >
@@ -24,7 +25,7 @@
           :disabled="loading"
           class="flex min-w-[150px] items-center justify-center rounded-full bg-luxury-black px-6 py-3.5 text-xs font-bold uppercase tracking-widest text-white transition-colors hover:bg-black/90 disabled:opacity-70 sm:rounded-l-none"
         >
-          <span x-show="!loading">Subscribe</span>
+          <span x-show="!loading">{% trans "Subscribe" %}</span>
           <svg x-show="loading" class="h-4 w-4 animate-spin text-white" style="display:none;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
         </button>
       </div>
@@ -65,7 +66,7 @@ function newsletterForm() {
                 if (data.status === 'success') this.contactValue = '';
             } catch (error) {
                 this.status = 'error';
-                this.message = 'Something went wrong. Please try again.';
+                this.message = '{% trans "Something went wrong. Please try again." %}';
             } finally {
                 this.loading = false;
             }

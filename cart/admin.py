@@ -149,12 +149,40 @@ def get_dashboard_stats(request):
 
     revenue_display = f"{int(revenue):,}".replace(',', ' ') + ' GNF'
 
+    # ── Stock KPIs + alerts ──
+    from shop.models import ProductSize
+    from django.db.models import F
+
+    total_products = Product.objects.count()
+    total_variants = ProductSize.objects.count()
+    total_stock_units = ProductSize.objects.aggregate(s=Sum('quantity'))['s'] or 0
+    variants_out = ProductSize.objects.filter(quantity=0).count()
+    variants_low = ProductSize.objects.filter(
+        quantity__gt=0, quantity__lte=F('low_stock_threshold')).count()
+    products_no_stock = (Product.objects.filter(is_active=True)
+                         .annotate(st=Sum('sizes__quantity'))
+                         .filter(Q(st=0) | Q(st__isnull=True)).count())
+
+    alert_rows = (ProductSize.objects
+                  .filter(product__is_active=True, quantity__lte=F('low_stock_threshold'))
+                  .select_related('product')
+                  .order_by('quantity', 'product__name')[:12])
+    alerts = [{
+        'name': a.product.name, 'size': a.size, 'quantity': a.quantity,
+        'threshold': a.low_stock_threshold, 'out': a.quantity == 0,
+        'url': reverse('admin:shop_product_change', args=[a.product_id]),
+    } for a in alert_rows]
+
     return {'dash': {
         'revenue': revenue, 'revenue_display': revenue_display,
         'today_orders': today_orders, 'month_orders': month_orders,
         'products_sold': products_sold, 'out_of_stock': out_of_stock,
         'new_customers': new_customers, 'chart_labels': labels, 'chart_data': data,
         'best_sellers': best_sellers,
+        'total_products': total_products, 'total_variants': total_variants,
+        'total_stock_units': total_stock_units, 'variants_out': variants_out,
+        'variants_low': variants_low, 'products_no_stock': products_no_stock,
+        'stock_alerts': alerts,
     }}
 
 

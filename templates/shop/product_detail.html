@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load currency_tags %}
+{% load currency_tags i18n %}
 
 {% block title %}{{ product.name }} — TEEBUSINESS{% endblock %}
 
@@ -17,7 +17,7 @@
         <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M3 12l9-9 9 9M5 10v10h14V10"/></svg>
       </a>
       <span>›</span>
-      <a href="{% url 'catalog' %}" class="hover:text-luxury-black">Shop</a>
+      <a href="{% url 'catalog' %}" class="hover:text-luxury-black">{% trans "Shop" %}</a>
       <span>›</span>
       <span class="text-luxury-black">{{ product.name }}</span>
     </nav>
@@ -81,18 +81,19 @@
           <div class="flex text-amber-400">
             {% for i in "12345" %}<svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.05 2.93c.3-.92 1.6-.92 1.9 0l1.36 4.18a1 1 0 00.95.69h4.4c.97 0 1.37 1.24.59 1.81l-3.56 2.59a1 1 0 00-.36 1.12l1.36 4.18c.3.92-.76 1.69-1.54 1.12l-3.56-2.59a1 1 0 00-1.18 0l-3.56 2.59c-.78.57-1.84-.2-1.54-1.12l1.36-4.18a1 1 0 00-.36-1.12L1.4 9.6c-.78-.57-.38-1.81.59-1.81h4.4a1 1 0 00.95-.69l1.36-4.18z"/></svg>{% endfor %}
           </div>
-          <span class="text-xs text-luxury-mid">(No reviews yet)</span>
+          <span class="text-xs text-luxury-mid">{% trans "(No reviews yet)" %}</span>
         </div>
 
         <!-- Availability -->
         <p class="mt-3 text-sm font-semibold {% if product.in_stock %}text-green-600{% else %}text-red-500{% endif %}">
-          {% if product.in_stock %}Available{% else %}Out of stock{% endif %}
+          {% if product.in_stock %}{% trans "Available" %}{% else %}{% trans "Out of stock" %}{% endif %}
         </p>
 
         <!-- Description -->
         <div class="mt-5">
-          <h2 class="mb-1.5 text-sm font-bold uppercase tracking-wide">Product Description</h2>
-          <p class="text-[15px] leading-7 text-luxury-mid">{{ product.description|default:"No description available." }}</p>
+          <h2 class="mb-1.5 text-sm font-bold uppercase tracking-wide">{% trans "Product Description" %}</h2>
+          {% trans "No description available." as no_desc %}
+          <p class="text-[15px] leading-7 text-luxury-mid">{{ product.description|default:no_desc }}</p>
         </div>
 
         <form method="post" action="{% url 'add_to_cart' product.id %}" class="mt-6">
@@ -101,11 +102,11 @@
           <input type="hidden" name="quantity" :value="quantity">
 
           <!-- Sizes -->
-          <h2 class="mb-2 text-sm font-bold uppercase tracking-wide">Sizes</h2>
+          <h2 class="mb-2 text-sm font-bold uppercase tracking-wide">{% trans "Sizes" %}</h2>
           <div class="flex flex-wrap gap-2">
             {% for s in product.sizes.all %}
             {% if s.stock_status == 'out_of_stock' %}
-            <span class="flex h-11 min-w-[3rem] items-center justify-center rounded-full border border-dashed border-luxury-line px-3 text-sm text-luxury-mid/50 line-through" title="Out of stock">{{ s.size }}</span>
+            <span class="flex h-11 min-w-[3rem] items-center justify-center rounded-full border border-dashed border-luxury-line px-3 text-sm text-luxury-mid/50 line-through" title="{% trans 'Out of stock' %}">{{ s.size }}</span>
             {% else %}
             <button type="button" @click="selectSize('{{ s.size }}')"
                     :class="selectedSize === '{{ s.size }}' ? 'border-luxury-black bg-luxury-black text-white' : 'border-luxury-line hover:border-luxury-black'"
@@ -116,7 +117,7 @@
           <p x-show="error" class="mt-2 text-xs text-red-600" x-text="error" style="display:none;"></p>
 
           <!-- Quantity -->
-          <h2 class="mb-2 mt-6 text-sm font-bold uppercase tracking-wide">Quantity</h2>
+          <h2 class="mb-2 mt-6 text-sm font-bold uppercase tracking-wide">{% trans "Quantity" %}</h2>
           <div class="flex items-center gap-4">
             <div class="flex items-center rounded-xl border border-luxury-line">
               <button type="button" @click="dec()" class="flex h-11 w-11 items-center justify-center text-lg text-luxury-mid transition hover:text-luxury-black" aria-label="Decrease">−</button>
@@ -125,7 +126,7 @@
             </div>
             <button type="submit" :disabled="!selectedSize"
                     class="flex-1 rounded-xl bg-luxury-black px-8 py-3 text-sm font-semibold uppercase tracking-[0.15em] text-white transition hover:bg-luxury-black/90 disabled:cursor-not-allowed disabled:opacity-40">
-              Add to cart
+              {% trans "Add to cart" %}
             </button>
           </div>
         </form>
@@ -133,17 +134,17 @@
         <!-- Reviews accordion -->
         <div class="mt-6 border-t border-luxury-line" x-data="{ open: false }">
           <button type="button" @click="open = !open" class="flex w-full items-center justify-between py-4 text-left">
-            <span class="text-sm font-bold uppercase tracking-wide">Reviews</span>
+            <span class="text-sm font-bold uppercase tracking-wide">{% trans "Reviews" %}</span>
             <svg class="h-5 w-5 text-luxury-mid transition-transform" :class="open && 'rotate-180'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
           </button>
           <div x-show="open" x-transition.opacity class="pb-4 text-sm text-luxury-mid" style="display:none;">
-            No reviews yet. Be the first to share your thoughts on this product.
+            {% trans "No reviews yet. Be the first to share your thoughts on this product." %}
           </div>
         </div>
 
         <!-- Share -->
         <div class="mt-6 border-t border-luxury-line pt-6">
-          <p class="mb-3 text-sm font-bold uppercase tracking-wide">Share this Product</p>
+          <p class="mb-3 text-sm font-bold uppercase tracking-wide">{% trans "Share this Product" %}</p>
           <div class="flex gap-2">
             <a href="https://twitter.com/intent/tweet?url={{ share_url|urlencode }}&text={{ product.name|urlencode }}" target="_blank" rel="noopener noreferrer" aria-label="Share on X" class="flex h-10 w-10 items-center justify-center rounded-lg bg-luxury-black text-white transition hover:bg-luxury-black/80">
               <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18.9 1.6h3.7l-8.1 9.2L24 22.4h-7.4l-5.8-7.6-6.7 7.6H.4l8.6-9.8L0 1.6h7.6l5.2 6.9 6.1-6.9zm-1.3 18.6h2L6.5 3.7H4.4l13.2 16.5z"/></svg>
@@ -159,7 +160,7 @@
 
         <!-- Tag -->
         {% if product.category %}
-        <p class="mt-5 text-sm text-luxury-mid">Tag:
+        <p class="mt-5 text-sm text-luxury-mid">{% trans "Tag:" %}
           <a href="{% url 'catalog' %}?category={{ product.category.slug }}" class="font-semibold uppercase text-luxury-black underline underline-offset-2">{{ product.category.name }}</a>
         </p>
         {% endif %}
@@ -178,7 +179,7 @@
     <!-- You may also like -->
     {% if similar_products %}
     <section class="mt-16 md:mt-20">
-      <h2 class="mb-8 font-barlow text-2xl font-black uppercase tracking-tight">You may also like</h2>
+      <h2 class="mb-8 font-barlow text-2xl font-black uppercase tracking-tight">{% trans "You may also like" %}</h2>
       <div class="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 lg:grid-cols-4 md:gap-x-6">
         {% for product in similar_products %}{% include 'includes/product_card.html' %}{% endfor %}
       </div>

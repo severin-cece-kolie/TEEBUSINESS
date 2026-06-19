@@ -1,10 +1,10 @@
-{% load currency_tags %}
+{% load currency_tags i18n %}{% get_current_language as LANGUAGE_CODE %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ LANGUAGE_CODE }}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Invoice {{ order.order_number }} — TEEBUSINESS</title>
+  <title>{% trans "Invoice" %} {{ order.order_number }} — TEEBUSINESS</title>
   <style>
     *{box-sizing:border-box;margin:0;padding:0;}
     body{font-family:Arial,Helvetica,sans-serif;color:#1a1a1a;background:#f4f4f4;padding:24px;}
@@ -25,19 +25,29 @@
     .badge{display:inline-block;padding:4px 12px;border-radius:99px;color:#fff;font-size:12px;font-weight:700;text-transform:uppercase;}
     .actions{max-width:760px;margin:0 auto 16px;text-align:right;}
     .btn{display:inline-block;background:#0a0a0a;color:#fff;text-decoration:none;padding:10px 22px;border-radius:8px;font-size:13px;font-weight:700;border:none;cursor:pointer;}
-    @media print{body{background:#fff;padding:0;}.sheet{border:none;}.actions{display:none;}}
+    @media (max-width:640px){
+      body{padding:10px;}
+      .sheet{padding:22px 18px;}
+      .top{flex-direction:column;gap:14px;}
+      .top > div:last-child{text-align:left !important;}
+      .cols{gap:18px;}
+      .totals{width:100%;}
+      .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+      table{min-width:460px;}
+    }
+    @media print{body{background:#fff;padding:0;}.sheet{border:none;}.actions{display:none;}.table-wrap{overflow:visible;}}
   </style>
 </head>
 <body>
-  <div class="actions"><button class="btn" onclick="window.print()">Print invoice</button></div>
+  <div class="actions"><button class="btn" onclick="window.print()">{% trans "Print invoice" %}</button></div>
   <div class="sheet">
     <div class="top">
       <div>
         <div class="brand">TEEBUSINESS</div>
-        <p class="muted">Premium footwear</p>
+        <p class="muted">{% trans "Premium footwear" %}</p>
       </div>
       <div style="text-align:right;">
-        <div style="font-size:20px;font-weight:800;">INVOICE</div>
+        <div style="font-size:20px;font-weight:800;">{% trans "INVOICE" %}</div>
         <p class="muted">#{{ order.order_number }}</p>
         <p class="muted">{{ order.created_at|date:"d M Y, H:i" }}</p>
         <span class="badge" style="background:{{ order.status_color }};margin-top:6px;">{{ order.get_status_display }}</span>
@@ -46,24 +56,25 @@
 
     <div class="cols">
       <div class="col">
-        <h2>Billed to</h2>
+        <h2>{% trans "Billed to" %}</h2>
         <strong>{{ order.full_name }}</strong><br>
         {{ order.phone }}<br>
         {{ order.email }}
       </div>
       <div class="col">
-        <h2>Shipping to</h2>
+        <h2>{% trans "Shipping to" %}</h2>
         {{ order.address }}<br>
         {% if order.district %}{{ order.district }}, {% endif %}{{ order.city }}
       </div>
       <div class="col">
-        <h2>Payment</h2>
+        <h2>{% trans "Payment" %}</h2>
         {{ order.get_payment_method_display }}
       </div>
     </div>
 
+    <div class="table-wrap">
     <table>
-      <thead><tr><th>Product</th><th>Size</th><th class="r">Qty</th><th class="r">Unit price</th><th class="r">Subtotal</th></tr></thead>
+      <thead><tr><th>{% trans "Product" %}</th><th>{% trans "Size" %}</th><th class="r">{% trans "Qty" %}</th><th class="r">{% trans "Unit price" %}</th><th class="r">{% trans "Subtotal" %}</th></tr></thead>
       <tbody>
         {% for item in order.items.all %}
         <tr>
@@ -76,15 +87,16 @@
         {% endfor %}
       </tbody>
     </table>
-
-    <div class="totals">
-      <div><span>Subtotal</span><span>{{ order.subtotal_gnf|convert_price:request }}</span></div>
-      <div><span>Shipping</span><span>{{ order.shipping_gnf|convert_price:request }}</span></div>
-      <div><span>Taxes</span><span>{{ order.tax_gnf|convert_price:request }}</span></div>
-      <div class="grand"><span>Total</span><span>{{ order.total_gnf|convert_price:request }}</span></div>
     </div>
 
-    <p class="muted" style="margin-top:30px;text-align:center;">Thank you for shopping with TEEBUSINESS.</p>
+    <div class="totals">
+      <div><span>{% trans "Subtotal" %}</span><span>{{ order.subtotal_gnf|convert_price:request }}</span></div>
+      <div><span>{% trans "Shipping" %}</span><span>{{ order.shipping_gnf|convert_price:request }}</span></div>
+      <div><span>{% trans "Taxes" %}</span><span>{{ order.tax_gnf|convert_price:request }}</span></div>
+      <div class="grand"><span>{% trans "Total" %}</span><span>{{ order.total_gnf|convert_price:request }}</span></div>
+    </div>
+
+    <p class="muted" style="margin-top:30px;text-align:center;">{% trans "Thank you for shopping with TEEBUSINESS." %}</p>
   </div>
 </body>
 </html>

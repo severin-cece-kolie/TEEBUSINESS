@@ -1,20 +1,20 @@
 {% extends 'base_auth.html' %}
+{% load i18n %}
 
-{% block title %}Verify Email — TEEBUSINESS{% endblock %}
+{% block title %}{% trans "Verify Email" %} — TEEBUSINESS{% endblock %}
 
-{% block brand_eyebrow %}One last step{% endblock %}
-{% block brand_headline %}Verify<br>your email.{% endblock %}
-{% block brand_sub %}We sent a 6-digit code to keep your account secure. Enter it to activate your membership.{% endblock %}
+{% block brand_eyebrow %}{% trans "One last step" %}{% endblock %}
+{% block brand_headline %}{% trans "Verify your email." %}{% endblock %}
+{% block brand_sub %}{% trans "We sent a 6-digit code to keep your account secure. Enter it to activate your membership." %}{% endblock %}
 
 {% block form_panel %}
 <div class="mb-8">
   <div class="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-full bg-luxury-grey">
     <svg class="h-6 w-6 text-luxury-black" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
   </div>
-  <h2 class="font-barlow text-3xl font-black uppercase tracking-tight">Check your email</h2>
+  <h2 class="font-barlow text-3xl font-black uppercase tracking-tight">{% trans "Check your email" %}</h2>
   <p class="mt-2 text-sm text-luxury-mid">
-    We sent a 6-digit code to
-    {% if user %}<span class="font-semibold text-luxury-black">{{ user.email }}</span>{% else %}your inbox{% endif %}.
+    {% if user %}{% trans "We sent a 6-digit code to:" %} <span class="font-semibold text-luxury-black">{{ user.email }}</span>{% else %}{% trans "We sent a 6-digit code to your inbox." %}{% endif %}
   </p>
 </div>
 
@@ -29,24 +29,24 @@
 <form method="post" class="space-y-5" novalidate>
   {% csrf_token %}
   <div>
-    <label for="{{ form.otp_code.id_for_label }}" class="sr-only">Verification code</label>
+    <label for="{{ form.otp_code.id_for_label }}" class="sr-only">{% trans "Verification code" %}</label>
     {{ form.otp_code }}
     {% if form.otp_code.errors %}<p class="mt-2 text-center text-xs text-red-600">{{ form.otp_code.errors.0 }}</p>{% endif %}
   </div>
 
   <button type="submit" class="w-full rounded-xl bg-luxury-black py-3.5 text-sm font-semibold uppercase tracking-[0.15em] text-white transition hover:bg-luxury-black/90 focus:outline-none focus:ring-2 focus:ring-luxury-black/20 active:scale-[0.99]">
-    Verify &amp; activate
+    {% trans "Verify & activate" %}
   </button>
 </form>
 
 <div class="mt-6 text-center text-sm text-luxury-mid">
-  Didn’t get the code?
-  <a id="resend-link" href="{% url 'resend_otp' %}" class="font-semibold text-luxury-black underline-offset-4 hover:underline">Resend code</a>
+  {% trans "Didn’t get the code?" %}
+  <a id="resend-link" href="{% url 'resend_otp' %}" class="font-semibold text-luxury-black underline-offset-4 hover:underline">{% trans "Resend code" %}</a>
   <span id="resend-timer" class="hidden text-luxury-mid"></span>
 </div>
 
 <p class="mt-4 text-center text-xs text-luxury-mid">
-  The code expires in 10 minutes. Be sure to check your spam folder.
+  {% trans "The code expires in 10 minutes. Be sure to check your spam folder." %}
 </p>
 {% endblock %}
 

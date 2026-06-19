@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.urls import reverse
+from django.utils.translation import gettext
 
 from shop.models import Product, Brand
 from shop.pagination import paginate
@@ -96,23 +97,23 @@ def contact(request):
     })
 def faq(request):
     faqs = [
-        {'q': 'How long does shipping take?',
-         'a': 'Orders within Conakry are typically delivered within 1–2 business days. '
-              'Deliveries elsewhere in Guinea take 2–5 business days. You’ll receive tracking details once your order ships.'},
-        {'q': 'What payment methods do you accept?',
-         'a': 'We accept Orange Money, MTN Mobile Money, cash on delivery (where available) and bank transfer. '
-              'All payment details are handled securely.'},
-        {'q': 'What is your return & refund policy?',
-         'a': 'You can return unworn items in their original packaging within 7 days of delivery. '
-              'Once we receive and inspect the item, your refund or exchange is processed promptly.'},
-        {'q': 'Are your products authentic?',
-         'a': 'Yes — 100%. Every pair we sell is genuine and carefully sourced. We never sell replicas.'},
-        {'q': 'How do I track my order?',
-         'a': 'After your order ships, we send you a tracking reference by email or WhatsApp. '
-              'You can also reach our team any time for an update.'},
-        {'q': 'How do I choose the right size?',
-         'a': 'Each product page lists available sizes (EU 38–48). If you’re between sizes or unsure, '
-              'message us and we’ll help you find the best fit.'},
+        {'q': gettext('How long does shipping take?'),
+         'a': gettext('Orders within Conakry are typically delivered within 1–2 business days. '
+              'Deliveries elsewhere in Guinea take 2–5 business days. You’ll receive tracking details once your order ships.')},
+        {'q': gettext('What payment methods do you accept?'),
+         'a': gettext('We accept Orange Money, MTN Mobile Money, cash on delivery (where available) and bank transfer. '
+              'All payment details are handled securely.')},
+        {'q': gettext('What is your return & refund policy?'),
+         'a': gettext('You can return unworn items in their original packaging within 7 days of delivery. '
+              'Once we receive and inspect the item, your refund or exchange is processed promptly.')},
+        {'q': gettext('Are your products authentic?'),
+         'a': gettext('Yes — 100%. Every pair we sell is genuine and carefully sourced. We never sell replicas.')},
+        {'q': gettext('How do I track my order?'),
+         'a': gettext('After your order ships, we send you a tracking reference by email or WhatsApp. '
+              'You can also reach our team any time for an update.')},
+        {'q': gettext('How do I choose the right size?'),
+         'a': gettext('Each product page lists available sizes (EU 38–48). If you’re between sizes or unsure, '
+              'message us and we’ll help you find the best fit.')},
     ]
     return render(request, 'pages/faq.html', {'faqs': faqs})
 def terms(request):   return render(request, 'pages/terms.html')

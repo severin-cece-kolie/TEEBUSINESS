@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
-{% load currency_tags %}
+{% load currency_tags i18n %}
 
-{% block title %}Order Confirmed — TEEBUSINESS{% endblock %}
+{% block title %}{% trans "Order Confirmed" %} — TEEBUSINESS{% endblock %}
 
 {% block content %}
 <section class="bg-white py-12 md:py-16">
@@ -10,35 +10,35 @@
       <div class="mx-auto mb-6 inline-flex h-16 w-16 items-center justify-center rounded-full bg-green-50">
         <svg class="h-8 w-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M5 13l4 4L19 7"/></svg>
       </div>
-      <h1 class="font-barlow text-3xl font-black uppercase tracking-tight md:text-4xl">Order confirmed</h1>
-      <p class="mx-auto mt-3 max-w-md text-sm leading-6 text-luxury-mid">Thank you, {{ order.full_name }}! Your order has been received. Our team will contact you to arrange delivery and payment.</p>
-      <p class="mt-4 inline-block rounded-full bg-luxury-grey px-4 py-1.5 text-sm font-bold tracking-widest">Order #{{ order.order_number }}</p>
+      <h1 class="font-barlow text-3xl font-black uppercase tracking-tight md:text-4xl">{% trans "Order confirmed" %}</h1>
+      <p class="mx-auto mt-3 max-w-md text-sm leading-6 text-luxury-mid">{% blocktrans with name=order.full_name %}Thank you, {{ name }}! Your order has been received. Our team will contact you to arrange delivery and payment.{% endblocktrans %}</p>
+      <p class="mt-4 inline-block rounded-full bg-luxury-grey px-4 py-1.5 text-sm font-bold tracking-widest">{% trans "Order" %} #{{ order.order_number }}</p>
     </div>
 
     <div class="mt-10 overflow-hidden rounded-2xl border border-luxury-line">
       <div class="flex items-center justify-between bg-luxury-grey/50 px-6 py-4">
-        <h2 class="font-barlow text-base font-black uppercase tracking-tight">Order summary</h2>
+        <h2 class="font-barlow text-base font-black uppercase tracking-tight">{% trans "Order summary" %}</h2>
         <span class="rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-white" style="background:{{ order.status_color }}">{{ order.get_status_display }}</span>
       </div>
       <div class="divide-y divide-luxury-line">
         {% for item in order.items.all %}
         <div class="flex items-center justify-between px-6 py-3 text-sm">
-          <span class="text-luxury-mid">{{ item.product_name }} · Size {{ item.size }} × {{ item.quantity }}</span>
+          <span class="text-luxury-mid">{{ item.product_name }} · {% trans "Size" %} {{ item.size }} × {{ item.quantity }}</span>
           <span class="font-semibold">{{ item.subtotal_gnf|convert_price:request }}</span>
         </div>
         {% endfor %}
       </div>
       <div class="space-y-2 border-t border-luxury-line px-6 py-4 text-sm">
-        <div class="flex justify-between text-luxury-mid"><span>Subtotal</span><span>{{ order.subtotal_gnf|convert_price:request }}</span></div>
-        <div class="flex justify-between text-luxury-mid"><span>Shipping</span><span>{{ order.shipping_gnf|convert_price:request }}</span></div>
-        <div class="flex justify-between text-luxury-mid"><span>Taxes</span><span>{{ order.tax_gnf|convert_price:request }}</span></div>
-        <div class="flex justify-between border-t border-luxury-line pt-2 text-base font-bold"><span>Total</span><span>{{ order.total_gnf|convert_price:request }}</span></div>
+        <div class="flex justify-between text-luxury-mid"><span>{% trans "Subtotal" %}</span><span>{{ order.subtotal_gnf|convert_price:request }}</span></div>
+        <div class="flex justify-between text-luxury-mid"><span>{% trans "Shipping" %}</span><span>{{ order.shipping_gnf|convert_price:request }}</span></div>
+        <div class="flex justify-between text-luxury-mid"><span>{% trans "Taxes" %}</span><span>{{ order.tax_gnf|convert_price:request }}</span></div>
+        <div class="flex justify-between border-t border-luxury-line pt-2 text-base font-bold"><span>{% trans "Total" %}</span><span>{{ order.total_gnf|convert_price:request }}</span></div>
       </div>
     </div>
 
     <div class="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
-      <a href="{% url 'order_invoice' order.order_number %}" target="_blank" class="rounded-xl border border-luxury-line px-6 py-3.5 text-center text-xs font-bold uppercase tracking-widest transition hover:bg-luxury-grey">View / print invoice</a>
-      <a href="{% url 'catalog' %}" class="rounded-xl bg-luxury-black px-6 py-3.5 text-center text-xs font-bold uppercase tracking-widest text-white transition hover:bg-black/90">Continue shopping</a>
+      <a href="{% url 'order_invoice' order.order_number %}" target="_blank" class="rounded-xl border border-luxury-line px-6 py-3.5 text-center text-xs font-bold uppercase tracking-widest transition hover:bg-luxury-grey">{% trans "View / print invoice" %}</a>
+      <a href="{% url 'catalog' %}" class="rounded-xl bg-luxury-black px-6 py-3.5 text-center text-xs font-bold uppercase tracking-widest text-white transition hover:bg-black/90">{% trans "Continue shopping" %}</a>
     </div>
   </div>
 </section>

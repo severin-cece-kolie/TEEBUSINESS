@@ -1,62 +1,64 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
-{% block title %}Privacy Policy — TEEBUSINESS{% endblock %}
-{% block meta_desc %}How TEEBUSINESS collects, uses and protects your personal data.{% endblock %}
+{% block title %}{% trans "Privacy Policy" %} — TEEBUSINESS{% endblock %}
+{% block meta_desc %}{% trans "How TEEBUSINESS collects, uses and protects your personal data." %}{% endblock %}
 
 {% block content %}
-{% include 'includes/page_hero.html' with compact=True eyebrow='Your privacy matters' title='Privacy Policy' %}
+{% trans "Your privacy matters" as ph_eyebrow %}{% trans "Privacy Policy" as ph_title %}
+{% include 'includes/page_hero.html' with compact=True eyebrow=ph_eyebrow title=ph_title %}
 <section class="bg-white py-14 md:py-20">
   <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-    <p class="mb-8 border-b border-luxury-line pb-6 text-sm text-luxury-mid">Last updated: {% now "F Y" %}</p>
+    <p class="mb-8 border-b border-luxury-line pb-6 text-sm text-luxury-mid">{% trans "Last updated:" %} {% now "F Y" %}</p>
 
     <div class="space-y-9 text-[15px] leading-7 text-luxury-mid">
-      <p>At TEEBUSINESS, we respect your privacy and are committed to protecting your personal data. This policy explains what we collect, why, and the rights you have over your information.</p>
+      <p>{% trans "At TEEBUSINESS, we respect your privacy and are committed to protecting your personal data. This policy explains what we collect, why, and the rights you have over your information." %}</p>
 
       <div>
-        <h2 class="mb-2 font-barlow text-lg font-bold uppercase tracking-tight text-luxury-black">1. Information we collect</h2>
-        <p>We collect information you provide directly — such as your name, email, phone number and delivery address when you create an account, subscribe to our newsletter, place an order or contact us. We also collect limited technical data (such as your IP address and browser type) to keep your account secure and improve our service.</p>
+        <h2 class="mb-2 font-barlow text-lg font-bold uppercase tracking-tight text-luxury-black">{% trans "1. Information we collect" %}</h2>
+        <p>{% trans "We collect information you provide directly — such as your name, email, phone number and delivery address when you create an account, subscribe to our newsletter, place an order or contact us. We also collect limited technical data (such as your IP address and browser type) to keep your account secure and improve our service." %}</p>
       </div>
 
       <div>
-        <h2 class="mb-2 font-barlow text-lg font-bold uppercase tracking-tight text-luxury-black">2. How we use your data</h2>
-        <p>Your data is used to process and deliver orders, provide customer support, send verification and security notifications, and — only with your consent — share news about new arrivals, restocks and promotions. We never sell your personal data.</p>
+        <h2 class="mb-2 font-barlow text-lg font-bold uppercase tracking-tight text-luxury-black">{% trans "2. How we use your data" %}</h2>
+        <p>{% trans "Your data is used to process and deliver orders, provide customer support, send verification and security notifications, and — only with your consent — share news about new arrivals, restocks and promotions. We never sell your personal data." %}</p>
       </div>
 
       <div>
-        <h2 class="mb-2 font-barlow text-lg font-bold uppercase tracking-tight text-luxury-black">3. Legal basis (GDPR)</h2>
-        <p>We process your data on the basis of contract (to fulfil your orders), legitimate interest (to secure and improve our service), and consent (for marketing emails, which you can withdraw at any time).</p>
+        <h2 class="mb-2 font-barlow text-lg font-bold uppercase tracking-tight text-luxury-black">{% trans "3. Legal basis (GDPR)" %}</h2>
+        <p>{% trans "We process your data on the basis of contract (to fulfil your orders), legitimate interest (to secure and improve our service), and consent (for marketing emails, which you can withdraw at any time)." %}</p>
       </div>
 
       <div>
-        <h2 class="mb-2 font-barlow text-lg font-bold uppercase tracking-tight text-luxury-black">4. Cookies</h2>
-        <p>We use essential cookies to keep you signed in, remember your cart and protect against fraud (CSRF). Optional analytics cookies help us understand how the store is used. You can control cookies through your browser settings; disabling essential cookies may affect core functionality.</p>
+        <h2 class="mb-2 font-barlow text-lg font-bold uppercase tracking-tight text-luxury-black">{% trans "4. Cookies" %}</h2>
+        <p>{% trans "We use essential cookies to keep you signed in, remember your cart and protect against fraud (CSRF). Optional analytics cookies help us understand how the store is used. You can control cookies through your browser settings; disabling essential cookies may affect core functionality." %}</p>
       </div>
 
       <div>
-        <h2 class="mb-2 font-barlow text-lg font-bold uppercase tracking-tight text-luxury-black">5. Data security</h2>
-        <p>We apply strong technical safeguards: encrypted password storage, secure sessions, CSRF and clickjacking protection, account-lockout against brute-force attacks, and HTTPS in production. Access to personal data is restricted to authorised staff only.</p>
+        <h2 class="mb-2 font-barlow text-lg font-bold uppercase tracking-tight text-luxury-black">{% trans "5. Data security" %}</h2>
+        <p>{% trans "We apply strong technical safeguards: encrypted password storage, secure sessions, CSRF and clickjacking protection, account-lockout against brute-force attacks, and HTTPS in production. Access to personal data is restricted to authorised staff only." %}</p>
       </div>
 
       <div>
-        <h2 class="mb-2 font-barlow text-lg font-bold uppercase tracking-tight text-luxury-black">6. Your rights</h2>
-        <p>You have the right to access, correct, export or delete your personal data, and to unsubscribe from marketing at any time. To exercise any of these rights, contact us using the details below.</p>
+        <h2 class="mb-2 font-barlow text-lg font-bold uppercase tracking-tight text-luxury-black">{% trans "6. Your rights" %}</h2>
+        <p>{% trans "You have the right to access, correct, export or delete your personal data, and to unsubscribe from marketing at any time. To exercise any of these rights, contact us using the details below." %}</p>
       </div>
 
       <div>
-        <h2 class="mb-2 font-barlow text-lg font-bold uppercase tracking-tight text-luxury-black">7. Data retention</h2>
-        <p>We keep your data only as long as necessary to provide our services and meet legal obligations. When it is no longer needed, it is securely deleted or anonymised.</p>
+        <h2 class="mb-2 font-barlow text-lg font-bold uppercase tracking-tight text-luxury-black">{% trans "7. Data retention" %}</h2>
+        <p>{% trans "We keep your data only as long as necessary to provide our services and meet legal obligations. When it is no longer needed, it is securely deleted or anonymised." %}</p>
       </div>
 
       <div>
-        <h2 class="mb-2 font-barlow text-lg font-bold uppercase tracking-tight text-luxury-black">8. Terms of use</h2>
-        <p>By using this website you agree to use it lawfully and not to misuse our services or content. For full terms, please see our <a href="{% url 'terms' %}" class="text-luxury-black underline underline-offset-2">Terms &amp; Conditions</a>.</p>
+        <h2 class="mb-2 font-barlow text-lg font-bold uppercase tracking-tight text-luxury-black">{% trans "8. Terms of use" %}</h2>
+        <p>{% trans "By using this website you agree to use it lawfully and not to misuse our services or content." %} <a href="{% url 'terms' %}" class="text-luxury-black underline underline-offset-2">{% trans "See our full Terms & Conditions" %}</a>.</p>
       </div>
 
       <div class="rounded-2xl border border-luxury-line bg-luxury-grey/40 p-7">
-        <h2 class="mb-2 font-barlow text-lg font-bold uppercase tracking-tight text-luxury-black">Contact us</h2>
-        <p>Questions about this policy or your data? Reach us at
+        <h2 class="mb-2 font-barlow text-lg font-bold uppercase tracking-tight text-luxury-black">{% trans "Contact us" %}</h2>
+        <p>{% trans "Questions about this policy or your data? Reach us at" %}
           <a href="mailto:{{ BUSINESS_EMAIL }}" class="text-luxury-black underline underline-offset-2">{{ BUSINESS_EMAIL }}</a>
-          or through our <a href="{% url 'contact' %}" class="text-luxury-black underline underline-offset-2">contact page</a>.</p>
+          {% trans "or through our" %} <a href="{% url 'contact' %}" class="text-luxury-black underline underline-offset-2">{% trans "contact page" %}</a>.</p>
       </div>
     </div>
   </div>

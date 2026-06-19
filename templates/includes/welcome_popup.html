@@ -1,6 +1,6 @@
-{% load static %}
-<div 
-    x-data="welcomePopup()" 
+{% load static i18n %}
+<div
+    x-data="welcomePopup()"
     x-init="init()"
     x-show="isOpen" 
     class="fixed inset-0 z-[100] flex items-center justify-center px-4" 
@@ -38,9 +38,9 @@
                 <img src="{% static 'assets/images/logo.png' %}" alt="TEEBUSINESS" class="h-8 w-8 object-contain">
             </div>
             
-            <h2 class="mb-2 font-barlow text-2xl font-black uppercase tracking-widest text-luxury-black">Join The Community</h2>
+            <h2 class="mb-2 font-barlow text-2xl font-black uppercase tracking-widest text-luxury-black">{% trans "Join The Community" %}</h2>
             <h3 class="mb-8 font-barlow text-lg font-bold uppercase tracking-widest text-luxury-mid">TEEBUSINESS</h3>
-            <p class="mb-8 text-sm text-luxury-mid">Get exclusive access to our next drop.</p>
+            <p class="mb-8 text-sm text-luxury-mid">{% trans "Get exclusive access to our next drop." %}</p>
 
             <form @submit.prevent="submitPopup" class="text-left">
                 {% csrf_token %}
@@ -48,7 +48,7 @@
                     <input 
                         type="text" 
                         x-model="fullName"
-                        placeholder="Full Name" 
+                        placeholder="{% trans 'Full Name' %}"
                         class="w-full rounded-xl border border-luxury-line bg-luxury-grey/50 px-4 py-3 text-sm outline-none transition-colors focus:border-luxury-black"
                         required
                     >
@@ -57,7 +57,7 @@
                     <input 
                         type="email" 
                         x-model="email"
-                        placeholder="Email Address" 
+                        placeholder="{% trans 'Email Address' %}"
                         class="w-full rounded-xl border border-luxury-line bg-luxury-grey/50 px-4 py-3 text-sm outline-none transition-colors focus:border-luxury-black"
                         required
                     >
@@ -70,12 +70,12 @@
                     :disabled="loading"
                     class="flex w-full items-center justify-center rounded-xl bg-luxury-black px-4 py-3.5 text-xs font-bold uppercase tracking-widest text-white transition-colors hover:bg-black/90 disabled:opacity-70"
                 >
-                    <span x-show="!loading">Sign Up</span>
+                    <span x-show="!loading">{% trans "Sign Up" %}</span>
                     <svg x-show="loading" class="h-4 w-4 animate-spin text-white" style="display: none;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                 </button>
             </form>
             
-            <button @click="close()" class="mt-6 text-xs text-luxury-mid underline transition-colors hover:text-luxury-black">No thanks, I'll just browse</button>
+            <button @click="close()" class="mt-6 text-xs text-luxury-mid underline transition-colors hover:text-luxury-black">{% trans "No thanks, I’ll just browse" %}</button>
         </div>
     </div>
 </div>
