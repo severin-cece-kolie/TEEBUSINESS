@@ -1,24 +1,10 @@
-# Standalone Tailwind v4 validation
+# Tailwind v4 standalone migration record
 
-## Modes
+The standalone candidate was accepted as the storefront's canonical Tailwind
+build. The temporary current/standalone cookie switch and the Tailwind CDN were
+removed after manual parity validation.
 
-Run Django normally, then select a mode in the browser:
-
-- baseline: `http://127.0.0.1:8000/?tailwind=current`
-- candidate: `http://127.0.0.1:8000/?tailwind=standalone`
-- reset: `http://127.0.0.1:8000/?tailwind=reset`
-
-The selected mode follows normal navigation through a DEBUG-only cookie. Check
-the `<html data-tailwind-mode="...">` attribute if the active mode is unclear.
-
-The baseline loads, in order:
-
-1. `tailwind.generated.css`;
-2. Tailwind CDN and its inline compatibility configuration;
-3. `output.css`;
-4. `premium.css`.
-
-The standalone storefront loads:
+## Final CSS order
 
 1. `tailwind.standalone.css`;
 2. `output.css`;
@@ -52,10 +38,9 @@ Completed without browser automation:
 - `manage.py collectstatic --dry-run --noinput`;
 - HTTP 200 for home, catalog, product detail, cart, login, registration,
   authenticated checkout, authenticated account and admin;
-- confirmed that standalone HTML loads no Tailwind CDN or coexistence CSS;
-- confirmed that current mode still loads both the coexistence CSS and CDN.
+- confirmed that storefront/auth HTML loads no Tailwind CDN or coexistence CSS.
 
-The visual matrix was intentionally left for manual testing.
+The final visual matrix was accepted manually before CDN removal.
 
 ## Manual comparison checklist
 
@@ -74,8 +59,8 @@ Compare at desktop and mobile widths:
 Pay special attention to typography, line wrapping, borders, placeholder
 colors, shadows, gradients, transforms, hover/focus states and breakpoints.
 
-## Decision gate
+## Cleanup deferred
 
-Current recommendation: do not remove the CDN yet. Accept the manual matrix
-above first. If a difference is found, record the page, viewport, element,
-baseline behavior and standalone behavior before changing CSS.
+The unused `static/css/tailwind.generated.css` coexistence artifact and the
+historical `dist/` build were intentionally left in place. Their removal should
+be handled by a separate evidence-backed cleanup.

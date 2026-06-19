@@ -1,8 +1,7 @@
 /*
  * Canonical Tailwind v4 source for the Django storefront.
  *
- * The build emits a coexistence preview and a native standalone candidate.
- * The CDN remains active by default until standalone parity is accepted.
+ * The generated standalone file is the storefront's canonical utility CSS.
  */
 @import "tailwindcss" source(none);
 

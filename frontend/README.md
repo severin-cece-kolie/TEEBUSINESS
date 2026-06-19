@@ -1,8 +1,8 @@
 # Frontend build
 
-This directory contains the progressive Tailwind CSS v4 workflow for the
-server-rendered Django application. It does not introduce React, Vite, or a
-separate frontend application.
+This directory contains the local Tailwind CSS v4 workflow for the
+server-rendered Django application. Tailwind is compiled locally; the
+storefront and authentication templates no longer load the Tailwind CDN.
 
 ## Files
 
@@ -11,54 +11,19 @@ separate frontend application.
 - `safelist.txt`: complete utility names used in Alpine/Django conditional
   states. Add entries only when a class cannot be detected as a literal string
   in a scanned source file.
-- `tailwind-workflow.mjs`: runs the official CLI and prepares the temporary
-  CDN-compatible preview and the native standalone build described below.
 - `check-tailwind-classes.mjs`: verifies that Alpine/Django conditional classes
-  and the explicit safelist exist in the standalone output.
-- `static/css/tailwind.generated.css`: generated output. It is kept separate
-  from `output.css` and is loaded before the Tailwind CDN during parity checks.
-- `static/css/tailwind.standalone.css`: native Tailwind v4 output with no
-  coexistence filtering. It is loaded only in the explicit standalone test
-  mode.
+  and the explicit safelist exist in the generated output.
+- `static/css/tailwind.standalone.css`: canonical generated Tailwind v4 output
+  loaded by the storefront and authentication templates.
 
-`static/css/premium.css`, the Tailwind CDN scripts, and their inline
-compatibility configurations remain active for now.
+`static/css/output.css` and `static/css/premium.css` remain separate and load
+after Tailwind so their custom rules stay prioritized.
 
 The source list includes both Django template trees and the Python form modules
 that assign Tailwind classes to Django widgets.
 
-## Temporary CDN compatibility
-
-Tailwind v4 emits typed CSS `@property` registrations for internal variables.
-When the v3 CDN runtime is loaded on the same page, those registrations reject
-some legacy gradient values and visibly change hero overlays.
-
-Tailwind v4 also emits individual `scale`, `translate`, and `rotate`
-properties, while the CDN v3 runtime emits a composed `transform`. Applying
-both doubles some transforms.
-
-During this coexistence phase, `tailwind-workflow.mjs` removes those
-registrations and individual transform declarations from the generated
-preview. The CDN remains authoritative for gradients and transforms; the other
-utilities and theme remain v4. Remove this post-processing step when the CDN is
-removed so the final standalone v4 build keeps Tailwind's native output.
-
-The standalone output is written from the same raw CLI build before that
-filtering. Its source also preserves the Tailwind v3 colors and the few
-Preflight defaults used by the current interface.
-
-## Switching modes locally
-
-The current CDN mode remains the default. The switch is enabled only when
-Django `DEBUG=True` and is persisted in an HTTP-only cookie for eight hours.
-
-- current CDN stack: `/?tailwind=current`
-- standalone Tailwind v4: `/?tailwind=standalone`
-- clear the preview cookie: `/?tailwind=reset`
-
-After opening one of these URLs, normal navigation stays in the selected mode.
-The `<html>` element exposes `data-tailwind-mode="current"` or
-`data-tailwind-mode="standalone"` for inspection.
+The canonical source preserves the Tailwind v3 colors and the small set of
+Preflight defaults established during visual parity testing.
 
 ## Commands
 
@@ -80,7 +45,7 @@ Recompile while editing templates or CSS:
 npm run watch
 ```
 
-Create both minified outputs:
+Create the minified production CSS:
 
 ```bash
 npm run build
@@ -92,6 +57,24 @@ Verify conditional and safelisted classes:
 npm run check:css
 ```
 
-The standalone mode does not affect Django admin, which uses Unfold's own base
-templates and assets. Keep the CDN as the default until the manual
-desktop/mobile comparison in `STANDALONE_VALIDATION.md` has been completed.
+Django admin uses Unfold's own templates and assets, so it does not load the
+storefront Tailwind stylesheet.
+
+## CSS loading order
+
+Storefront:
+
+1. `tailwind.standalone.css`;
+2. `output.css`;
+3. `premium.css`;
+4. template-specific styles from `extra_head` / `extra_css`.
+
+Authentication:
+
+1. `tailwind.standalone.css`;
+2. existing inline authentication styles;
+3. template-specific styles from `extra_css`.
+
+`static/css/tailwind.generated.css` is a retained migration artifact and is no
+longer generated or loaded. It can be removed in a separate cleanup after the
+local Tailwind rollout has remained stable.

@@ -1,6 +1,6 @@
 {% load static i18n %}
 <!DOCTYPE html>
-<html lang="{{ LANGUAGE_CODE }}" class="scroll-smooth" data-tailwind-mode="{{ request.tailwind_mode }}">
+<html lang="{{ LANGUAGE_CODE }}" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,38 +14,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Barlow:wght@700;800;900&display=swap" rel="stylesheet">
-    {% if request.tailwind_mode == 'standalone' %}
-    {# Native Tailwind v4 test mode: no CDN and no coexistence post-processing. #}
+    {# Canonical local Tailwind v4 build. Custom CSS below remains authoritative. #}
     <link rel="stylesheet" href="{% static 'css/tailwind.standalone.css' %}">
-    {% else %}
-    {# Default reversible mode: CDN plus the coexistence-compatible v4 candidate. #}
-    <link rel="stylesheet" href="{% static 'css/tailwind.generated.css' %}">
-    {% endif %}
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    {% if request.tailwind_mode != 'standalone' %}
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      // Compatibility config while the CDN remains active.
-      // Canonical Tailwind v4 tokens live in frontend/tailwind.css.
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              'luxury-black': '#0a0a0a',
-              'luxury-grey': '#f6f5f2',
-              'luxury-mid': '#77736c',
-              'luxury-line': '#e8e4dc',
-            },
-            fontFamily: {
-              'barlow': ['Barlow', 'sans-serif'],
-              'inter': ['Inter', 'sans-serif'],
-            },
-            borderRadius: { 'luxury': '8px' }
-          }
-        }
-      }
-    </script>
-    {% endif %}
     <link rel="stylesheet" href="{% static 'css/output.css' %}">
     <link rel="stylesheet" href="{% static 'css/premium.css' %}">
     {% block extra_head %}{% endblock %}

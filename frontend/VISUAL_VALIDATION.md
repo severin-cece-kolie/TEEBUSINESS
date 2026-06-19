@@ -1,4 +1,7 @@
-# Tailwind v4 visual validation
+# Historical Tailwind v4 coexistence validation
+
+This document records the earlier CDN/local coexistence phase. The standalone
+candidate was subsequently accepted manually and the Tailwind CDN was removed.
 
 Validation performed on June 19, 2026 with Chromium at:
 
@@ -63,12 +66,8 @@ CSS difference.
 No new safelist entries were required during this validation. Existing Alpine
 and Django conditional classes were present in the generated output.
 
-## CDN removal gate
+## CDN removal outcome
 
-Not ready to remove the CDN yet. Before removal:
-
-1. stop stripping Tailwind's native `@property` output;
-2. test the standalone v4 build with the CDN blocked;
-3. resolve any genuine v3-to-v4 gradient/reset differences in source CSS;
-4. repeat desktop/mobile screenshots and interactive-state checks;
-5. update CSP and remove the inline CDN compatibility configurations.
+Completed in the following migration step: the native v4 build is now loaded
+directly, inline CDN configuration was removed, and the CSP no longer permits
+`cdn.tailwindcss.com`.

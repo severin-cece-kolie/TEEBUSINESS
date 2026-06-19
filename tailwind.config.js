@@ -1,10 +1,10 @@
 /**
- * Legacy/CDN compatibility mirror.
+ * Legacy configuration reference.
  *
  * Tailwind v4's canonical theme and source paths live in
- * frontend/tailwind.css. The current templates still load Tailwind's CDN and
- * define smaller inline configs, so keep this file aligned until the visual
- * parity phase is complete.
+ * frontend/tailwind.css, and the templates load the compiled local stylesheet.
+ * The v4 CLI does not consume this file; keep it only until the remaining
+ * historical frontend files are audited in a dedicated cleanup.
  *
  * @type {import('tailwindcss').Config}
  */
