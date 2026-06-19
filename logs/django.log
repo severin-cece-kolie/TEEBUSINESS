@@ -254,3 +254,5 @@ WARNING 2026-06-19 07:15:40,305 sms_utils Twilio SDK not installed. SMS function
 WARNING 2026-06-19 07:16:02,918 sms_utils Twilio SDK not installed. SMS functionality disabled. Install with: pip install twilio
 WARNING 2026-06-19 07:16:15,497 sms_utils Twilio SDK not installed. SMS functionality disabled. Install with: pip install twilio
 WARNING 2026-06-19 07:16:26,215 sms_utils Twilio SDK not installed. SMS functionality disabled. Install with: pip install twilio
+WARNING 2026-06-19 13:22:42,787 sms_utils Twilio SDK not installed. SMS functionality disabled. Install with: pip install twilio
+WARNING 2026-06-19 13:22:43,514 sms_utils Twilio SDK not installed. SMS functionality disabled. Install with: pip install twilio

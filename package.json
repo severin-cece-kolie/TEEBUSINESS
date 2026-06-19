@@ -7,9 +7,9 @@
     "node": ">=20"
   },
   "scripts": {
-    "dev": "tailwindcss -i ./frontend/tailwind.css -o ./static/css/tailwind.generated.css",
-    "watch": "tailwindcss -i ./frontend/tailwind.css -o ./static/css/tailwind.generated.css --watch",
-    "build": "tailwindcss -i ./frontend/tailwind.css -o ./static/css/tailwind.generated.css --minify"
+    "dev": "node ./frontend/tailwind-workflow.mjs",
+    "watch": "node ./frontend/tailwind-workflow.mjs --watch",
+    "build": "node ./frontend/tailwind-workflow.mjs --minify"
   },
   "devDependencies": {
     "@tailwindcss/cli": "^4.3.1",

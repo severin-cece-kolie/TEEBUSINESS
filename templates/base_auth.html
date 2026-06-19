@@ -12,8 +12,12 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+    {# Tailwind v4 parity candidate. The CDN below remains authoritative for now. #}
+    <link rel="stylesheet" href="{% static 'css/tailwind.generated.css' %}">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
+      // Compatibility config while the CDN remains active.
+      // Canonical Tailwind v4 tokens live in frontend/tailwind.css.
       tailwind.config = {
         theme: {
           extend: {
