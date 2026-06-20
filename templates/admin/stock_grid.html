@@ -1,0 +1,103 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block extrastyle %}{{ block.super }}
+<style>
+  .sg-bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:16px;}
+  .sg-bar input[type=text],.sg-bar select{border:1px solid #d8dade;border-radius:9px;padding:8px 10px;font-size:13px;background:#fff;}
+  .dark .sg-bar input[type=text],.dark .sg-bar select{background:#19191b;border-color:#2a2a2e;color:#e5e7eb;}
+  .sg-btn{background:#a4182b;color:#fff;border:none;border-radius:9px;padding:9px 16px;font-size:13px;font-weight:700;cursor:pointer;}
+  .sg-btn.ghost{background:transparent;color:#6b7280;border:1px solid #d8dade;}
+  .sg-wrap{overflow-x:auto;border:1px solid #e7e8ec;border-radius:12px;background:#fff;}
+  .dark .sg-wrap{background:#19191b;border-color:#2a2a2e;}
+  table.sg{border-collapse:separate;border-spacing:0;width:100%;font-size:13px;}
+  table.sg th,table.sg td{padding:8px 6px;text-align:center;white-space:nowrap;border-bottom:1px solid rgba(125,125,125,.14);}
+  table.sg thead th{position:sticky;top:0;background:#f6f6f7;font-size:11px;text-transform:uppercase;letter-spacing:.4px;color:#6b7280;z-index:2;}
+  .dark table.sg thead th{background:#202022;}
+  .sg-name{position:sticky;left:0;background:#fff;text-align:left!important;min-width:190px;max-width:240px;z-index:1;font-weight:600;}
+  .dark .sg-name{background:#19191b;}
+  table.sg thead th.sg-name{z-index:3;background:#f6f6f7;}
+  .dark table.sg thead th.sg-name{background:#202022;}
+  table.sg input.q{width:48px;border:1px solid #d8dade;border-radius:7px;padding:6px 4px;text-align:center;font-size:13px;background:#fff;}
+  .dark table.sg input.q{background:#222226;border-color:#33343a;color:#e5e7eb;}
+  table.sg input.q:focus{border-color:#a4182b;outline:none;box-shadow:0 0 0 2px rgba(164,24,43,.18);}
+  table.sg input.q.zero{color:#b91c1c;}
+  .sg-name a{color:inherit;}
+  .sg-save{position:sticky;bottom:0;display:flex;gap:10px;align-items:center;justify-content:flex-end;
+           padding:12px;margin-top:14px;background:rgba(255,255,255,.92);backdrop-filter:blur(6px);border-radius:12px;border:1px solid #e7e8ec;}
+  .dark .sg-save{background:rgba(25,25,27,.92);border-color:#2a2a2e;}
+  .sg-page{display:flex;gap:6px;align-items:center;margin-top:14px;flex-wrap:wrap;font-size:13px;}
+  .sg-page a,.sg-page span{padding:6px 11px;border:1px solid #d8dade;border-radius:8px;color:inherit;text-decoration:none;}
+  .sg-page .cur{background:#a4182b;color:#fff;border-color:#a4182b;}
+</style>
+{% endblock %}
+
+{% block content %}
+<h1 style="font-size:20px;font-weight:800;margin-bottom:4px;">{% trans "Grille de stock" %}</h1>
+<p style="color:#6b7280;font-size:13px;margin-bottom:16px;">{% trans "Modifiez le stock de chaque pointure puis enregistrez en une fois." %}</p>
+
+{% if messages %}{% for m in messages %}
+<div style="margin-bottom:12px;padding:10px 14px;border-radius:9px;background:#e7f7ee;color:#16a34a;font-size:13px;font-weight:600;">{{ m }}</div>
+{% endfor %}{% endif %}
+
+<form method="get" class="sg-bar">
+  <input type="text" name="q" value="{{ q }}" placeholder="{% trans 'Rechercher un produit…' %}">
+  <select name="brand">
+    <option value="">{% trans "Toutes les marques" %}</option>
+    {% for b in brands %}<option value="{{ b.id }}" {% if sel_brand == b.id|stringformat:'s' %}selected{% endif %}>{{ b.name }}</option>{% endfor %}
+  </select>
+  <select name="category">
+    <option value="">{% trans "Toutes les catégories" %}</option>
+    {% for c in categories %}<option value="{{ c.slug }}" {% if sel_category == c.slug %}selected{% endif %}>{{ c.name }}</option>{% endfor %}
+  </select>
+  <select name="availability">
+    <option value="">{% trans "Disponibilité" %}</option>
+    <option value="out" {% if sel_avail == 'out' %}selected{% endif %}>{% trans "Rupture" %}</option>
+    <option value="low" {% if sel_avail == 'low' %}selected{% endif %}>{% trans "Stock faible" %}</option>
+  </select>
+  <button type="submit" class="sg-btn">{% trans "Filtrer" %}</button>
+  <a href="?" class="sg-btn ghost">{% trans "Réinitialiser" %}</a>
+</form>
+
+<form method="post" action="{{ request.get_full_path }}">
+  {% csrf_token %}
+  <div class="sg-wrap">
+    <table class="sg">
+      <thead>
+        <tr>
+          <th class="sg-name">{% trans "Produit" %}</th>
+          {% for s in sizes %}<th>{{ s }}</th>{% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in grid %}
+        <tr>
+          <td class="sg-name"><a href="{% url 'admin:shop_product_change' row.product.id %}">{{ row.product.name }}</a></td>
+          {% for size, qty in row.cells %}
+          <td><input class="q {% if qty == 0 %}zero{% endif %}" type="number" min="0" inputmode="numeric"
+                     name="qty_{{ row.product.id }}_{{ size }}" value="{{ qty|default_if_none:0 }}"></td>
+          {% endfor %}
+        </tr>
+        {% empty %}
+        <tr><td class="sg-name" colspan="{{ sizes|length|add:1 }}" style="padding:24px;color:#6b7280;">{% trans "Aucun produit." %}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% if grid %}
+  <div class="sg-save">
+    <span style="color:#6b7280;font-size:13px;">{{ page.paginator.count }} {% trans "produit(s)" %}</span>
+    <button type="submit" class="sg-btn">{% trans "Enregistrer les modifications" %}</button>
+  </div>
+  {% endif %}
+</form>
+
+{% if page.paginator.num_pages > 1 %}
+<div class="sg-page">
+  {% if page.has_previous %}<a href="?q={{ q|urlencode }}&brand={{ sel_brand }}&category={{ sel_category }}&availability={{ sel_avail }}&page={{ page.previous_page_number }}">‹</a>{% endif %}
+  <span class="cur">{{ page.number }} / {{ page.paginator.num_pages }}</span>
+  {% if page.has_next %}<a href="?q={{ q|urlencode }}&brand={{ sel_brand }}&category={{ sel_category }}&availability={{ sel_avail }}&page={{ page.next_page_number }}">›</a>{% endif %}
+</div>
+{% endif %}
+{% endblock %}

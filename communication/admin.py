@@ -10,7 +10,7 @@ from import_export.admin import ImportExportModelAdmin
 from import_export import resources
 from import_export.formats import base_formats
 
-from .models import NewsletterSubscriber, EmailCampaign, CampaignRecipient, EmailHistory
+from .models import NewsletterSubscriber, EmailCampaign, CampaignRecipient
 
 EXPORT_FORMATS = [base_formats.CSV, base_formats.XLSX, base_formats.JSON]
 
@@ -295,34 +295,4 @@ class CampaignRecipientAdmin(ModelAdmin):
     )
 
 
-@admin.register(EmailHistory)
-class EmailHistoryAdmin(ModelAdmin):
-    """Admin interface for EmailHistory model."""
-    
-    list_display = ['subject', 'to_email', 'email_type', 'status', 'sent_at', 'created_at']
-    list_filter = ['email_type', 'status', 'created_at']
-    search_fields = ['subject', 'to_email', 'from_email']
-    readonly_fields = ['id', 'sent_at', 'delivered_at', 'created_at']
-    
-    fieldsets = (
-        ('Email Information', {
-            'fields': ('email_type', 'to_email', 'from_email', 'subject')
-        }),
-        ('Content', {
-            'fields': ('body',)
-        }),
-        ('Status', {
-            'fields': ('status', 'sent_at', 'delivered_at')
-        }),
-        ('Related Objects', {
-            'fields': ('campaign', 'related_user')
-        }),
-        ('Error Information', {
-            'fields': ('error_message',),
-            'classes': ('collapse',)
-        }),
-        ('Metadata', {
-            'fields': ('id', 'created_at'),
-            'classes': ('collapse',)
-        }),
-    )
+# EmailHistory removed — emails are no longer journaled to the database.

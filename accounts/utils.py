@@ -2,96 +2,66 @@
 Utility functions for OTP generation, verification, and email sending.
 """
 
+import hashlib
 import logging
 import random
 import string
+from types import SimpleNamespace
 from datetime import timedelta
 from django.utils import timezone
+from django.core.cache import cache
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.conf import settings
-from .models import OTP, LoginSecurityLog
+from .models import LoginSecurityLog
 
 logger = logging.getLogger('accounts')
 
+OTP_MAX_ATTEMPTS = 5
 
-def generate_otp(user, purpose='email_verification', expiration_minutes=10):
+
+def _otp_cache_key(user, purpose):
+    return f'otp:{user.pk}:{purpose}'
+
+
+def _hash_otp(user, code):
+    """Hash the code (salted with SECRET_KEY + user id) so plaintext is never stored."""
+    return hashlib.sha256(f'{settings.SECRET_KEY}:{user.pk}:{code}'.encode()).hexdigest()
+
+
+def generate_otp(user, purpose='email_verification', expiration_minutes=None):
     """
-    Generate a 6-digit OTP code for the specified purpose.
-    
-    Args:
-        user: User instance
-        purpose: Purpose of OTP (email_verification, password_reset, login_verification)
-        expiration_minutes: OTP expiration time in minutes (default: 10)
-    
-    Returns:
-        OTP instance
+    Create a 6-digit OTP. Only its HASH is kept in the Django cache (auto-expiring) —
+    nothing is written to the database. Returns a lightweight object carrying the
+    plaintext code (with a ``.code`` attribute) so the email template is unchanged.
     """
-    # Generate 6-digit OTP
     code = ''.join(random.choices(string.digits, k=6))
-    
-    # Calculate expiration time
-    expires_at = timezone.now() + timedelta(minutes=expiration_minutes)
-    
-    # Create OTP record
-    otp = OTP.objects.create(
-        user=user,
-        code=code,
-        purpose=purpose,
-        expires_at=expires_at
-    )
-    
-    return otp
+    ttl = int(expiration_minutes or settings.OTP_EXPIRATION_MINUTES) * 60
+    cache.set(_otp_cache_key(user, purpose),
+              {'hash': _hash_otp(user, code), 'attempts': 0}, ttl)
+    return SimpleNamespace(code=code, purpose=purpose, user=user)
 
 
 def verify_otp(user, code, purpose='email_verification'):
     """
-    Verify an OTP code for the specified purpose.
-    
-    Args:
-        user: User instance
-        code: OTP code to verify
-        purpose: Purpose of OTP
-    
-    Returns:
-        tuple (is_valid, otp_instance or error_message)
+    Validate a submitted code against the cached hash. One-time use (deleted on
+    success), limited attempts, auto-expiring. Returns (is_valid, message).
     """
-    try:
-        # Get the most recent unused OTP for this user and purpose
-        otp = OTP.objects.filter(
-            user=user,
-            code=code,
-            purpose=purpose,
-            is_used=False
-        ).latest('created_at')
-        
-        # Check if OTP is valid
-        if not otp.is_valid():
-            if otp.expires_at < timezone.now():
-                return False, 'OTP has expired. Please request a new one.'
-            if otp.is_used:
-                return False, 'OTP has already been used. Please request a new one.'
-        
-        # Mark OTP as used
-        otp.mark_as_used()
-        
-        # Log successful OTP verification
-        LoginSecurityLog.objects.create(
-            user=user,
-            event_type='otp_verified',
-            details={'purpose': purpose}
-        )
-        
-        return True, otp
-        
-    except OTP.DoesNotExist:
-        # Log failed OTP verification
-        LoginSecurityLog.objects.create(
-            user=user,
-            event_type='otp_failed',
-            details={'purpose': purpose, 'reason': 'Invalid OTP code'}
-        )
-        return False, 'Invalid OTP code. Please try again.'
+    key = _otp_cache_key(user, purpose)
+    data = cache.get(key)
+    if not data:
+        return False, 'Votre code a expiré ou est invalide. Veuillez en demander un nouveau.'
+    if data.get('attempts', 0) >= OTP_MAX_ATTEMPTS:
+        cache.delete(key)
+        return False, 'Trop de tentatives. Veuillez demander un nouveau code.'
+    if _hash_otp(user, str(code).strip()) == data.get('hash'):
+        cache.delete(key)  # one-time use
+        log_security_event(user, 'otp_verified', None, {'purpose': purpose})
+        return True, 'ok'
+    data['attempts'] = data.get('attempts', 0) + 1
+    cache.set(key, data, int(settings.OTP_EXPIRATION_MINUTES) * 60)
+    log_security_event(user, 'otp_failed', None, {'purpose': purpose})
+    return False, 'Code incorrect. Veuillez réessayer.'
 
 
 def send_otp_email(user, otp, request=None):
@@ -144,19 +114,6 @@ def send_otp_email(user, otp, request=None):
         )
         result = email.send(fail_silently=False)
 
-        # Log to email history
-        from communication.models import EmailHistory
-        EmailHistory.objects.create(
-            email_type='otp',
-            to_email=user.email,
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            subject=subject,
-            body=html_content,
-            status='sent' if result == 1 else 'failed',
-            related_user=user,
-            sent_at=timezone.now() if result == 1 else None
-        )
-
         if result == 1:
             logger.info("OTP email accepted by the mail server for %s", user.email)
         else:
@@ -172,16 +129,6 @@ def send_otp_email(user, otp, request=None):
             getattr(settings, 'EMAIL_USE_TLS', '-'), getattr(settings, 'EMAIL_HOST_USER', '-'),
             type(exc).__name__, exc,
         )
-        # Record the failure so it shows in the admin Message History too.
-        try:
-            from communication.models import EmailHistory
-            EmailHistory.objects.create(
-                email_type='otp', to_email=getattr(user, 'email', ''),
-                from_email=settings.DEFAULT_FROM_EMAIL, subject='OTP verification (FAILED)',
-                body=f'{type(exc).__name__}: {exc}', status='failed', related_user=user,
-            )
-        except Exception:
-            pass
         return False
 
 
@@ -232,16 +179,9 @@ def log_security_event(user, event_type, request=None, details=None):
 
 
 def cleanup_expired_otps():
-    """
-    Delete expired OTPs from the database.
-    This should be called periodically (e.g., via cron or Celery beat).
-    """
-    expired_count = OTP.objects.filter(
-        expires_at__lt=timezone.now(),
-        is_used=False
-    ).delete()[0]
-    
-    return expired_count
+    """No-op kept for backwards compatibility: OTPs now live in the cache and
+    expire automatically, so there is nothing to purge from the database."""
+    return 0
 
 
 def check_rate_limit(request, key, max_attempts=5, window_minutes=1):

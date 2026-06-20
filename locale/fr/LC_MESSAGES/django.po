@@ -607,7 +607,13 @@ msgstr "Suivant"
 
 # === Newsletter ===
 msgid "Sign Up For Discounts & Updates"
-msgstr "Inscrivez-vous pour des remises et mises à jour"
+msgstr "Offres et nouveautés en avant-première"
+
+msgid "pair"
+msgstr "paire"
+
+msgid "Only %(n)s left"
+msgstr "Plus que %(n)s en stock"
 
 msgid ""
 "Get notified about new arrivals, promotions, restocks and exclusive offers."

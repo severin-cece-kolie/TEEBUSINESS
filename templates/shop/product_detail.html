@@ -118,14 +118,14 @@
 
           <!-- Quantity -->
           <h2 class="mb-2 mt-6 text-sm font-bold uppercase tracking-wide">{% trans "Quantity" %}</h2>
-          <div class="flex items-center gap-4">
-            <div class="flex items-center rounded-xl border border-luxury-line">
+          <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+            <div class="flex w-max items-center rounded-xl border border-luxury-line">
               <button type="button" @click="dec()" class="flex h-11 w-11 items-center justify-center text-lg text-luxury-mid transition hover:text-luxury-black" aria-label="Decrease">−</button>
               <input type="number" x-model.number="quantity" min="1" :max="maxQty()" class="h-11 w-14 border-x border-luxury-line text-center text-sm outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none">
               <button type="button" @click="inc()" class="flex h-11 w-11 items-center justify-center text-lg text-luxury-mid transition hover:text-luxury-black" aria-label="Increase">+</button>
             </div>
             <button type="submit" :disabled="!selectedSize"
-                    class="flex-1 rounded-xl bg-luxury-black px-8 py-3 text-sm font-semibold uppercase tracking-[0.15em] text-white transition hover:bg-luxury-black/90 disabled:cursor-not-allowed disabled:opacity-40">
+                    class="w-full whitespace-nowrap rounded-xl bg-luxury-black px-6 py-3.5 text-sm font-semibold uppercase tracking-[0.12em] text-white transition hover:bg-luxury-black/90 disabled:cursor-not-allowed disabled:opacity-40 sm:flex-1">
               {% trans "Add to cart" %}
             </button>
           </div>

@@ -135,7 +135,7 @@ def add_to_cart(request, product_id):
     """Add one or more sizes of a product in a single submission."""
     product = get_object_or_404(Product, id=product_id, is_active=True)
     if request.method != 'POST':
-        return redirect('product_detail', id=product.id)
+        return redirect('product_detail', slug=product.slug)
 
     cart = request.session.get('cart', {})
     sizes = {s.size: s for s in product.sizes.all()}

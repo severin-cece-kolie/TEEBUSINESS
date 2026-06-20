@@ -44,10 +44,8 @@ UNFOLD = {
             ]},
             {"title": _("Communication"), "separator": True, "items": [
                 {"title": _("Campagnes email"), "icon": "campaign", "link": reverse_lazy("admin:communication_emailcampaign_changelist")},
-                {"title": _("Historique emails"), "icon": "history", "link": reverse_lazy("admin:communication_emailhistory_changelist")},
             ]},
             {"title": _("Sécurité"), "separator": True, "items": [
-                {"title": _("Codes OTP"), "icon": "pin", "link": reverse_lazy("admin:accounts_otp_changelist")},
                 {"title": _("Journaux de connexion"), "icon": "security", "link": reverse_lazy("admin:accounts_loginsecuritylog_changelist")},
                 {"title": _("Groupes & rôles"), "icon": "admin_panel_settings", "link": reverse_lazy("admin:auth_group_changelist")},
             ]},

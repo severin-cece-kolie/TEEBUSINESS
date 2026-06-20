@@ -130,7 +130,7 @@ class ProductSizeImportResource(resources.ModelResource):
     product = fields.Field(attribute='product', column_name='Produit',
                            widget=ForeignKeyWidget(Product, 'name'))
     size = fields.Field(attribute='size', column_name='Pointure')
-    quantity = fields.Field(attribute='quantity', column_name='Stock')
+    quantity = fields.Field(attribute='quantity', column_name='Stock', widget=IntegerWidget())
 
     class Meta:
         model = ProductSize
@@ -227,3 +227,76 @@ class ProductSizeAdmin(ImportExportModelAdmin, ModelAdmin):
         labels = {'in_stock': 'En stock', 'low_stock': 'Faible', 'out_of_stock': 'Rupture'}
         s = obj.stock_status
         return format_html('<b style="color:{}">{}</b>', colors.get(s, '#666'), labels.get(s, s))
+
+    # ── Compact stock grid (Produit | 38 … 48), editable in bulk ──
+    GRID_SIZES = [str(s) for s in range(38, 49)]
+
+    def get_urls(self):
+        from django.urls import path
+        custom = [
+            path('grid/', self.admin_site.admin_view(self.stock_grid_view),
+                 name='shop_productsize_grid'),
+        ]
+        return custom + super().get_urls()
+
+    def stock_grid_view(self, request):
+        from django.contrib import messages
+        from django.core.paginator import Paginator
+        from django.db.models import F, Q, Sum
+        from django.shortcuts import redirect, render
+
+        if request.method == 'POST':
+            updates = {}
+            for key, val in request.POST.items():
+                if not key.startswith('qty_'):
+                    continue
+                try:
+                    _, pid, size = key.split('_', 2)
+                    updates[(pid, size)] = max(0, int(val or 0))
+                except (ValueError, TypeError):
+                    continue
+            changed = []
+            if updates:
+                rows = ProductSize.objects.filter(product_id__in={pid for pid, _ in updates})
+                for r in rows:
+                    nv = updates.get((str(r.product_id), r.size))
+                    if nv is not None and r.quantity != nv:
+                        r.quantity = nv
+                        changed.append(r)
+                if changed:
+                    ProductSize.objects.bulk_update(changed, ['quantity'])
+            messages.success(request, f'{len(changed)} pointure(s) mise(s) à jour.')
+            return redirect(request.get_full_path())
+
+        qs = Product.objects.select_related('brand', 'category').prefetch_related('sizes')
+        q = request.GET.get('q', '').strip()
+        brand = request.GET.get('brand', '').strip()
+        category = request.GET.get('category', '').strip()
+        avail = request.GET.get('availability', '').strip()
+        if q:
+            qs = qs.filter(name__icontains=q)
+        if brand:
+            qs = qs.filter(brand_id=brand)
+        if category:
+            qs = qs.filter(category__slug=category)
+        if avail == 'out':
+            qs = qs.annotate(st=Sum('sizes__quantity')).filter(Q(st=0) | Q(st__isnull=True))
+        elif avail == 'low':
+            qs = qs.filter(sizes__quantity__gt=0,
+                           sizes__quantity__lte=F('sizes__low_stock_threshold')).distinct()
+        qs = qs.order_by('name')
+
+        page = Paginator(qs, 25).get_page(request.GET.get('page'))
+        grid = []
+        for p in page:
+            smap = {s.size: s.quantity for s in p.sizes.all()}
+            grid.append({'product': p, 'cells': [(sz, smap.get(sz)) for sz in self.GRID_SIZES]})
+
+        ctx = {
+            **self.admin_site.each_context(request),
+            'title': 'Grille de stock', 'sizes': self.GRID_SIZES, 'grid': grid, 'page': page,
+            'brands': Brand.objects.all(), 'categories': Category.objects.all(),
+            'q': q, 'sel_brand': brand, 'sel_category': category, 'sel_avail': avail,
+            'opts': self.model._meta,
+        }
+        return render(request, 'admin/stock_grid.html', ctx)

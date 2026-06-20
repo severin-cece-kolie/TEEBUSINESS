@@ -1,6 +1,6 @@
 {% load i18n currency_tags %}
 <article class="product-card group flex flex-col">
-    <a href="{% url 'product_detail' product.id %}" class="product-card__media relative overflow-hidden rounded-lg bg-luxury-grey">
+    <a href="{% url 'product_detail' product.slug %}" class="product-card__media relative overflow-hidden rounded-lg bg-luxury-grey">
         {% if product.images.all %}
         <img
             src="{{ product.images.first.image.url }}"
@@ -30,11 +30,11 @@
     <div class="product-card__body mt-2 flex items-start justify-between gap-2 md:mt-4 md:gap-4">
         <div class="min-w-0 flex-1">
             <p class="product-card__brand mb-0.5 hidden truncate text-[9px] font-bold uppercase tracking-widest text-luxury-mid md:mb-1 lg:block md:text-[10px]">{{ product.brand.name|default:product.category.name }}</p>
-            <a href="{% url 'product_detail' product.id %}" class="product-card__title block text-sm font-semibold leading-snug transition-colors hover:text-luxury-mid md:text-sm">{{ product.name }}</a>
+            <a href="{% url 'product_detail' product.slug %}" class="product-card__title block text-sm font-semibold leading-snug transition-colors hover:text-luxury-mid md:text-sm">{{ product.name }}</a>
         </div>
         <p class="product-card__price shrink-0 font-barlow text-sm font-bold md:text-sm">{{ product.discounted_price|convert_price:request }}</p>
     </div>
-    <a href="{% url 'product_detail' product.id %}" class="product-card__cta mt-2 flex h-9 w-full items-center justify-center whitespace-nowrap rounded-md bg-luxury-black px-3 text-[10px] font-bold uppercase tracking-wide text-white transition-all hover:bg-black/90 md:mt-3 md:h-10 md:text-[11px] md:tracking-widest">
+    <a href="{% url 'product_detail' product.slug %}" class="product-card__cta mt-2 flex h-9 w-full items-center justify-center whitespace-nowrap rounded-md bg-luxury-black px-3 text-[10px] font-bold uppercase tracking-wide text-white transition-all hover:bg-black/90 md:mt-3 md:h-10 md:text-[11px] md:tracking-widest">
         {% trans "View product" %}
     </a>
 </article>

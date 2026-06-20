@@ -155,12 +155,12 @@
           </div>
         </div>
 
-        <!-- Nav buttons -->
-        <div class="mt-8 flex items-center justify-between">
-          <button type="button" x-show="step > 1" @click="step--" class="rounded-xl border border-luxury-line px-6 py-3 text-sm font-semibold uppercase tracking-widest transition hover:bg-luxury-grey" style="display:none;">Retour</button>
-          <a x-show="step === 1" href="{% url 'cart' %}" class="text-sm font-semibold uppercase tracking-widest text-luxury-mid hover:text-luxury-black">Retour au panier</a>
-          <button type="button" x-show="step < 3" @click="next()" class="rounded-xl bg-luxury-black px-8 py-3 text-sm font-semibold uppercase tracking-[0.15em] text-white transition hover:bg-luxury-black/90">Continuer</button>
-          <button type="submit" x-show="step === 3" class="rounded-xl bg-luxury-black px-8 py-3 text-sm font-semibold uppercase tracking-[0.15em] text-white transition hover:bg-luxury-black/90" style="display:none;">Valider la commande</button>
+        <!-- Nav buttons (stack on mobile so long FR labels never overflow) -->
+        <div class="mt-8 flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <button type="button" x-show="step > 1" @click="step--" class="w-full whitespace-nowrap rounded-xl border border-luxury-line px-6 py-3 text-sm font-semibold uppercase tracking-widest transition hover:bg-luxury-grey sm:w-auto" style="display:none;">Retour</button>
+          <a x-show="step === 1" href="{% url 'cart' %}" class="w-full text-center text-sm font-semibold uppercase tracking-widest text-luxury-mid hover:text-luxury-black sm:w-auto">Retour au panier</a>
+          <button type="button" x-show="step < 3" @click="next()" class="w-full whitespace-nowrap rounded-xl bg-luxury-black px-8 py-3.5 text-sm font-semibold uppercase tracking-[0.15em] text-white transition hover:bg-luxury-black/90 sm:w-auto">Continuer</button>
+          <button type="submit" x-show="step === 3" class="w-full whitespace-nowrap rounded-xl bg-luxury-black px-8 py-3.5 text-sm font-semibold uppercase tracking-[0.15em] text-white transition hover:bg-luxury-black/90 sm:w-auto" style="display:none;">Valider la commande</button>
         </div>
       </div>
 

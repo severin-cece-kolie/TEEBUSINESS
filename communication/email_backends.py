@@ -8,9 +8,8 @@ Two pieces, composed together:
 
 * ``LoggingEmailBackend`` — the backend Django actually uses. It wraps the real
   provider backend (console / smtp / brevo, chosen via ``EMAIL_BACKEND`` env)
-  and, for EVERY message, retries on failure and writes an ``EmailHistory`` row
-  (status sent/failed + error) so every attempt is journaled and visible in the
-  admin. It never raises on send failure → email problems can't cause HTTP 500.
+  and retries on failure. It never raises on send failure → email problems can't
+  cause HTTP 500. (Emails are no longer journaled to the database.)
 """
 import json
 import logging
@@ -96,9 +95,10 @@ class BrevoApiEmailBackend(BaseEmailBackend):
 
 
 class LoggingEmailBackend(BaseEmailBackend):
-    """Wrap the real provider backend: retry + journal every send to EmailHistory.
+    """Wrap the real provider backend: retry on failure and never raise.
 
     Real backend is resolved from ``settings.EMAIL_PROVIDER_BACKEND``.
+    (Email history is no longer journaled to the database.)
     """
 
     def __init__(self, fail_silently=False, **kwargs):
@@ -118,7 +118,6 @@ class LoggingEmailBackend(BaseEmailBackend):
         sent = 0
         for message in email_messages:
             ok, error = self._send_with_retry(message)
-            self._record(message, ok, error)
             if ok:
                 sent += 1
         return sent
@@ -139,28 +138,3 @@ class LoggingEmailBackend(BaseEmailBackend):
         logger.error('Email to %s FAILED after %s attempt(s): %s',
                      message.to, self.max_retries + 1, last_error)
         return False, last_error
-
-    def _record(self, message, ok, error):
-        """Write one EmailHistory row per recipient (best-effort)."""
-        try:
-            from communication.models import EmailHistory
-            headers = getattr(message, 'extra_headers', None) or {}
-            if headers.get('X-TEE-NoLog'):
-                return  # caller already journals this one (e.g. OTP) — avoid duplicates
-            etype = headers.get('X-TEE-Type', 'transactional')
-            name, addr = parseaddr(message.from_email or settings.DEFAULT_FROM_EMAIL)
-            body = _html_of(message) or message.body or ''
-            now = timezone.now()
-            for recipient in (message.to or []):
-                EmailHistory.objects.create(
-                    email_type=etype if etype in dict(EmailHistory.EMAIL_TYPE_CHOICES) else 'transactional',
-                    to_email=recipient,
-                    from_email=addr,
-                    subject=message.subject or '',
-                    body=body,
-                    status='sent' if ok else 'failed',
-                    error_message=None if ok else (error or '')[:1000],
-                    sent_at=now if ok else None,
-                )
-        except Exception:
-            logger.exception('Could not write EmailHistory row')

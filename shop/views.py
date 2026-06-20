@@ -1,5 +1,5 @@
 from django.http import HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.http import url_has_allowed_host_and_scheme
 
 from .models import Product, Category, Brand
@@ -35,19 +35,25 @@ def catalog(request):
     })
 
 
-def product_detail(request, id):
+def product_detail(request, slug):
     product = get_object_or_404(
         Product.objects.select_related('category', 'brand').prefetch_related('images', 'sizes'),
-        id=id, is_active=True,
+        slug=slug, is_active=True,
     )
     similar = Product.objects.filter(
         category=product.category, is_active=True,
-    ).exclude(id=id)[:4]
+    ).exclude(id=product.id)[:4]
     return render(request, 'shop/product_detail.html', {
         'product': product,
         'similar_products': similar,
         'share_url': request.build_absolute_uri(),
     })
+
+
+def product_detail_redirect(request, id):
+    """Permanent redirect from a legacy numeric product URL to its slug URL."""
+    product = get_object_or_404(Product, id=id, is_active=True)
+    return redirect('product_detail', slug=product.slug, permanent=True)
 
 
 def search(request):

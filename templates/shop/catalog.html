@@ -11,25 +11,25 @@
 
 <section class="bg-white py-10 md:py-14">
   <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-    <!-- Filters -->
-    <form method="get" class="mb-8 flex flex-wrap items-center gap-3">
-      <select name="category" class="rounded-xl border border-luxury-line bg-white px-4 py-2.5 text-sm outline-none focus:border-luxury-black">
+    <!-- Filters: 2-col grid on mobile, inline row on desktop -->
+    <form method="get" class="mb-8 grid grid-cols-2 gap-3 sm:flex sm:flex-wrap sm:items-center">
+      <select name="category" class="w-full rounded-xl border border-luxury-line bg-white px-4 py-2.5 text-sm outline-none focus:border-luxury-black sm:w-auto">
         <option value="">{% trans "All categories" %}</option>
         {% for category in categories %}
         <option value="{{ category.slug }}" {% if selected_category == category.slug %}selected{% endif %}>{{ category.name }}</option>
         {% endfor %}
       </select>
-      <select name="brand" class="rounded-xl border border-luxury-line bg-white px-4 py-2.5 text-sm outline-none focus:border-luxury-black">
+      <select name="brand" class="w-full rounded-xl border border-luxury-line bg-white px-4 py-2.5 text-sm outline-none focus:border-luxury-black sm:w-auto">
         <option value="">{% trans "All brands" %}</option>
         {% for brand in brands %}
         <option value="{{ brand.id }}" {% if selected_brand == brand.id|stringformat:"s" %}selected{% endif %}>{{ brand.name }}</option>
         {% endfor %}
       </select>
       <input type="text" name="q" placeholder="{% trans 'Search products' %}" value="{{ search_q }}"
-             class="min-w-[12rem] flex-1 rounded-xl border border-luxury-line bg-white px-4 py-2.5 text-sm outline-none focus:border-luxury-black sm:flex-none">
-      <button type="submit" class="rounded-xl bg-luxury-black px-6 py-2.5 text-xs font-bold uppercase tracking-widest text-white transition hover:bg-black/90">{% trans "Filter" %}</button>
+             class="col-span-2 w-full rounded-xl border border-luxury-line bg-white px-4 py-2.5 text-sm outline-none focus:border-luxury-black sm:col-auto sm:w-auto sm:min-w-[14rem] sm:flex-1">
+      <button type="submit" class="col-span-2 w-full whitespace-nowrap rounded-xl bg-luxury-black px-6 py-2.5 text-xs font-bold uppercase tracking-widest text-white transition hover:bg-black/90 sm:col-auto sm:w-auto">{% trans "Filter" %}</button>
       {% if selected_category or selected_brand or search_q %}
-      <a href="{% url 'catalog' %}" class="text-xs font-semibold uppercase tracking-widest text-luxury-mid hover:text-luxury-black">{% trans "Clear" %}</a>
+      <a href="{% url 'catalog' %}" class="col-span-2 text-center text-xs font-semibold uppercase tracking-widest text-luxury-mid hover:text-luxury-black sm:col-auto">{% trans "Clear" %}</a>
       {% endif %}
     </form>
 

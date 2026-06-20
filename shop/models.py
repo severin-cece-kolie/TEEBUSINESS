@@ -149,6 +149,11 @@ class ProductSize(models.Model):
     quantity = models.PositiveIntegerField(default=0)
     low_stock_threshold = models.PositiveIntegerField(default=5)
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['product', 'size'], name='uniq_product_size'),
+        ]
+
     def __str__(self):
         return f"{self.product.name} - Size {self.size}"
 

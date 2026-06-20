@@ -115,51 +115,8 @@ class User(AbstractUser):
         self.save()
 
 
-class OTP(models.Model):
-    """Model for storing OTP codes for email verification."""
-    
-    PURPOSE_CHOICES = [
-        ('email_verification', 'Email Verification'),
-        ('password_reset', 'Password Reset'),
-        ('login_verification', 'Login Verification'),
-    ]
-    
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='otps')
-    code = models.CharField(max_length=6)  # 6-digit OTP
-    purpose = models.CharField(max_length=30, choices=PURPOSE_CHOICES)
-    is_used = models.BooleanField(default=False)
-    used_at = models.DateTimeField(blank=True, null=True)
-    expires_at = models.DateTimeField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    ip_address = models.GenericIPAddressField(blank=True, null=True)
-    
-    class Meta:
-        ordering = ['-created_at']
-        verbose_name = 'OTP'
-        verbose_name_plural = 'OTPs'
-        indexes = [
-            models.Index(fields=['code']),
-            models.Index(fields=['user', 'purpose']),
-            models.Index(fields=['expires_at']),
-        ]
-    
-    def __str__(self):
-        return f"OTP for {self.user.username} ({self.purpose})"
-    
-    def is_valid(self):
-        """Check if OTP is valid (not expired and not used)."""
-        if self.is_used:
-            return False
-        if self.expires_at < timezone.now():
-            return False
-        return True
-    
-    def mark_as_used(self):
-        """Mark OTP as used."""
-        self.is_used = True
-        self.used_at = timezone.now()
-        self.save()
+# OTP codes are no longer stored in the database — they live in the Django
+# cache (hashed, auto-expiring). See accounts.utils.generate_otp / verify_otp.
 
 
 class LoginSecurityLog(models.Model):

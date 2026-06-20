@@ -4,7 +4,7 @@ Subscriber email notifications: a welcome email plus automatic product alerts
 
 Design notes
 ------------
-* Sending is centralised in `_send_html`, which also records an EmailHistory row
+* Sending is centralised in `_send_html`
   so every email is auditable from the admin.
 * Product alerts are triggered by Django signals (see signals.py) wrapped in
   `transaction.on_commit`, so emails only go out after the product is safely
@@ -52,9 +52,7 @@ def _format_gnf(amount):
 
 
 def _send_html(to_email, subject, html, email_type='notification'):
-    """Send one HTML email and log it. Returns True on success."""
-    from .models import EmailHistory
-
+    """Send one HTML email. Returns True on success. (No DB journaling.)"""
     text_body = strip_tags(html)
     message = EmailMultiAlternatives(
         subject=subject,
@@ -64,24 +62,12 @@ def _send_html(to_email, subject, html, email_type='notification'):
     )
     message.attach_alternative(html, 'text/html')
 
-    status, error = 'sent', ''
     try:
         message.send()
-    except Exception as exc:  # noqa: BLE001 — log and record, never raise to caller
-        status, error = 'failed', str(exc)
+        return True
+    except Exception:  # noqa: BLE001 — log, never raise to caller
         logger.exception("Newsletter email '%s' to %s failed", subject, to_email)
-
-    EmailHistory.objects.create(
-        email_type=email_type,
-        to_email=to_email,
-        from_email=settings.DEFAULT_FROM_EMAIL,
-        subject=subject,
-        body=html,
-        status=status,
-        error_message=error or None,
-        sent_at=timezone.now() if status == 'sent' else None,
-    )
-    return status == 'sent'
+        return False
 
 
 # ─────────────────────────────────────────────────────────────
@@ -153,7 +139,7 @@ def notify_product(product_id, kind):
 
     image = product.images.first()
     image_url = _abs_url(image.image.url) if image and image.image else ''
-    product_url = _abs_url(reverse('product_detail', args=[product.id]))
+    product_url = _abs_url(reverse('product_detail', args=[product.slug]))
 
     has_discount = product.discount_percent and product.discount_percent > 0
     context = {

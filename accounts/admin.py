@@ -13,7 +13,7 @@ from unfold.admin import ModelAdmin
 from unfold.forms import AdminPasswordChangeForm, UserChangeForm, UserCreationForm
 
 from teebusiness_core.admin_exports import export_pdf_response
-from .models import User, OTP, LoginSecurityLog
+from .models import User, LoginSecurityLog
 from .email_utils import send_batch_newsletter
 from .sms_utils import send_batch_promotional_sms
 
@@ -135,31 +135,6 @@ class UserAdmin(BaseUserAdmin, ModelAdmin):
     send_otp_email_action.short_description = 'Send OTP verification email'
 
 
-@admin.register(OTP)
-class OTPAdmin(ModelAdmin):
-    list_display = ['user', 'code', 'purpose', 'is_used', 'expires_at', 'created_at']
-    list_filter = ['purpose', 'is_used', 'created_at', 'expires_at']
-    search_fields = ['user__username', 'user__email', 'code']
-    readonly_fields = ['id', 'created_at', 'used_at']
-    actions = ['invalidate_otps', 'delete_expired_otps']
-
-    fieldsets = (
-        ('OTP Information', {'fields': ('user', 'code', 'purpose')}),
-        ('Status', {'fields': ('is_used', 'used_at', 'expires_at')}),
-        ('Metadata', {'fields': ('ip_address', 'id', 'created_at'), 'classes': ('collapse',)}),
-    )
-
-    def invalidate_otps(self, request, queryset):
-        count = queryset.filter(is_used=False).update(is_used=True, used_at=timezone.now())
-        messages.success(request, f'{count} OTP(s) invalidated.')
-    invalidate_otps.short_description = 'Invalidate selected OTPs'
-
-    def delete_expired_otps(self, request, queryset):
-        count = queryset.filter(expires_at__lt=timezone.now()).delete()[0]
-        messages.success(request, f'{count} expired OTP(s) deleted.')
-    delete_expired_otps.short_description = 'Delete expired OTPs'
-
-
 @admin.register(LoginSecurityLog)
 class LoginSecurityLogAdmin(ModelAdmin):
     list_display = ['event_type', 'user', 'username_attempted', 'ip_address', 'created_at']
@@ -207,9 +182,6 @@ class CommunicationsAdminView:
             path('communications/promo-sms/',
                  wrap(self.send_promo_sms_view),
                  name='send_promo_sms'),
-            path('communications/history/',
-                 wrap(self.message_history_view),
-                 name='message_history'),
         ]
 
     # ── helpers ──────────────────────────────────────────────
@@ -241,12 +213,6 @@ class CommunicationsAdminView:
                 'description': 'Send a promotional SMS to users with phone numbers',
                 'url': reverse('admin:send_promo_sms'),
                 'color': '#10b981',
-            },
-            {
-                'name': 'Message History',
-                'description': 'View all sent messages and delivery status',
-                'url': reverse('admin:message_history'),
-                'color': '#f59e0b',
             },
         ]
         ctx = self._ctx(request, title='Communications Center', actions=actions)
@@ -366,14 +332,6 @@ class CommunicationsAdminView:
         ctx = self._ctx(request, title='Send Promotional SMS',
                         users=users, action='sms', char_limit=160)
         return render(request, 'admin/communications_form.html', ctx)
-
-    def message_history_view(self, request):
-        from communication.models import EmailHistory
-        history = (EmailHistory.objects
-                   .select_related('related_user', 'campaign')
-                   .order_by('-created_at')[:100])
-        ctx = self._ctx(request, title='Message History', history=history)
-        return render(request, 'admin/message_history.html', ctx)
 
 
 # ─────────────────────────────────────────────────────────────
